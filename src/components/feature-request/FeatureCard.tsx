@@ -2,15 +2,23 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowBigUp, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface FeatureCardProps {
   id: number;
   title: string;
   description: string;
   status: "new" | "review" | "progress" | "completed";
-  category: string;
+  product: string;
   votes: number;
   comments: number;
+  onStatusChange?: (id: number, newStatus: "new" | "review" | "progress" | "completed") => void;
 }
 
 const statusConfig = {
@@ -20,14 +28,20 @@ const statusConfig = {
   completed: { label: "Completed", bg: "bg-status-completed", text: "text-status-completed-text" },
 };
 
+const productLabels = {
+  "website-demand-capture": "Website / Demand Capture",
+  "dof-onboarding": "DOF / Onboarding"
+};
+
 export const FeatureCard = ({
   id,
   title,
   description,
   status,
-  category,
+  product,
   votes,
   comments,
+  onStatusChange,
 }: FeatureCardProps) => {
   const [currentVotes, setCurrentVotes] = useState(votes);
   const [hasVoted, setHasVoted] = useState(false);
@@ -42,22 +56,32 @@ export const FeatureCard = ({
     }
   };
 
+  const handleStatusChange = (newStatus: "new" | "review" | "progress" | "completed") => {
+    onStatusChange?.(id, newStatus);
+  };
+
   return (
     <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200 animate-scale-in">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
-            <span
-              className={cn(
-                "text-xs font-medium px-2.5 py-0.5 rounded-full",
+            <Select value={status} onValueChange={handleStatusChange}>
+              <SelectTrigger className={cn(
+                "h-6 text-xs font-medium px-2.5 py-0.5 rounded-full w-auto min-w-32",
                 statusConfig[status].bg,
                 statusConfig[status].text
-              )}
-            >
-              {statusConfig[status].label}
-            </span>
+              )}>
+                <SelectValue placeholder={statusConfig[status].label} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="new">New</SelectItem>
+                <SelectItem value="review">Under Review</SelectItem>
+                <SelectItem value="progress">In Progress</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+              </SelectContent>
+            </Select>
             <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600">
-              {category}
+              {productLabels[product as keyof typeof productLabels]}
             </span>
           </div>
           <h3 className="text-lg font-semibold mb-2">{title}</h3>

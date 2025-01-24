@@ -9,13 +9,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 
 interface Feature {
   id: number;
   title: string;
   description: string;
   status: "new" | "review" | "progress" | "completed";
-  category: string;
+  product: string;
   votes: number;
   comments: number;
 }
@@ -26,7 +27,7 @@ const initialFeatures: Feature[] = [
     title: "Email notification before an ad expires",
     description: "Send an email notification 5 days before an ad expires to check if renewal is desired.",
     status: "progress",
-    category: "demand-capture",
+    product: "website-demand-capture",
     votes: 202,
     comments: 15,
   },
@@ -35,7 +36,7 @@ const initialFeatures: Feature[] = [
     title: "Rename placement feature",
     description: "Allow renaming placements for better organization and clarity.",
     status: "review",
-    category: "onboarding",
+    product: "dof-onboarding",
     votes: 132,
     comments: 8,
   },
@@ -44,7 +45,7 @@ const initialFeatures: Feature[] = [
     title: "Multiple image support for ads",
     description: "Enable uploading multiple images for different devices and date ranges.",
     status: "new",
-    category: "demand-capture",
+    product: "website-demand-capture",
     votes: 111,
     comments: 12,
   },
@@ -52,13 +53,14 @@ const initialFeatures: Feature[] = [
 
 const Index = () => {
   const [features, setFeatures] = useState<Feature[]>(initialFeatures);
-  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [productFilter, setProductFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const { toast } = useToast();
 
   const handleSubmit = (newFeature: {
     title: string;
     description: string;
-    category: string;
+    product: string;
   }) => {
     const feature: Feature = {
       id: features.length + 1,
@@ -70,10 +72,22 @@ const Index = () => {
     setFeatures((prev) => [feature, ...prev]);
   };
 
+  const handleStatusChange = (id: number, newStatus: "new" | "review" | "progress" | "completed") => {
+    setFeatures((prev) =>
+      prev.map((feature) =>
+        feature.id === id ? { ...feature, status: newStatus } : feature
+      )
+    );
+    toast({
+      title: "Status updated",
+      description: "The feature request status has been updated successfully.",
+    });
+  };
+
   const filteredFeatures = features.filter((feature) => {
-    const matchesCategory = categoryFilter === "all" || feature.category === categoryFilter;
+    const matchesProduct = productFilter === "all" || feature.product === productFilter;
     const matchesStatus = statusFilter === "all" || feature.status === statusFilter;
-    return matchesCategory && matchesStatus;
+    return matchesProduct && matchesStatus;
   });
 
   return (
@@ -88,15 +102,15 @@ const Index = () => {
         <div className="bg-white rounded-lg p-6 mb-8 shadow-sm">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label>Filter by Category</Label>
-              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+              <Label>Filter by Product</Label>
+              <Select value={productFilter} onValueChange={setProductFilter}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
+                  <SelectValue placeholder="Select product" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="demand-capture">Demand Capture</SelectItem>
-                  <SelectItem value="onboarding">Onboarding</SelectItem>
+                  <SelectItem value="all">All Products</SelectItem>
+                  <SelectItem value="website-demand-capture">Website / Demand Capture</SelectItem>
+                  <SelectItem value="dof-onboarding">DOF / Onboarding</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -120,7 +134,11 @@ const Index = () => {
 
         <div className="space-y-4">
           {filteredFeatures.map((feature) => (
-            <FeatureCard key={feature.id} {...feature} />
+            <FeatureCard 
+              key={feature.id} 
+              {...feature} 
+              onStatusChange={handleStatusChange}
+            />
           ))}
         </div>
       </div>

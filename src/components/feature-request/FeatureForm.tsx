@@ -23,7 +23,7 @@ interface FeatureFormProps {
   onSubmit: (feature: {
     title: string;
     description: string;
-    category: string;
+    product: string;
   }) => void;
 }
 
@@ -31,22 +31,22 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
+  const [product, setProduct] = useState("");
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !description || !category) {
+    if (!title || !description || !product) {
       toast({
         title: "Please fill in all fields",
         variant: "destructive",
       });
       return;
     }
-    onSubmit({ title, description, category });
+    onSubmit({ title, description, product });
     setTitle("");
     setDescription("");
-    setCategory("");
+    setProduct("");
     setOpen(false);
     toast({
       title: "Feature request submitted",
@@ -86,14 +86,14 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="category">Category</Label>
-            <Select value={category} onValueChange={setCategory}>
+            <Label htmlFor="product">Product</Label>
+            <Select value={product} onValueChange={setProduct}>
               <SelectTrigger>
-                <SelectValue placeholder="Select a category" />
+                <SelectValue placeholder="Select a product" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="demand-capture">Demand Capture</SelectItem>
-                <SelectItem value="onboarding">Onboarding</SelectItem>
+                <SelectItem value="website-demand-capture">Website / Demand Capture</SelectItem>
+                <SelectItem value="dof-onboarding">DOF / Onboarding</SelectItem>
               </SelectContent>
             </Select>
           </div>
