@@ -19,6 +19,7 @@ interface Feature {
   product: string;
   votes: number;
   comments: number;
+  canContact?: boolean;
 }
 
 const initialFeatures: Feature[] = [
@@ -61,6 +62,7 @@ const Index = () => {
     title: string;
     description: string;
     product: string;
+    canContact: boolean;
   }) => {
     const feature: Feature = {
       id: features.length + 1,

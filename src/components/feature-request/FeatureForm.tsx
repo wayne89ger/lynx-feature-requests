@@ -18,12 +18,14 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface FeatureFormProps {
   onSubmit: (feature: {
     title: string;
     description: string;
     product: string;
+    canContact: boolean;
   }) => void;
 }
 
@@ -32,6 +34,7 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [product, setProduct] = useState("");
+  const [canContact, setCanContact] = useState(false);
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -43,10 +46,11 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
       });
       return;
     }
-    onSubmit({ title, description, product });
+    onSubmit({ title, description, product, canContact });
     setTitle("");
     setDescription("");
     setProduct("");
+    setCanContact(false);
     setOpen(false);
     toast({
       title: "Feature request submitted",
@@ -96,6 +100,16 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
                 <SelectItem value="dof-onboarding">DOF / Onboarding</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="canContact"
+              checked={canContact}
+              onCheckedChange={(checked) => setCanContact(checked as boolean)}
+            />
+            <Label htmlFor="canContact" className="text-sm font-normal">
+              Can we contact you about this feature request?
+            </Label>
           </div>
           <Button type="submit" className="w-full">
             Submit
