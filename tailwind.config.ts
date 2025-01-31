@@ -19,6 +19,13 @@ export default {
     },
     extend: {
       colors: {
+        lynx: {
+          primary: "#4CAF50",
+          secondary: "#E8F5E9",
+          border: "#E0E0E0",
+          text: "#333333",
+          "text-secondary": "#666666",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
