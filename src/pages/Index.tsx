@@ -4,6 +4,7 @@ import { FeatureForm } from "@/components/feature-request/FeatureForm";
 import { BugReportForm } from "@/components/bug-report/BugReportForm";
 import { useToast } from "@/hooks/use-toast";
 import { EditFeatureForm } from "@/components/feature-request/EditFeatureForm";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Comment {
   id: number;
@@ -62,6 +63,9 @@ const Index = () => {
   ]);
   const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
   const [showEditForm, setShowEditForm] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<string>("all");
+  const [selectedStatus, setSelectedStatus] = useState<string>("all");
+  const [selectedLocation, setSelectedLocation] = useState<string>("all");
   const { toast } = useToast();
 
   const handleFeatureSubmit = (formData: { 
@@ -134,8 +138,14 @@ const Index = () => {
     setShowEditForm(true);
   };
 
-  // Sort features by votes in descending order
-  const sortedFeatures = [...features].sort((a, b) => b.votes - a.votes);
+  // Filter and sort features
+  const filteredAndSortedFeatures = [...features]
+    .filter(feature => 
+      (selectedProduct === "all" || feature.product === selectedProduct) &&
+      (selectedStatus === "all" || feature.status === selectedStatus) &&
+      (selectedLocation === "all" || feature.location === selectedLocation)
+    )
+    .sort((a, b) => b.votes - a.votes);
 
   return (
     <div className="container mx-auto p-4">
@@ -163,8 +173,46 @@ const Index = () => {
         />
       )}
 
+      <div className="flex flex-wrap gap-4 mb-6 justify-center">
+        <Select value={selectedProduct} onValueChange={setSelectedProduct}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filter by Product" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Products</SelectItem>
+            <SelectItem value="website-demand-capture">Website / Demand Capture</SelectItem>
+            <SelectItem value="dof-onboarding">DOF / Onboarding</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filter by Status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Statuses</SelectItem>
+            <SelectItem value="new">New</SelectItem>
+            <SelectItem value="review">Under Review</SelectItem>
+            <SelectItem value="progress">In Progress</SelectItem>
+            <SelectItem value="completed">Completed</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filter by Location" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Locations</SelectItem>
+            <SelectItem value="knowledge-portal">Knowledge Portal</SelectItem>
+            <SelectItem value="marketing-section">Marketing Section</SelectItem>
+            <SelectItem value="service-portal">Service Portal</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       <div className="grid grid-cols-1 gap-4 mt-8">
-        {sortedFeatures.map((feature) => (
+        {filteredAndSortedFeatures.map((feature) => (
           <FeatureCard
             key={feature.id}
             {...feature}
