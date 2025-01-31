@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowBigUp, MessageCircle, Paperclip, Edit } from "lucide-react";
+import { ArrowBigUp, ArrowBigDown, MessageCircle, Paperclip, Edit } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Select,
@@ -85,19 +85,30 @@ export const FeatureCard = ({
   onEdit,
 }: FeatureCardProps) => {
   const [currentVotes, setCurrentVotes] = useState(votes);
-  const [hasVoted, setHasVoted] = useState(false);
+  const [voteStatus, setVoteStatus] = useState<'none' | 'up' | 'down'>('none');
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState("");
   const { toast } = useToast();
 
-  const handleVote = () => {
-    if (!hasVoted) {
-      setCurrentVotes((prev) => prev + 1);
-      setHasVoted(true);
+  const handleVote = (direction: 'up' | 'down') => {
+    if (voteStatus === direction) {
+      // Remove vote
+      setCurrentVotes(prev => direction === 'up' ? prev - 1 : prev + 1);
+      setVoteStatus('none');
     } else {
-      setCurrentVotes((prev) => prev - 1);
-      setHasVoted(false);
+      // If changing vote direction, need to account for both changes
+      if (voteStatus !== 'none') {
+        setCurrentVotes(prev => direction === 'up' ? prev + 2 : prev - 2);
+      } else {
+        setCurrentVotes(prev => direction === 'up' ? prev + 1 : prev - 1);
+      }
+      setVoteStatus(direction);
     }
+
+    toast({
+      title: "Vote recorded",
+      description: `You ${voteStatus === direction ? 'removed your vote' : direction === 'up' ? 'upvoted' : 'downvoted'} this feature request.`,
+    });
   };
 
   const handleStatusChange = (newStatus: "new" | "review" | "progress" | "completed") => {
@@ -195,18 +206,31 @@ export const FeatureCard = ({
             </div>
           )}
           <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              className={cn(
-                "gap-1 hover:bg-gray-100",
-                hasVoted && "text-primary bg-primary/10 hover:bg-primary/20"
-              )}
-              onClick={handleVote}
-            >
-              <ArrowBigUp className="w-4 h-4" />
-              <span>{currentVotes}</span>
-            </Button>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                className={cn(
+                  "p-2 hover:bg-gray-100",
+                  voteStatus === 'up' && "text-primary bg-primary/10 hover:bg-primary/20"
+                )}
+                onClick={() => handleVote('up')}
+              >
+                <ArrowBigUp className="w-4 h-4" />
+              </Button>
+              <span className="min-w-[2rem] text-center">{currentVotes}</span>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={cn(
+                  "p-2 hover:bg-gray-100",
+                  voteStatus === 'down' && "text-destructive bg-destructive/10 hover:bg-destructive/20"
+                )}
+                onClick={() => handleVote('down')}
+              >
+                <ArrowBigDown className="w-4 h-4" />
+              </Button>
+            </div>
             <Button 
               variant="ghost" 
               size="sm" 
