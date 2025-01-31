@@ -3,7 +3,7 @@ import { Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface BugFormActionsProps {
-  onSubmit: () => void;
+  onSubmit: (e: React.FormEvent) => void;
 }
 
 export const BugFormActions = ({ onSubmit }: BugFormActionsProps) => {
