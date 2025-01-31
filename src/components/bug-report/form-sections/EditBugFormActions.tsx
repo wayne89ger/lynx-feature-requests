@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, Ticket } from "lucide-react";
 
 interface EditBugFormActionsProps {
-  onSubmit: () => void;
+  onSubmit: (e: React.FormEvent) => void;
   onShortcut: () => void;
   onITopTicket: () => void;
 }
