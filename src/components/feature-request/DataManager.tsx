@@ -3,6 +3,7 @@ import { Feature } from "@/types/feature";
 import { useFeatures } from "@/hooks/useFeatures";
 import { useBugs } from "@/hooks/useBugs";
 import { EditFeatureForm } from "./EditFeatureForm";
+import { EditBugForm } from "../bug-report/EditBugForm";
 import { FormActions } from "./FormActions";
 import { TabsSection } from "./TabsSection";
 import { useFeatureSubmission } from "./handlers/useFeatureSubmission";
@@ -63,12 +64,21 @@ export const DataManager = () => {
       />
 
       {showEditForm && selectedFeature && (
-        <EditFeatureForm
-          feature={selectedFeature}
-          open={showEditForm}
-          onSave={handleSave}
-          onClose={handleCloseEdit}
-        />
+        selectedFeature.product === "bug" ? (
+          <EditBugForm
+            feature={selectedFeature}
+            open={showEditForm}
+            onSave={handleSave}
+            onClose={handleCloseEdit}
+          />
+        ) : (
+          <EditFeatureForm
+            feature={selectedFeature}
+            open={showEditForm}
+            onSave={handleSave}
+            onClose={handleCloseEdit}
+          />
+        )
       )}
 
       <TabsSection
