@@ -14,7 +14,9 @@ export const DataManager = () => {
   const { features, setFeatures } = useFeatures();
   const { bugs, setBugs } = useBugs();
   const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
+  const [selectedBug, setSelectedBug] = useState<any>(null);
   const [showEditForm, setShowEditForm] = useState(false);
+  const [showEditBugForm, setShowEditBugForm] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<string>("all");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
   const [selectedLocation, setSelectedLocation] = useState<string>("all");
@@ -44,9 +46,19 @@ export const DataManager = () => {
     setShowEditForm(true);
   };
 
+  const handleEditBug = (bug: any) => {
+    setSelectedBug(bug);
+    setShowEditBugForm(true);
+  };
+
   const handleCloseEdit = () => {
     setShowEditForm(false);
     setSelectedFeature(null);
+  };
+
+  const handleCloseBugEdit = () => {
+    setShowEditBugForm(false);
+    setSelectedBug(null);
   };
 
   const handleSave = async (id: number, updatedFeature: any) => {
@@ -54,6 +66,11 @@ export const DataManager = () => {
     if (success) {
       handleCloseEdit();
     }
+  };
+
+  const handleBugSave = async (id: number, updatedBug: any) => {
+    // This will be implemented later when we rebuild the bug edit form
+    handleCloseBugEdit();
   };
 
   return (
@@ -64,34 +81,28 @@ export const DataManager = () => {
       />
 
       {showEditForm && selectedFeature && (
-        selectedFeature.product === "bug" ? (
-          <EditBugForm
-            bug={{
-              id: selectedFeature.id,
-              title: selectedFeature.title,
-              current_situation: selectedFeature.description || "",
-              expected_behavior: selectedFeature.description || "",
-              url: selectedFeature.location || "",
-              product: selectedFeature.product
-            }}
-            open={showEditForm}
-            onSave={handleSave}
-            onClose={handleCloseEdit}
-          />
-        ) : (
-          <EditFeatureForm
-            feature={selectedFeature}
-            open={showEditForm}
-            onSave={handleSave}
-            onClose={handleCloseEdit}
-          />
-        )
+        <EditFeatureForm
+          feature={selectedFeature}
+          open={showEditForm}
+          onSave={handleSave}
+          onClose={handleCloseEdit}
+        />
+      )}
+
+      {showEditBugForm && selectedBug && (
+        <EditBugForm
+          bug={selectedBug}
+          open={showEditBugForm}
+          onSave={handleBugSave}
+          onClose={handleCloseBugEdit}
+        />
       )}
 
       <TabsSection
         filteredFeatures={filteredAndSortedFeatures}
         filteredBugs={filteredAndSortedBugs}
         onEdit={handleEdit}
+        onEditBug={handleEditBug}
         selectedProduct={selectedProduct}
         setSelectedProduct={setSelectedProduct}
         selectedStatus={selectedStatus}
