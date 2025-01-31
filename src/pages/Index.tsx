@@ -208,14 +208,22 @@ const Index = () => {
       )}
 
       <Tabs defaultValue="features" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 max-w-[400px] mx-auto mb-8">
-          <TabsTrigger value="features" className="text-sm sm:text-base">
-            Feature Requests ({filteredAndSortedFeatures.length})
-          </TabsTrigger>
-          <TabsTrigger value="bugs" className="text-sm sm:text-base">
-            Bug Reports ({filteredAndSortedBugs.length})
-          </TabsTrigger>
-        </TabsList>
+        <div className="flex justify-center mb-8">
+          <TabsList className="grid w-full max-w-[400px] grid-cols-2 bg-secondary/20 p-1 rounded-lg">
+            <TabsTrigger 
+              value="features" 
+              className="rounded-md data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm"
+            >
+              Feature Requests ({filteredAndSortedFeatures.length})
+            </TabsTrigger>
+            <TabsTrigger 
+              value="bugs" 
+              className="rounded-md data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm"
+            >
+              Bug Reports ({filteredAndSortedBugs.length})
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <Filters
           selectedProduct={selectedProduct}
