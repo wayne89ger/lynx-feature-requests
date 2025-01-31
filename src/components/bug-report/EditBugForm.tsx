@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { Ticket } from "lucide-react";
 
 interface EditBugFormProps {
   bug: {
@@ -56,6 +57,13 @@ export const EditBugForm = ({ bug, open, onClose, onSave }: EditBugFormProps) =>
       expected_behavior: expectedBehavior,
       url,
       product,
+    });
+  };
+
+  const handleCreateITopTicket = () => {
+    toast({
+      title: "Coming soon",
+      description: "iTop integration will be implemented soon.",
     });
   };
 
@@ -117,11 +125,22 @@ export const EditBugForm = ({ bug, open, onClose, onSave }: EditBugFormProps) =>
               placeholder="Page URL where the issue occurred"
             />
           </div>
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" type="button" onClick={onClose}>
-              Cancel
+          <div className="flex justify-between items-center">
+            <Button 
+              type="button" 
+              variant="outline"
+              onClick={handleCreateITopTicket}
+              className="gap-2"
+            >
+              <Ticket className="w-4 h-4" />
+              Create iTop ticket
             </Button>
-            <Button type="submit">Save changes</Button>
+            <div className="flex gap-2">
+              <Button variant="outline" type="button" onClick={onClose}>
+                Cancel
+              </Button>
+              <Button type="submit">Save changes</Button>
+            </div>
           </div>
         </form>
       </DialogContent>
