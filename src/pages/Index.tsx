@@ -2,14 +2,6 @@ import { useState } from "react";
 import { FeatureCard } from "@/components/feature-request/FeatureCard";
 import { FeatureForm } from "@/components/feature-request/FeatureForm";
 import { BugReportForm } from "@/components/bug-report/BugReportForm";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { EditFeatureForm } from "@/components/feature-request/EditFeatureForm";
 
@@ -34,10 +26,42 @@ interface Feature {
 }
 
 const Index = () => {
-  const [features, setFeatures] = useState<Feature[]>([]);
+  const [features, setFeatures] = useState<Feature[]>([
+    {
+      id: 1,
+      title: "Add dark mode support",
+      description: "Implement a dark mode theme for better visibility in low-light conditions",
+      status: "new",
+      product: "website-demand-capture",
+      location: "knowledge-portal",
+      votes: 5,
+      comments: [],
+      reporter: "LYNX - Wanja Aram"
+    },
+    {
+      id: 2,
+      title: "Improve mobile responsiveness",
+      description: "Enhance the mobile experience across all pages",
+      status: "progress",
+      product: "website-demand-capture",
+      location: "service-portal",
+      votes: 8,
+      comments: [],
+      reporter: "LYNX - Wanja Aram"
+    },
+    {
+      id: 3,
+      title: "Add export to PDF feature",
+      description: "Allow users to export their data to PDF format",
+      status: "review",
+      product: "dof-onboarding",
+      votes: 3,
+      comments: [],
+      reporter: "LYNX - Wanja Aram"
+    }
+  ]);
   const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
   const [showEditForm, setShowEditForm] = useState(false);
-  const [formType, setFormType] = useState<"feature" | "bug">("feature");
   const { toast } = useToast();
 
   const handleFeatureSubmit = (formData: { 
@@ -112,41 +136,23 @@ const Index = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="mb-8">
-        <Label htmlFor="form-type">Select Form Type</Label>
-        <Select
-          value={formType}
-          onValueChange={(value: "feature" | "bug") => setFormType(value)}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select form type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="feature">Feature Request</SelectItem>
-            <SelectItem value="bug">Bug Report</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      {formType === "feature" ? (
+      <div className="flex gap-4 mb-8">
         <FeatureForm onSubmit={handleFeatureSubmit} />
-      ) : (
         <BugReportForm onSubmit={handleBugSubmit} />
-      )}
+      </div>
 
       {showEditForm && selectedFeature && (
         <EditFeatureForm
           feature={selectedFeature}
-          open={showEditForm}
+          onSave={handleFeatureUpdate}
           onClose={() => {
             setShowEditForm(false);
             setSelectedFeature(null);
           }}
-          onSave={handleFeatureUpdate}
         />
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+      <div className="grid grid-cols-1 gap-4 mt-8">
         {features.map((feature) => (
           <FeatureCard
             key={feature.id}
