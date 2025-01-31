@@ -18,7 +18,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
-import { X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 
 interface EditFeatureFormProps {
   feature: {
@@ -33,7 +33,7 @@ interface EditFeatureFormProps {
   onSave: (id: number, updatedFeature: any) => void;
 }
 
-const metrics = [
+const defaultMetrics = [
   "Avg. Organic Position",
   "Visits / Users",
   "Number of Leads / Conversions",
@@ -59,6 +59,8 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
   const [impact, setImpact] = useState<number>(1);
   const [confidence, setConfidence] = useState<number>(1);
   const [effort, setEffort] = useState<number>(1);
+  const [metrics, setMetrics] = useState<string[]>(defaultMetrics);
+  const [newMetric, setNewMetric] = useState("");
   const { toast } = useToast();
 
   const handleMetricSelect = (metric: string) => {
@@ -73,6 +75,33 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
         variant: "destructive",
       });
     }
+  };
+
+  const handleAddMetric = () => {
+    if (!newMetric.trim()) {
+      toast({
+        title: "Invalid metric",
+        description: "Please enter a metric name",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (metrics.includes(newMetric.trim())) {
+      toast({
+        title: "Duplicate metric",
+        description: "This metric already exists",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setMetrics([...metrics, newMetric.trim()]);
+    setNewMetric("");
+    toast({
+      title: "Metric added",
+      description: "New metric has been added successfully",
+    });
   };
 
   const calculateRICEScore = () => {
@@ -203,6 +232,22 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
           </div>
           <div className="space-y-2">
             <Label>Metrics (select up to 3)</Label>
+            <div className="flex items-center gap-2 mb-2">
+              <Input
+                placeholder="Add new metric"
+                value={newMetric}
+                onChange={(e) => setNewMetric(e.target.value)}
+                className="flex-1"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onClick={handleAddMetric}
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
             <div className="flex flex-wrap gap-2">
               {metrics.map((metric) => (
                 <Badge
