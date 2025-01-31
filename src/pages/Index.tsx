@@ -26,6 +26,12 @@ interface Feature {
   experimentOwner?: string;
 }
 
+const productLabels = {
+  "website-demand-capture": "Website / Demand Capture",
+  "dof-onboarding": "DOF / Onboarding",
+  "lynx-plus": "LYNX+ / Client Experience"
+};
+
 const Index = () => {
   const [features, setFeatures] = useState<Feature[]>([
     {
@@ -286,3 +292,4 @@ const Index = () => {
 };
 
 export default Index;
+

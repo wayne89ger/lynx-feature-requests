@@ -147,6 +147,7 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
               <SelectContent>
                 <SelectItem value="website-demand-capture">Website / Demand Capture</SelectItem>
                 <SelectItem value="dof-onboarding">DOF / Onboarding</SelectItem>
+                <SelectItem value="lynx-plus">LYNX+ / Client Experience</SelectItem>
               </SelectContent>
             </Select>
           </div>

@@ -59,7 +59,8 @@ const statusConfig = {
 
 const productLabels = {
   "website-demand-capture": "Website / Demand Capture",
-  "dof-onboarding": "DOF / Onboarding"
+  "dof-onboarding": "DOF / Onboarding",
+  "lynx-plus": "LYNX+ / Client Experience"
 };
 
 const locationLabels = {
