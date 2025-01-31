@@ -186,13 +186,9 @@ const Index = () => {
         </p>
       </div>
 
-      <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-8">
-        <div className="w-full sm:w-auto flex justify-center">
-          <FeatureForm onSubmit={handleFeatureSubmit} />
-        </div>
-        <div className="w-full sm:w-auto flex justify-center">
-          <BugReportForm onSubmit={handleBugSubmit} />
-        </div>
+      <div className="flex flex-row justify-center items-center gap-4 mb-8">
+        <FeatureForm onSubmit={handleFeatureSubmit} />
+        <BugReportForm onSubmit={handleBugSubmit} />
       </div>
 
       {showEditForm && selectedFeature && (
