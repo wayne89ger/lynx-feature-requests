@@ -68,7 +68,7 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
   const [hasConfluenceDoc, setHasConfluenceDoc] = useState(false);
   const { toast } = useToast();
 
-  const isBug = product === "bug";
+  const isBug = feature.product === "bug" || product === "bug";
 
   const handleSubmit = () => {
     if (!title || !description || !product) {
