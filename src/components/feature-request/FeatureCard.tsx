@@ -9,6 +9,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useToast } from "@/hooks/use-toast";
+
+interface Comment {
+  id: number;
+  text: string;
+  timestamp: string;
+}
 
 interface FeatureCardProps {
   id: number;
@@ -17,8 +26,9 @@ interface FeatureCardProps {
   status: "new" | "review" | "progress" | "completed";
   product: string;
   votes: number;
-  comments: number;
+  comments: Comment[];
   onStatusChange?: (id: number, newStatus: "new" | "review" | "progress" | "completed") => void;
+  onAddComment?: (id: number, text: string) => void;
 }
 
 const statusConfig = {
@@ -42,9 +52,13 @@ export const FeatureCard = ({
   votes,
   comments,
   onStatusChange,
+  onAddComment,
 }: FeatureCardProps) => {
   const [currentVotes, setCurrentVotes] = useState(votes);
   const [hasVoted, setHasVoted] = useState(false);
+  const [showComments, setShowComments] = useState(false);
+  const [newComment, setNewComment] = useState("");
+  const { toast } = useToast();
 
   const handleVote = () => {
     if (!hasVoted) {
@@ -58,6 +72,23 @@ export const FeatureCard = ({
 
   const handleStatusChange = (newStatus: "new" | "review" | "progress" | "completed") => {
     onStatusChange?.(id, newStatus);
+  };
+
+  const handleAddComment = () => {
+    if (!newComment.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a comment",
+        variant: "destructive",
+      });
+      return;
+    }
+    onAddComment?.(id, newComment);
+    setNewComment("");
+    toast({
+      title: "Comment added",
+      description: "Your comment has been added successfully.",
+    });
   };
 
   return (
@@ -99,11 +130,38 @@ export const FeatureCard = ({
               <ArrowBigUp className="w-4 h-4" />
               <span>{currentVotes}</span>
             </Button>
-            <Button variant="ghost" size="sm" className="gap-1 hover:bg-gray-100">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="gap-1 hover:bg-gray-100"
+              onClick={() => setShowComments(!showComments)}
+            >
               <MessageCircle className="w-4 h-4" />
-              <span>{comments}</span>
+              <span>{comments.length}</span>
             </Button>
           </div>
+
+          {showComments && (
+            <div className="mt-4 space-y-4">
+              <ScrollArea className="h-[200px] w-full rounded-md border p-4">
+                {comments.map((comment) => (
+                  <div key={comment.id} className="mb-3 last:mb-0">
+                    <p className="text-sm text-gray-600">{comment.text}</p>
+                    <span className="text-xs text-gray-400">{comment.timestamp}</span>
+                  </div>
+                ))}
+              </ScrollArea>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Add a comment..."
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  className="flex-1"
+                />
+                <Button onClick={handleAddComment}>Comment</Button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

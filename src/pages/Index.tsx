@@ -11,6 +11,12 @@ import {
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 
+interface Comment {
+  id: number;
+  text: string;
+  timestamp: string;
+}
+
 interface Feature {
   id: number;
   title: string;
@@ -18,7 +24,7 @@ interface Feature {
   status: "new" | "review" | "progress" | "completed";
   product: string;
   votes: number;
-  comments: number;
+  comments: Comment[];
   canContact?: boolean;
 }
 
@@ -30,7 +36,10 @@ const initialFeatures: Feature[] = [
     status: "progress",
     product: "website-demand-capture",
     votes: 202,
-    comments: 15,
+    comments: [
+      { id: 1, text: "This would be really helpful!", timestamp: "2024-01-30 10:00" },
+      { id: 2, text: "Looking forward to this feature", timestamp: "2024-01-30 11:30" }
+    ],
   },
   {
     id: 2,
@@ -39,7 +48,9 @@ const initialFeatures: Feature[] = [
     status: "review",
     product: "dof-onboarding",
     votes: 132,
-    comments: 8,
+    comments: [
+      { id: 3, text: "This would make organization much easier", timestamp: "2024-01-29 15:20" }
+    ],
   },
   {
     id: 3,
@@ -48,7 +59,7 @@ const initialFeatures: Feature[] = [
     status: "new",
     product: "website-demand-capture",
     votes: 111,
-    comments: 12,
+    comments: [],
   },
 ];
 
@@ -69,7 +80,7 @@ const Index = () => {
       ...newFeature,
       status: "new",
       votes: 0,
-      comments: 0,
+      comments: [],
     };
     setFeatures((prev) => [feature, ...prev]);
   };
@@ -84,6 +95,25 @@ const Index = () => {
       title: "Status updated",
       description: "The feature request status has been updated successfully.",
     });
+  };
+
+  const handleAddComment = (featureId: number, text: string) => {
+    setFeatures((prev) =>
+      prev.map((feature) => {
+        if (feature.id === featureId) {
+          const newComment: Comment = {
+            id: feature.comments.length + 1,
+            text,
+            timestamp: new Date().toLocaleString(),
+          };
+          return {
+            ...feature,
+            comments: [...feature.comments, newComment],
+          };
+        }
+        return feature;
+      })
+    );
   };
 
   const filteredFeatures = features.filter((feature) => {
@@ -140,6 +170,7 @@ const Index = () => {
               key={feature.id} 
               {...feature} 
               onStatusChange={handleStatusChange}
+              onAddComment={handleAddComment}
             />
           ))}
         </div>
