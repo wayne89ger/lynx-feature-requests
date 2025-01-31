@@ -138,23 +138,32 @@ export const FeatureCard = ({
       <div className="flex flex-col gap-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
           <div className="flex flex-wrap items-center gap-2">
-            <Select value={status} onValueChange={handleStatusChange}>
-              <SelectTrigger className={cn(
-                "h-6 text-xs font-medium px-2.5 py-0.5 rounded-full w-auto min-w-32",
-                statusConfig[status].bg,
-                statusConfig[status].text
-              )}>
-                <SelectValue placeholder={statusConfig[status].label} />
-              </SelectTrigger>
+            <div className="w-full sm:w-auto min-w-[200px] sm:min-w-0">
+              <Select value={status} onValueChange={handleStatusChange}>
+                <SelectTrigger className={cn(
+                  "h-8 text-xs font-medium px-2.5 py-0.5 rounded-full w-full sm:w-auto",
+                  statusConfig[status].bg,
+                  statusConfig[status].text
+                )}>
+                  <SelectValue placeholder={statusConfig[status].label} />
+                </SelectTrigger>
+                <SelectContent className="min-w-[200px]">
+                  {Object.entries(statusConfig).map(([key, config]) => (
+                    <SelectItem key={key} value={key}>
+                      {config.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600 whitespace-nowrap">
+              {productLabels[product as keyof typeof productLabels]}
+            </span>
+            {location && (
               <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600 whitespace-nowrap">
-                {productLabels[product as keyof typeof productLabels]}
+                {locationLabels[location as keyof typeof locationLabels]}
               </span>
-              {location && (
-                <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600 whitespace-nowrap">
-                  {locationLabels[location as keyof typeof locationLabels]}
-                </span>
-              )}
-            </Select>
+            )}
             {onEdit && (
               <Button
                 variant="ghost"
@@ -179,6 +188,7 @@ export const FeatureCard = ({
               </Button>
             )}
           </div>
+          
           <div className="space-y-2">
             <h3 className="text-lg font-semibold">{title}</h3>
             <p className="text-gray-600 text-sm">{description}</p>
