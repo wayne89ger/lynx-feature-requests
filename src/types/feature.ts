@@ -17,4 +17,6 @@ export interface Feature {
   attachment?: string;
   reporter: string;
   experimentOwner?: string;
+  created_at?: string;
+  updated_at?: string;
 }
