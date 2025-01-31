@@ -15,6 +15,7 @@ export const BugList = ({ bugs, onEdit }: BugListProps) => {
           <Bug className="absolute left-4 top-4 text-destructive/70 w-5 h-5" />
           <FeatureCard
             {...bug}
+            product="bug"
             onEdit={() => onEdit(bug)}
           />
         </div>
