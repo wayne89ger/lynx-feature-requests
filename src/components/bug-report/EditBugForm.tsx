@@ -5,8 +5,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useToast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 interface EditBugFormProps {
   bug: {
@@ -23,31 +33,97 @@ interface EditBugFormProps {
 }
 
 export const EditBugForm = ({ bug, open, onClose, onSave }: EditBugFormProps) => {
+  const [title, setTitle] = useState(bug.title);
+  const [currentSituation, setCurrentSituation] = useState(bug.current_situation);
+  const [expectedBehavior, setExpectedBehavior] = useState(bug.expected_behavior);
+  const [url, setUrl] = useState(bug.url);
+  const [product, setProduct] = useState(bug.product);
   const { toast } = useToast();
 
-  const handleSubmit = () => {
-    // For now, we'll just close the form without making any changes
-    onClose();
-    toast({
-      title: "Form cleared",
-      description: "The bug edit form will be rebuilt with proper fields soon.",
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title || !currentSituation || !expectedBehavior || !url || !product) {
+      toast({
+        title: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    onSave(bug.id, {
+      title,
+      current_situation: currentSituation,
+      expected_behavior: expectedBehavior,
+      url,
+      product,
     });
   };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Edit bug report</DialogTitle>
         </DialogHeader>
-        <div className="space-y-6 mt-4">
-          <p className="text-muted-foreground">
-            This form is being rebuilt. Please check back later.
-          </p>
-          <Button onClick={handleSubmit} className="w-full">
-            Close
-          </Button>
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-6 mt-4">
+          <div className="space-y-2">
+            <Label htmlFor="product">Product</Label>
+            <Select value={product} onValueChange={setProduct}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a product" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="website-demand-capture">Website / Demand Capture</SelectItem>
+                <SelectItem value="dof-onboarding">DOF / Onboarding</SelectItem>
+                <SelectItem value="lynx-plus">LYNX+ / Client Experience</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="title">Title</Label>
+            <Input
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Short summary of the issue"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="currentSituation">Current Situation</Label>
+            <Textarea
+              id="currentSituation"
+              value={currentSituation}
+              onChange={(e) => setCurrentSituation(e.target.value)}
+              placeholder="Describe what's happening"
+              className="min-h-[100px]"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="expectedBehavior">Expected Behavior</Label>
+            <Textarea
+              id="expectedBehavior"
+              value={expectedBehavior}
+              onChange={(e) => setExpectedBehavior(e.target.value)}
+              placeholder="Describe how it should work"
+              className="min-h-[100px]"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="url">URL</Label>
+            <Input
+              id="url"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              placeholder="Page URL where the issue occurred"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" type="button" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button type="submit">Save changes</Button>
+          </div>
+        </form>
       </DialogContent>
     </Dialog>
   );
