@@ -187,10 +187,10 @@ const Index = () => {
       </div>
 
       <div className="flex flex-row justify-center gap-4 mb-8">
-        <div className="w-1/2 sm:w-auto">
+        <div className="w-1/2 sm:w-[400px]">
           <FeatureForm onSubmit={handleFeatureSubmit} />
         </div>
-        <div className="w-1/2 sm:w-auto">
+        <div className="w-1/2 sm:w-[400px]">
           <BugReportForm onSubmit={handleBugSubmit} />
         </div>
       </div>
