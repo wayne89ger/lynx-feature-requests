@@ -10,13 +10,14 @@ export const BugFormActions = ({ onSubmit }: BugFormActionsProps) => {
   const { toast } = useToast();
 
   return (
-    <div className="flex gap-2">
-      <Button type="submit" className="flex-1" onClick={onSubmit}>
+    <div className="flex items-center gap-3">
+      <Button type="submit" className="bg-primary text-white" onClick={onSubmit}>
         Submit
       </Button>
       <Button 
         type="button" 
         variant="outline"
+        size="icon"
         onClick={() => {
           toast({
             title: "Coming soon",
@@ -24,12 +25,12 @@ export const BugFormActions = ({ onSubmit }: BugFormActionsProps) => {
           });
         }}
       >
-        <Plus className="w-4 h-4 mr-2" />
-        Create story in shortcut
+        <Plus className="w-4 h-4" />
       </Button>
       <Button 
         type="button" 
         variant="outline"
+        size="icon"
         onClick={() => {
           toast({
             title: "Coming soon",
@@ -37,8 +38,7 @@ export const BugFormActions = ({ onSubmit }: BugFormActionsProps) => {
           });
         }}
       >
-        <Ticket className="w-4 h-4 mr-2" />
-        Create itop ticket
+        <Ticket className="w-4 h-4" />
       </Button>
     </div>
   );
