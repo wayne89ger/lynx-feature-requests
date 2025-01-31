@@ -44,7 +44,7 @@ export const Filters = ({
         {/* Product filter - always visible */}
         <div className="w-full sm:w-[200px]">
           <Select value={selectedProduct} onValueChange={setSelectedProduct}>
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full bg-white border-lynx-border shadow-sm hover:border-lynx-primary/50 transition-colors">
               <SelectValue placeholder="Filter by Product" />
             </SelectTrigger>
             <SelectContent>
@@ -62,7 +62,7 @@ export const Filters = ({
             <CollapsibleTrigger asChild>
               <Button 
                 variant="outline" 
-                className="w-full flex items-center justify-between"
+                className="w-full flex items-center justify-between bg-white border-lynx-border shadow-sm hover:border-lynx-primary/50 transition-colors"
               >
                 {isOpen ? "Hide filters" : "Show more filters"}
                 {isOpen ? <ChevronUp className="h-4 w-4 ml-2" /> : <ChevronDown className="h-4 w-4 ml-2" />}
@@ -71,7 +71,7 @@ export const Filters = ({
             <CollapsibleContent className="space-y-4 mt-4">
               <div className="w-full">
                 <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full bg-white border-lynx-border shadow-sm hover:border-lynx-primary/50 transition-colors">
                     <SelectValue placeholder="Filter by Status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -86,7 +86,7 @@ export const Filters = ({
 
               <div className="w-full">
                 <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full bg-white border-lynx-border shadow-sm hover:border-lynx-primary/50 transition-colors">
                     <SelectValue placeholder="Filter by Location" />
                   </SelectTrigger>
                   <SelectContent>
@@ -100,7 +100,7 @@ export const Filters = ({
 
               <div className="w-full">
                 <Select value={selectedRequester} onValueChange={setSelectedRequester}>
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full bg-white border-lynx-border shadow-sm hover:border-lynx-primary/50 transition-colors">
                     <SelectValue placeholder="Filter by Requester" />
                   </SelectTrigger>
                   <SelectContent>
@@ -114,7 +114,7 @@ export const Filters = ({
 
               <div className="w-full">
                 <Select value={selectedExperimentOwner} onValueChange={setSelectedExperimentOwner}>
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full bg-white border-lynx-border shadow-sm hover:border-lynx-primary/50 transition-colors">
                     <SelectValue placeholder="Filter by Experiment Owner" />
                   </SelectTrigger>
                   <SelectContent>
@@ -133,7 +133,7 @@ export const Filters = ({
         <div className="hidden sm:flex sm:space-x-4">
           <div className="w-[200px]">
             <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full bg-white border-lynx-border shadow-sm hover:border-lynx-primary/50 transition-colors">
                 <SelectValue placeholder="Filter by Status" />
               </SelectTrigger>
               <SelectContent>
@@ -148,7 +148,7 @@ export const Filters = ({
 
           <div className="w-[200px]">
             <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full bg-white border-lynx-border shadow-sm hover:border-lynx-primary/50 transition-colors">
                 <SelectValue placeholder="Filter by Location" />
               </SelectTrigger>
               <SelectContent>
@@ -162,7 +162,7 @@ export const Filters = ({
 
           <div className="w-[200px]">
             <Select value={selectedRequester} onValueChange={setSelectedRequester}>
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full bg-white border-lynx-border shadow-sm hover:border-lynx-primary/50 transition-colors">
                 <SelectValue placeholder="Filter by Requester" />
               </SelectTrigger>
               <SelectContent>
@@ -176,7 +176,7 @@ export const Filters = ({
 
           <div className="w-[200px]">
             <Select value={selectedExperimentOwner} onValueChange={setSelectedExperimentOwner}>
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full bg-white border-lynx-border shadow-sm hover:border-lynx-primary/50 transition-colors">
                 <SelectValue placeholder="Filter by Experiment Owner" />
               </SelectTrigger>
               <SelectContent>
