@@ -34,6 +34,24 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
   const [url, setUrl] = useState(feature.url || "");
   const [product, setProduct] = useState(feature.product);
   const [location, setLocation] = useState(feature.location || "");
+  const [hasShortcutStory, setHasShortcutStory] = useState(false);
+  const [hasConfluenceDoc, setHasConfluenceDoc] = useState(false);
+  
+  // Feature-specific states
+  const [hypothesis, setHypothesis] = useState("");
+  const [expectedOutcome, setExpectedOutcome] = useState("");
+  const [type, setType] = useState<"ab-test" | "seo-experiment">("ab-test");
+  const [selectedMetrics, setSelectedMetrics] = useState<string[]>([]);
+  const [metrics, setMetrics] = useState<string[]>([]);
+  const [newMetric, setNewMetric] = useState("");
+  const [userResearch, setUserResearch] = useState("");
+  const [mvpStates, setMvpStates] = useState("");
+  const [reach, setReach] = useState<number>(1);
+  const [impact, setImpact] = useState<number>(1);
+  const [confidence, setConfidence] = useState<number>(1);
+  const [effort, setEffort] = useState<number>(1);
+  const [experimentOwner, setExperimentOwner] = useState<string>("");
+  
   const { toast } = useToast();
 
   const isBug = product === "bug";
