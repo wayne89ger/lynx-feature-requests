@@ -69,8 +69,8 @@ export const DataManager = () => {
             bug={{
               id: selectedFeature.id,
               title: selectedFeature.title,
-              current_situation: selectedFeature.description,
-              expected_behavior: selectedFeature.description,
+              current_situation: selectedFeature.description || "",
+              expected_behavior: selectedFeature.description || "",
               url: selectedFeature.location || "",
               product: selectedFeature.product
             }}

@@ -265,7 +265,9 @@ export const FeatureCard = ({
             })}
           >
             <Edit className="w-4 h-4" />
-            <span className="hidden sm:inline">Edit</span>
+            <span className="hidden sm:inline">
+              {product === "bug" ? "Edit Bug" : "Edit Feature"}
+            </span>
           </Button>
         )}
       </div>
