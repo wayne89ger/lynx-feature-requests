@@ -36,7 +36,18 @@ const Index = () => {
       product: "website-demand-capture",
       location: "knowledge-portal",
       votes: 5,
-      comments: [],
+      comments: [
+        {
+          id: 1,
+          text: "This would be great for reducing eye strain during night shifts!",
+          timestamp: "2024-03-15 14:30"
+        },
+        {
+          id: 2,
+          text: "Could we also add a system preference detection?",
+          timestamp: "2024-03-15 15:45"
+        }
+      ],
       reporter: "LYNX - Wanja Aram"
     },
     {
@@ -47,7 +58,18 @@ const Index = () => {
       product: "website-demand-capture",
       location: "service-portal",
       votes: 8,
-      comments: [],
+      comments: [
+        {
+          id: 3,
+          text: "The tables are currently overflowing on mobile devices",
+          timestamp: "2024-03-14 09:15"
+        },
+        {
+          id: 4,
+          text: "We should prioritize this for our field teams",
+          timestamp: "2024-03-14 10:30"
+        }
+      ],
       reporter: "LYNX - Wanja Aram"
     },
     {
@@ -57,8 +79,15 @@ const Index = () => {
       status: "review",
       product: "dof-onboarding",
       votes: 3,
-      comments: [],
-      reporter: "LYNX - Wanja Aram"
+      comments: [
+        {
+          id: 5,
+          text: "This would help with offline documentation needs",
+          timestamp: "2024-03-13 16:20"
+        }
+      ],
+      reporter: "LYNX - Wanja Aram",
+      experimentOwner: "John Smith"
     }
   ]);
   const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
