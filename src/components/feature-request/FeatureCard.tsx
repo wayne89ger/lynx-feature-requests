@@ -28,22 +28,60 @@ interface FeatureCardProps extends Feature {
 }
 
 const statusConfig = {
-  new: { label: "New", bg: "bg-status-new", text: "text-status-new-text" },
-  review: { label: "Under Review", bg: "bg-status-review", text: "text-status-review-text" },
-  progress: { label: "In Progress", bg: "bg-status-progress", text: "text-status-progress-text" },
-  completed: { label: "Completed", bg: "bg-status-completed", text: "text-status-completed-text" },
+  new: { 
+    label: "New", 
+    mobileLabel: "New",
+    bg: "bg-status-new", 
+    text: "text-status-new-text" 
+  },
+  review: { 
+    label: "Under Review", 
+    mobileLabel: "Review",
+    bg: "bg-status-review", 
+    text: "text-status-review-text" 
+  },
+  progress: { 
+    label: "In Progress", 
+    mobileLabel: "Progress",
+    bg: "bg-status-progress", 
+    text: "text-status-progress-text" 
+  },
+  completed: { 
+    label: "Completed", 
+    mobileLabel: "Done",
+    bg: "bg-status-completed", 
+    text: "text-status-completed-text" 
+  },
 };
 
 const productLabels = {
-  "website-demand-capture": "Website / Demand Capture",
-  "dof-onboarding": "DOF / Onboarding",
-  "lynx-plus": "LYNX+ / Client Experience"
+  "website-demand-capture": {
+    full: "Website / Demand Capture",
+    mobile: "Website"
+  },
+  "dof-onboarding": {
+    full: "DOF / Onboarding",
+    mobile: "DOF"
+  },
+  "lynx-plus": {
+    full: "LYNX+ / Client Experience",
+    mobile: "LYNX+"
+  }
 };
 
 const locationLabels = {
-  "knowledge-portal": "Knowledge Portal",
-  "marketing-section": "Marketing Section",
-  "service-portal": "Service Portal"
+  "knowledge-portal": {
+    full: "Knowledge Portal",
+    mobile: "Knowledge"
+  },
+  "marketing-section": {
+    full: "Marketing Section",
+    mobile: "Marketing"
+  },
+  "service-portal": {
+    full: "Service Portal",
+    mobile: "Service"
+  }
 };
 
 export const FeatureCard = ({
@@ -119,7 +157,10 @@ export const FeatureCard = ({
               statusConfig[status].bg,
               statusConfig[status].text
             )}>
-              <SelectValue placeholder={statusConfig[status].label} />
+              <SelectValue>
+                <span className="hidden sm:inline">{statusConfig[status].label}</span>
+                <span className="sm:hidden">{statusConfig[status].mobileLabel}</span>
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {Object.entries(statusConfig).map(([key, config]) => (
@@ -129,12 +170,24 @@ export const FeatureCard = ({
               ))}
             </SelectContent>
           </Select>
-          <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600">
-            {productLabels[product as keyof typeof productLabels]}
-          </span>
+          {product && (
+            <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600">
+              <span className="hidden sm:inline">
+                {productLabels[product as keyof typeof productLabels]?.full}
+              </span>
+              <span className="sm:hidden">
+                {productLabels[product as keyof typeof productLabels]?.mobile}
+              </span>
+            </span>
+          )}
           {location && (
             <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600">
-              {locationLabels[location as keyof typeof locationLabels]}
+              <span className="hidden sm:inline">
+                {locationLabels[location as keyof typeof locationLabels]?.full}
+              </span>
+              <span className="sm:hidden">
+                {locationLabels[location as keyof typeof locationLabels]?.mobile}
+              </span>
             </span>
           )}
         </div>
@@ -158,7 +211,7 @@ export const FeatureCard = ({
             })}
           >
             <Edit className="w-4 h-4" />
-            Edit
+            <span className="hidden sm:inline">Edit</span>
           </Button>
         )}
       </div>
