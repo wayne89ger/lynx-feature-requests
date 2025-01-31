@@ -109,7 +109,7 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
 
     onClose();
     toast({
-      title: "Feature updated",
+      title: product === "bug" ? "Bug updated" : "Feature updated",
       description: "Your changes have been saved successfully.",
     });
   };
@@ -134,7 +134,9 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Edit feature request</DialogTitle>
+          <DialogTitle>
+            {product === "bug" ? "Edit bug report" : "Edit feature request"}
+          </DialogTitle>
         </DialogHeader>
         <div className="space-y-6 mt-4 max-h-[70vh] overflow-y-auto">
           {/* Basic Information */}
