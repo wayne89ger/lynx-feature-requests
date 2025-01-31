@@ -1,40 +1,36 @@
 import { useState } from "react";
-import { FeatureForm } from "@/components/feature-request/FeatureForm";
-import { BugReportForm } from "@/components/bug-report/BugReportForm";
 import { EditFeatureForm } from "@/components/feature-request/EditFeatureForm";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Feature } from "@/types/feature";
-import { Filters } from "@/components/feature-request/Filters";
-import { FeatureList } from "@/components/feature-request/FeatureList";
-import { BugList } from "@/components/bug-report/BugList";
 import { EXPERIMENT_OWNERS } from "@/constants/experimentOwners";
+import { PageHeader } from "@/components/feature-request/PageHeader";
+import { FormActions } from "@/components/feature-request/FormActions";
+import { TabsSection } from "@/components/feature-request/TabsSection";
 
-const Index = () => {
-  const [features, setFeatures] = useState<Feature[]>([
-    {
-      id: 1,
-      title: "Add dark mode support",
-      description: "Implement a dark mode theme for better visibility in low-light conditions",
-      status: "new",
-      product: "website-demand-capture",
-      location: "knowledge-portal",
-      votes: 5,
-      comments: [
-        {
-          id: 1,
-          text: "This would be great for reducing eye strain during night shifts!",
-          timestamp: "2024-03-15 14:30",
-          reporter: "LYNX - Wanja Aram"
-        },
-        {
-          id: 2,
-          text: "Could we also add a system preference detection?",
-          timestamp: "2024-03-15 15:45",
-          reporter: "LYNX - Raquell Serrano"
-        }
-      ],
-      reporter: EXPERIMENT_OWNERS[0]
-    },
+const initialFeatures: Feature[] = [
+  {
+    id: 1,
+    title: "Add dark mode support",
+    description: "Implement a dark mode theme for better visibility in low-light conditions",
+    status: "new",
+    product: "website-demand-capture",
+    location: "knowledge-portal",
+    votes: 5,
+    comments: [
+      {
+        id: 1,
+        text: "This would be great for reducing eye strain during night shifts!",
+        timestamp: "2024-03-15 14:30",
+        reporter: "LYNX - Wanja Aram"
+      },
+      {
+        id: 2,
+        text: "Could we also add a system preference detection?",
+        timestamp: "2024-03-15 15:45",
+        reporter: "LYNX - Raquell Serrano"
+      }
+    ],
+    reporter: EXPERIMENT_OWNERS[0]
+  },
     {
       id: 2,
       title: "Improve mobile responsiveness",
@@ -64,26 +60,26 @@ const Index = () => {
       reporter: EXPERIMENT_OWNERS[0],
       experimentOwner: EXPERIMENT_OWNERS[0]
     }
-  ]);
+];
 
-  const [bugs, setBugs] = useState<Feature[]>([
-    {
-      id: 4,
-      title: "Login button unresponsive on Safari",
-      description: "Users report that the login button doesn't work on Safari mobile browsers",
-      status: "new",
-      product: "website-demand-capture",
-      votes: 12,
-      comments: [
-        {
-          id: 6,
-          text: "Confirmed on iPhone 13 with iOS 16",
-          timestamp: "2024-03-16 10:00",
-          reporter: "LYNX - Wanja Aram"
-        }
-      ],
-      reporter: EXPERIMENT_OWNERS[0]
-    },
+const initialBugs: Feature[] = [
+  {
+    id: 4,
+    title: "Login button unresponsive on Safari",
+    description: "Users report that the login button doesn't work on Safari mobile browsers",
+    status: "new",
+    product: "website-demand-capture",
+    votes: 12,
+    comments: [
+      {
+        id: 6,
+        text: "Confirmed on iPhone 13 with iOS 16",
+        timestamp: "2024-03-16 10:00",
+        reporter: "LYNX - Wanja Aram"
+      }
+    ],
+    reporter: EXPERIMENT_OWNERS[0]
+  },
     {
       id: 5,
       title: "Data not saving in forms",
@@ -101,8 +97,11 @@ const Index = () => {
       ],
       reporter: EXPERIMENT_OWNERS[1]
     }
-  ]);
+];
 
+const Index = () => {
+  const [features, setFeatures] = useState<Feature[]>(initialFeatures);
+  const [bugs, setBugs] = useState<Feature[]>(initialBugs);
   const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
   const [showEditForm, setShowEditForm] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<string>("all");
@@ -111,7 +110,7 @@ const Index = () => {
   const [selectedRequester, setSelectedRequester] = useState<string>("all");
   const [selectedExperimentOwner, setSelectedExperimentOwner] = useState<string>("all");
 
-  const handleFeatureSubmit = (formData: { 
+  const handleFeatureSubmit = (formData: {
     title: string;
     description: string;
     product: string;
@@ -174,22 +173,16 @@ const Index = () => {
     )
     .sort((a, b) => b.votes - a.votes);
 
-  const filteredAndSortedBugs = [...bugs]
-    .sort((a, b) => b.votes - a.votes);
+  const filteredAndSortedBugs = [...bugs].sort((a, b) => b.votes - a.votes);
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 max-w-5xl">
-      <div className="text-center mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-lynx-text mb-2">Help Shape Our Product</h1>
-        <p className="text-lynx-text-secondary text-sm sm:text-base">
-          Your feedback is valuable! Submit feature requests or report bugs to help us improve.
-        </p>
-      </div>
+      <PageHeader />
 
-      <div className="flex flex-row justify-center items-center gap-4 mb-8">
-        <FeatureForm onSubmit={handleFeatureSubmit} />
-        <BugReportForm onSubmit={handleBugSubmit} />
-      </div>
+      <FormActions 
+        onFeatureSubmit={handleFeatureSubmit}
+        onBugSubmit={handleBugSubmit}
+      />
 
       {showEditForm && selectedFeature && (
         <EditFeatureForm
@@ -203,57 +196,24 @@ const Index = () => {
         />
       )}
 
-      <Tabs defaultValue="features" className="w-full">
-        <div className="flex justify-center mb-8">
-          <TabsList className="grid w-full max-w-[400px] grid-cols-2 bg-secondary/20 p-1 rounded-lg">
-            <TabsTrigger 
-              value="features" 
-              className="rounded-md data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm"
-            >
-              Feature Requests ({filteredAndSortedFeatures.length})
-            </TabsTrigger>
-            <TabsTrigger 
-              value="bugs" 
-              className="rounded-md data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm"
-            >
-              Bug Reports ({filteredAndSortedBugs.length})
-            </TabsTrigger>
-          </TabsList>
-        </div>
-
-        <Filters
-          selectedProduct={selectedProduct}
-          setSelectedProduct={setSelectedProduct}
-          selectedStatus={selectedStatus}
-          setSelectedStatus={setSelectedStatus}
-          selectedLocation={selectedLocation}
-          setSelectedLocation={setSelectedLocation}
-          selectedRequester={selectedRequester}
-          setSelectedRequester={setSelectedRequester}
-          selectedExperimentOwner={selectedExperimentOwner}
-          setSelectedExperimentOwner={setSelectedExperimentOwner}
-        />
-
-        <TabsContent value="features">
-          <FeatureList 
-            features={filteredAndSortedFeatures} 
-            onEdit={(feature) => {
-              setSelectedFeature(feature);
-              setShowEditForm(true);
-            }}
-          />
-        </TabsContent>
-
-        <TabsContent value="bugs">
-          <BugList 
-            bugs={filteredAndSortedBugs}
-            onEdit={(bug) => {
-              setSelectedFeature(bug);
-              setShowEditForm(true);
-            }}
-          />
-        </TabsContent>
-      </Tabs>
+      <TabsSection
+        filteredFeatures={filteredAndSortedFeatures}
+        filteredBugs={filteredAndSortedBugs}
+        onEdit={(feature) => {
+          setSelectedFeature(feature);
+          setShowEditForm(true);
+        }}
+        selectedProduct={selectedProduct}
+        setSelectedProduct={setSelectedProduct}
+        selectedStatus={selectedStatus}
+        setSelectedStatus={setSelectedStatus}
+        selectedLocation={selectedLocation}
+        setSelectedLocation={setSelectedLocation}
+        selectedRequester={selectedRequester}
+        setSelectedRequester={setSelectedRequester}
+        selectedExperimentOwner={selectedExperimentOwner}
+        setSelectedExperimentOwner={setSelectedExperimentOwner}
+      />
     </div>
   );
 };
