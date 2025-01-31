@@ -11,7 +11,8 @@ export const useBugs = () => {
     try {
       const { data, error } = await supabase
         .from('bugs')
-        .select('*');
+        .select('*')
+        .order('votes', { ascending: false });
       
       if (error) throw error;
 
@@ -19,7 +20,7 @@ export const useBugs = () => {
         id: bug.id,
         title: bug.title,
         description: bug.current_situation,
-        status: bug.status,
+        status: bug.status || 'new',
         product: bug.product,
         votes: bug.votes || 0,
         reporter: bug.reporter,
@@ -28,6 +29,7 @@ export const useBugs = () => {
         updated_at: bug.updated_at
       })) as Feature[];
 
+      console.log('Fetched bugs:', bugsAsFeatures);
       setBugs(bugsAsFeatures);
     } catch (error) {
       console.error('Error fetching bugs:', error);

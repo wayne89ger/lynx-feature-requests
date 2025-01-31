@@ -9,18 +9,22 @@ export const useFeatures = () => {
 
   const fetchFeatures = async () => {
     try {
+      // First fetch features
       const { data: featuresData, error: featuresError } = await supabase
         .from('features')
-        .select('*');
+        .select('*')
+        .order('votes', { ascending: false });
       
       if (featuresError) throw featuresError;
 
+      // Then fetch all comments
       const { data: commentsData, error: commentsError } = await supabase
         .from('comments')
         .select('*');
 
       if (commentsError) throw commentsError;
 
+      // Map comments to features
       const featuresWithComments = featuresData?.map(feature => ({
         ...feature,
         comments: commentsData
@@ -33,6 +37,7 @@ export const useFeatures = () => {
           })) || []
       })) as Feature[];
 
+      console.log('Fetched features:', featuresWithComments);
       setFeatures(featuresWithComments || []);
     } catch (error) {
       console.error('Error fetching features:', error);
