@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { EditFeatureForm } from "@/components/feature-request/EditFeatureForm";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { EXPERIMENT_OWNERS } from "@/constants/experimentOwners";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Comment {
   id: number;
@@ -176,9 +177,9 @@ const Index = () => {
     setShowEditForm(true);
   };
 
-  // Filter and sort features
+  // Filter features and bugs separately
   const filteredAndSortedFeatures = [...features]
-    .filter(feature => 
+    .filter(feature => feature.product !== "bug" &&
       (selectedProduct === "all" || feature.product === selectedProduct) &&
       (selectedStatus === "all" || feature.status === selectedStatus) &&
       (selectedLocation === "all" || feature.location === selectedLocation) &&
@@ -187,9 +188,9 @@ const Index = () => {
     )
     .sort((a, b) => b.votes - a.votes);
 
-  // Get unique requesters and experiment owners for filters
-  const uniqueRequesters = Array.from(new Set(features.map(f => f.reporter))).filter(Boolean);
-  const uniqueExperimentOwners = Array.from(new Set([...EXPERIMENT_OWNERS])).filter(Boolean);
+  const filteredAndSortedBugs = [...features]
+    .filter(feature => feature.product === "bug")
+    .sort((a, b) => b.votes - a.votes);
 
   return (
     <div className="container mx-auto p-4">
@@ -217,80 +218,102 @@ const Index = () => {
         />
       )}
 
-      <div className="flex flex-wrap gap-4 mb-6 justify-center">
-        <Select value={selectedProduct} onValueChange={setSelectedProduct}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter by Product" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Products</SelectItem>
-            {Object.entries(productLabels).map(([value, label]) => (
-              <SelectItem key={value} value={value}>{label}</SelectItem>
+      <Tabs defaultValue="features" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 max-w-[400px] mx-auto mb-8">
+          <TabsTrigger value="features">Feature Requests ({filteredAndSortedFeatures.length})</TabsTrigger>
+          <TabsTrigger value="bugs">Bug Reports ({filteredAndSortedBugs.length})</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="features">
+          <div className="flex flex-wrap gap-4 mb-6 justify-center">
+            <Select value={selectedProduct} onValueChange={setSelectedProduct}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Filter by Product" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Products</SelectItem>
+                {Object.entries(productLabels).map(([value, label]) => (
+                  <SelectItem key={value} value={value}>{label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Filter by Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value="new">New</SelectItem>
+                <SelectItem value="review">Under Review</SelectItem>
+                <SelectItem value="progress">In Progress</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Filter by Location" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Locations</SelectItem>
+                <SelectItem value="knowledge-portal">Knowledge Portal</SelectItem>
+                <SelectItem value="marketing-section">Marketing Section</SelectItem>
+                <SelectItem value="service-portal">Service Portal</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={selectedRequester} onValueChange={setSelectedRequester}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Filter by Requester" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Requesters</SelectItem>
+                {Array.from(new Set(features.map(f => f.reporter))).filter(Boolean).map((requester) => (
+                  <SelectItem key={requester} value={requester}>{requester}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={selectedExperimentOwner} onValueChange={setSelectedExperimentOwner}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Filter by Experiment Owner" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Experiment Owners</SelectItem>
+                {Array.from(new Set([...EXPERIMENT_OWNERS])).filter(Boolean).map((owner) => (
+                  <SelectItem key={owner} value={owner}>{owner}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4">
+            {filteredAndSortedFeatures.map((feature) => (
+              <FeatureCard
+                key={feature.id}
+                {...feature}
+                onEdit={() => handleEdit(feature)}
+              />
             ))}
-          </SelectContent>
-        </Select>
+          </div>
+        </TabsContent>
 
-        <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter by Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Statuses</SelectItem>
-            <SelectItem value="new">New</SelectItem>
-            <SelectItem value="review">Under Review</SelectItem>
-            <SelectItem value="progress">In Progress</SelectItem>
-            <SelectItem value="completed">Completed</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter by Location" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Locations</SelectItem>
-            <SelectItem value="knowledge-portal">Knowledge Portal</SelectItem>
-            <SelectItem value="marketing-section">Marketing Section</SelectItem>
-            <SelectItem value="service-portal">Service Portal</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select value={selectedRequester} onValueChange={setSelectedRequester}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter by Requester" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Requesters</SelectItem>
-            {uniqueRequesters.map((requester) => (
-              <SelectItem key={requester} value={requester}>{requester}</SelectItem>
+        <TabsContent value="bugs">
+          <div className="grid grid-cols-1 gap-4">
+            {filteredAndSortedBugs.map((bug) => (
+              <FeatureCard
+                key={bug.id}
+                {...bug}
+                onEdit={() => handleEdit(bug)}
+              />
             ))}
-          </SelectContent>
-        </Select>
-
-        <Select value={selectedExperimentOwner} onValueChange={setSelectedExperimentOwner}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter by Experiment Owner" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Experiment Owners</SelectItem>
-            {uniqueExperimentOwners.map((owner) => (
-              <SelectItem key={owner} value={owner}>{owner}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 mt-8">
-        {filteredAndSortedFeatures.map((feature) => (
-          <FeatureCard
-            key={feature.id}
-            {...feature}
-            onEdit={() => handleEdit(feature)}
-          />
-        ))}
-      </div>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
 
 export default Index;
+
