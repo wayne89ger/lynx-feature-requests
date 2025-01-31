@@ -1,26 +1,14 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { MetricsSection } from "./form-sections/MetricsSection";
-import { RiceScoreSection } from "./form-sections/RiceScoreSection";
 import { ActionButtons } from "./form-sections/ActionButtons";
-import { EXPERIMENT_OWNERS } from "@/constants/experimentOwners";
+import { BasicInformation } from "./form-sections/BasicInformation";
+import { FeatureSpecificFields } from "./form-sections/FeatureSpecificFields";
 
 const defaultMetrics = [
   "Avg. Organic Position",
@@ -63,7 +51,7 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
   const [effort, setEffort] = useState<number>(1);
   const [metrics, setMetrics] = useState<string[]>(defaultMetrics);
   const [newMetric, setNewMetric] = useState("");
-  const [experimentOwner, setExperimentOwner] = useState<string>(EXPERIMENT_OWNERS[0]);
+  const [experimentOwner, setExperimentOwner] = useState<string>("");
   const [hasShortcutStory, setHasShortcutStory] = useState(false);
   const [hasConfluenceDoc, setHasConfluenceDoc] = useState(false);
   const { toast } = useToast();
@@ -122,84 +110,49 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-6 mt-4 max-h-[70vh] overflow-y-auto">
-          {/* Basic Information */}
-          <div className="space-y-2">
-            <Label htmlFor="title">Title</Label>
-            <Input
-              id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="description">
-              {isBug ? "Current Situation" : "Description"}
-            </Label>
-            <Textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="min-h-[100px]"
-            />
-          </div>
+          <BasicInformation
+            title={title}
+            description={description}
+            product={product}
+            location={location}
+            isBug={isBug}
+            setTitle={setTitle}
+            setDescription={setDescription}
+            setProduct={setProduct}
+            setLocation={setLocation}
+          />
 
-          {/* Product Selection */}
-          <div className="space-y-2">
-            <Label htmlFor="product">Product</Label>
-            <Select value={product} onValueChange={setProduct}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a product" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="website-demand-capture">Website / Demand Capture</SelectItem>
-                <SelectItem value="dof-onboarding">DOF / Onboarding</SelectItem>
-                <SelectItem value="bug">Bug</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Feature-specific fields - Only show if NOT a bug */}
           {!isBug && (
-            <>
-              {product === "website-demand-capture" && (
-                <div className="space-y-2">
-                  <Label htmlFor="location">Location</Label>
-                  <Select value={location} onValueChange={setLocation}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a location" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="knowledge-portal">Knowledge Portal</SelectItem>
-                      <SelectItem value="marketing-section">Marketing Section</SelectItem>
-                      <SelectItem value="service-portal">Service Portal</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-
-              <MetricsSection
-                metrics={metrics}
-                selectedMetrics={selectedMetrics}
-                newMetric={newMetric}
-                setNewMetric={setNewMetric}
-                setMetrics={setMetrics}
-                setSelectedMetrics={setSelectedMetrics}
-              />
-
-              <RiceScoreSection
-                reach={reach}
-                impact={impact}
-                confidence={confidence}
-                effort={effort}
-                setReach={setReach}
-                setImpact={setImpact}
-                setConfidence={setConfidence}
-                setEffort={setEffort}
-              />
-            </>
+            <FeatureSpecificFields
+              hypothesis={hypothesis}
+              setHypothesis={setHypothesis}
+              expectedOutcome={expectedOutcome}
+              setExpectedOutcome={setExpectedOutcome}
+              type={type}
+              setType={setType}
+              selectedMetrics={selectedMetrics}
+              setSelectedMetrics={setSelectedMetrics}
+              userResearch={userResearch}
+              setUserResearch={setUserResearch}
+              mvpStates={mvpStates}
+              setMvpStates={setMvpStates}
+              experimentOwner={experimentOwner}
+              setExperimentOwner={setExperimentOwner}
+              metrics={metrics}
+              setMetrics={setMetrics}
+              newMetric={newMetric}
+              setNewMetric={setNewMetric}
+              reach={reach}
+              impact={impact}
+              confidence={confidence}
+              effort={effort}
+              setReach={setReach}
+              setImpact={setImpact}
+              setConfidence={setConfidence}
+              setEffort={setEffort}
+            />
           )}
 
-          {/* Action Buttons */}
           <ActionButtons
             onSubmit={handleSubmit}
             onShortcutAction={() => {
