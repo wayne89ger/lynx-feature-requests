@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FeatureCard } from "@/components/feature-request/FeatureCard";
 import { FeatureForm } from "@/components/feature-request/FeatureForm";
+import { BugReportForm } from "@/components/bug-report/BugReportForm";
 import {
   Select,
   SelectContent,
@@ -83,8 +84,6 @@ const Index = () => {
     let attachmentUrl: string | undefined;
     
     if (newFeature.attachment) {
-      // In a real application, you would upload the file to a server here
-      // For now, we'll create a temporary URL
       attachmentUrl = URL.createObjectURL(newFeature.attachment);
     }
 
@@ -131,6 +130,17 @@ const Index = () => {
     );
   };
 
+  const handleBugReport = (bugReport: {
+    title: string;
+    currentSituation: string;
+    expectedBehavior: string;
+    url: string;
+    screenshot?: File;
+  }) => {
+    console.log("Bug report submitted:", bugReport);
+    // This will be implemented later with the shortcut integration
+  };
+
   const filteredFeatures = features.filter((feature) => {
     const matchesProduct = productFilter === "all" || feature.product === productFilter;
     const matchesStatus = statusFilter === "all" || feature.status === statusFilter;
@@ -142,9 +152,12 @@ const Index = () => {
     <div className="min-h-screen bg-gray-50 animate-fade-in">
       <div className="max-w-4xl mx-auto px-4 py-12">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">Feature Requests</h1>
-          <p className="text-gray-600 mb-8">Help shape the future by submitting and voting on features.</p>
-          <FeatureForm onSubmit={handleSubmit} />
+          <h1 className="text-4xl font-bold mb-4">Feature Requests & Bug Reports</h1>
+          <p className="text-gray-600 mb-8">Help shape the future by submitting and voting on features or reporting bugs.</p>
+          <div className="flex justify-center gap-4">
+            <FeatureForm onSubmit={handleSubmit} />
+            <BugReportForm onSubmit={handleBugReport} />
+          </div>
         </div>
 
         <div className="bg-white rounded-lg p-6 mb-8 shadow-sm">
