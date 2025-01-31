@@ -157,7 +157,7 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
             </Select>
           </div>
 
-          {/* Feature-specific fields */}
+          {/* Feature-specific fields - Only show if NOT a bug */}
           {!isBug && (
             <>
               {product === "website-demand-capture" && (
