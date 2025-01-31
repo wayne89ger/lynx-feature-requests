@@ -136,7 +136,14 @@ const Index = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="flex gap-4 mb-8">
+      <div className="text-center mb-8">
+        <h1 className="text-2xl font-bold text-lynx-text mb-2">Help Shape Our Product</h1>
+        <p className="text-lynx-text-secondary">
+          Your feedback is valuable! Submit feature requests or report bugs to help us improve.
+        </p>
+      </div>
+
+      <div className="flex flex-col sm:flex-row justify-center gap-4 mb-8">
         <FeatureForm onSubmit={handleFeatureSubmit} />
         <BugReportForm onSubmit={handleBugSubmit} />
       </div>
