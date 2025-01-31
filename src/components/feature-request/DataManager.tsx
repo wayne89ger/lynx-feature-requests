@@ -66,7 +66,14 @@ export const DataManager = () => {
       {showEditForm && selectedFeature && (
         selectedFeature.product === "bug" ? (
           <EditBugForm
-            feature={selectedFeature}
+            bug={{
+              id: selectedFeature.id,
+              title: selectedFeature.title,
+              current_situation: selectedFeature.description,
+              expected_behavior: selectedFeature.description,
+              url: selectedFeature.location || "",
+              product: selectedFeature.product
+            }}
             open={showEditForm}
             onSave={handleSave}
             onClose={handleCloseEdit}
