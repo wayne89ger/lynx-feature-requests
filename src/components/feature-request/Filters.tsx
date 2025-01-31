@@ -32,9 +32,9 @@ export const Filters = ({
   setSelectedExperimentOwner
 }: FiltersProps) => {
   return (
-    <div className="space-y-4 mb-6">
-      <div className="flex flex-col gap-4">
-        <div className="w-full">
+    <div className="space-y-4 sm:space-y-0 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 gap-4 sm:gap-0">
+        <div className="w-full sm:w-[200px]">
           <Select value={selectedProduct} onValueChange={setSelectedProduct}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Filter by Product" />
@@ -48,7 +48,7 @@ export const Filters = ({
           </Select>
         </div>
 
-        <div className="w-full">
+        <div className="w-full sm:w-[200px]">
           <Select value={selectedStatus} onValueChange={setSelectedStatus}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Filter by Status" />
@@ -63,7 +63,7 @@ export const Filters = ({
           </Select>
         </div>
 
-        <div className="w-full">
+        <div className="w-full sm:w-[200px]">
           <Select value={selectedLocation} onValueChange={setSelectedLocation}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Filter by Location" />
