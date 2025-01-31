@@ -44,6 +44,11 @@ const defaultMetrics = [
   "Engagement Rate",
 ];
 
+const experimentOwners = [
+  "LYNX - Wanja Aram",
+  "LYNX - Raquell Serrano"
+];
+
 export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureFormProps) => {
   const [title, setTitle] = useState(feature.title);
   const [description, setDescription] = useState(feature.description);
@@ -190,12 +195,7 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
           </div>
           <div className="space-y-2">
             <Label htmlFor="product">Product</Label>
-            <Select value={product} onValueChange={(value) => {
-              setProduct(value);
-              if (value !== "website-demand-capture") {
-                setLocation("");
-              }
-            }}>
+            <Select value={product} onValueChange={setProduct}>
               <SelectTrigger>
                 <SelectValue placeholder="Select a product" />
               </SelectTrigger>
@@ -361,8 +361,9 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="LYNX - Wanja Aram">LYNX - Wanja Aram</SelectItem>
-                <SelectItem value="LYNX - Raquell Serrano">LYNX - Raquell Serrano</SelectItem>
+                {experimentOwners.map((owner) => (
+                  <SelectItem key={owner} value={owner}>{owner}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

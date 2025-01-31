@@ -10,6 +10,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Bug, Plus, Upload } from "lucide-react";
 
@@ -20,6 +27,7 @@ interface BugReportFormProps {
     expectedBehavior: string;
     url: string;
     screenshot?: File;
+    product: string;
   }) => void;
 }
 
@@ -30,11 +38,12 @@ export const BugReportForm = ({ onSubmit }: BugReportFormProps) => {
   const [expectedBehavior, setExpectedBehavior] = useState("");
   const [url, setUrl] = useState(window.location.href);
   const [screenshot, setScreenshot] = useState<File | null>(null);
+  const [product, setProduct] = useState("website-demand-capture");
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !currentSituation || !expectedBehavior || !url) {
+    if (!title || !currentSituation || !expectedBehavior || !url || !product) {
       toast({
         title: "Please fill in all required fields",
         variant: "destructive",
@@ -48,6 +57,7 @@ export const BugReportForm = ({ onSubmit }: BugReportFormProps) => {
       expectedBehavior,
       url,
       screenshot: screenshot || undefined,
+      product,
     });
 
     setTitle("");
@@ -55,6 +65,7 @@ export const BugReportForm = ({ onSubmit }: BugReportFormProps) => {
     setExpectedBehavior("");
     setUrl(window.location.href);
     setScreenshot(null);
+    setProduct("website-demand-capture");
     setOpen(false);
 
     toast({
@@ -95,6 +106,19 @@ export const BugReportForm = ({ onSubmit }: BugReportFormProps) => {
           <DialogTitle>Report a bug</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6 mt-4">
+          <div className="space-y-2">
+            <Label htmlFor="product">Product</Label>
+            <Select value={product} onValueChange={setProduct}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a product" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="website-demand-capture">Website / Demand Capture</SelectItem>
+                <SelectItem value="dof-onboarding">DOF / Onboarding</SelectItem>
+                <SelectItem value="lynx-plus">LYNX+ / Client Experience</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <div className="space-y-2">
             <Label htmlFor="title">Title</Label>
             <Input
