@@ -7,6 +7,48 @@ export const useBugs = () => {
   const [bugs, setBugs] = useState<Feature[]>([]);
   const { toast } = useToast();
 
+  const createExampleBugs = async () => {
+    const exampleBugs = [
+      {
+        title: "Login button not working on mobile",
+        current_situation: "When clicking the login button on mobile devices, nothing happens",
+        expected_behavior: "The login form should appear when clicking the button",
+        url: "https://example.com/login",
+        product: "website-demand-capture",
+        reporter: "w.aram@lynxbroker.de",
+        votes: 3
+      },
+      {
+        title: "Form validation error message unclear",
+        current_situation: "Error message just says 'Invalid input' without specifying which field",
+        expected_behavior: "Error message should specify which field has the invalid input",
+        url: "https://example.com/signup",
+        product: "dof-onboarding",
+        reporter: "w.aram@lynxbroker.de",
+        votes: 2
+      },
+      {
+        title: "Dashboard loading time too long",
+        current_situation: "Dashboard takes more than 10 seconds to load on slow connections",
+        expected_behavior: "Dashboard should load within 3 seconds with proper loading states",
+        url: "https://example.com/dashboard",
+        product: "lynx-plus",
+        reporter: "w.aram@lynxbroker.de",
+        votes: 5
+      }
+    ];
+
+    for (const bug of exampleBugs) {
+      const { error } = await supabase
+        .from('bugs')
+        .insert([bug]);
+      
+      if (error) {
+        console.error('Error creating example bug:', error);
+      }
+    }
+  };
+
   const fetchBugs = async () => {
     try {
       console.log('Fetching bugs...');
@@ -37,6 +79,14 @@ export const useBugs = () => {
 
       console.log('Bugs as features:', bugsAsFeatures);
       setBugs(bugsAsFeatures);
+
+      // Create example bugs if none exist
+      if (bugsAsFeatures.length === 0) {
+        console.log('No bugs found, creating examples...');
+        await createExampleBugs();
+        // Fetch bugs again after creating examples
+        fetchBugs();
+      }
     } catch (error) {
       console.error('Error in useBugs:', error);
       toast({

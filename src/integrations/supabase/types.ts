@@ -17,7 +17,7 @@ export type Database = {
           id: number
           product: string
           reporter: string
-          status: Database["public"]["Enums"]["feature_status"] | null
+          status: Database["public"]["Enums"]["bug_status"] | null
           title: string
           updated_at: string | null
           url: string
@@ -27,10 +27,10 @@ export type Database = {
           created_at?: string | null
           current_situation: string
           expected_behavior: string
-          id?: never
+          id?: number
           product: string
           reporter: string
-          status?: Database["public"]["Enums"]["feature_status"] | null
+          status?: Database["public"]["Enums"]["bug_status"] | null
           title: string
           updated_at?: string | null
           url: string
@@ -40,10 +40,10 @@ export type Database = {
           created_at?: string | null
           current_situation?: string
           expected_behavior?: string
-          id?: never
+          id?: number
           product?: string
           reporter?: string
-          status?: Database["public"]["Enums"]["feature_status"] | null
+          status?: Database["public"]["Enums"]["bug_status"] | null
           title?: string
           updated_at?: string | null
           url?: string
@@ -53,6 +53,7 @@ export type Database = {
       }
       comments: {
         Row: {
+          bug_id: number | null
           created_at: string | null
           feature_id: number | null
           id: number
@@ -60,6 +61,7 @@ export type Database = {
           text: string
         }
         Insert: {
+          bug_id?: number | null
           created_at?: string | null
           feature_id?: number | null
           id?: never
@@ -67,6 +69,7 @@ export type Database = {
           text: string
         }
         Update: {
+          bug_id?: number | null
           created_at?: string | null
           feature_id?: number | null
           id?: never
@@ -75,10 +78,10 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "comments_feature_id_fkey"
-            columns: ["feature_id"]
+            foreignKeyName: "comments_bug_id_fkey"
+            columns: ["bug_id"]
             isOneToOne: false
-            referencedRelation: "features"
+            referencedRelation: "bugs"
             referencedColumns: ["id"]
           },
         ]
@@ -133,6 +136,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      bug_status: "new" | "review" | "progress" | "completed"
       feature_status: "new" | "review" | "progress" | "completed"
     }
     CompositeTypes: {

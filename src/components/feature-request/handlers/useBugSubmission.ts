@@ -1,4 +1,4 @@
-import { Feature } from "@/types/feature";
+import { Feature, Bug } from "@/types/feature";
 import { supabase } from "@/integrations/supabase/client";
 import { EXPERIMENT_OWNERS } from "@/constants/experimentOwners";
 import { useToast } from "@/hooks/use-toast";
@@ -12,8 +12,10 @@ export const useBugSubmission = (bugs: Feature[], setBugs: (bugs: Feature[]) => 
     expectedBehavior: string;
     url: string;
     screenshot?: File;
+    product: string;
   }) => {
     try {
+      console.log('Submitting bug:', bugData);
       const { data, error } = await supabase
         .from('bugs')
         .insert([{
@@ -21,16 +23,20 @@ export const useBugSubmission = (bugs: Feature[], setBugs: (bugs: Feature[]) => 
           current_situation: bugData.currentSituation,
           expected_behavior: bugData.expectedBehavior,
           url: bugData.url,
-          product: "website-demand-capture",
+          product: bugData.product,
           reporter: EXPERIMENT_OWNERS[0],
           votes: 0
         }])
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error submitting bug:', error);
+        throw error;
+      }
 
-      const newBug: Feature = {
+      console.log('Bug submitted successfully:', data);
+      const newBug = {
         id: data.id,
         title: data.title,
         description: data.current_situation,
@@ -41,7 +47,7 @@ export const useBugSubmission = (bugs: Feature[], setBugs: (bugs: Feature[]) => 
         comments: [],
         created_at: data.created_at,
         updated_at: data.updated_at
-      };
+      } as Feature;
 
       setBugs([...bugs, newBug]);
       toast({

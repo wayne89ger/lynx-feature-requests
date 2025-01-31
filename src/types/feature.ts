@@ -20,3 +20,17 @@ export interface Feature {
   created_at?: string;
   updated_at?: string;
 }
+
+export interface Bug {
+  id: number;
+  title: string;
+  current_situation: string;
+  expected_behavior: string;
+  url: string;
+  status: "new" | "review" | "progress" | "completed";
+  product: string;
+  votes: number;
+  reporter: string;
+  created_at?: string;
+  updated_at?: string;
+}
