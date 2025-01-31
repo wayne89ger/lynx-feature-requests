@@ -34,18 +34,7 @@ interface Feature {
   experimentOwner?: string;
 }
 
-interface FeatureCardProps {
-  id: number;
-  title: string;
-  description: string;
-  status: "new" | "review" | "progress" | "completed";
-  product: string;
-  location?: string;
-  votes: number;
-  comments: Comment[];
-  attachment?: string;
-  reporter?: string;
-  experimentOwner?: string;
+interface FeatureCardProps extends Feature {
   onStatusChange?: (id: number, newStatus: "new" | "review" | "progress" | "completed") => void;
   onAddComment?: (id: number, text: string) => void;
   onEdit?: (feature: Feature) => void;
@@ -94,11 +83,9 @@ export const FeatureCard = ({
 
   const handleVote = (direction: 'up' | 'down') => {
     if (voteStatus === direction) {
-      // Remove vote
       setCurrentVotes(prev => direction === 'up' ? prev - 1 : prev + 1);
       setVoteStatus('none');
     } else {
-      // If changing vote direction, need to account for both changes
       if (voteStatus !== 'none') {
         setCurrentVotes(prev => direction === 'up' ? prev + 2 : prev - 2);
       } else {
@@ -135,10 +122,10 @@ export const FeatureCard = ({
   };
 
   return (
-    <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200 animate-scale-in">
+    <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
       <div className="flex gap-6">
         {/* Voting Section - Left Side */}
-        <div className="flex flex-col items-center gap-1">
+        <div className="flex flex-col items-center gap-1 pt-8">
           <Button
             variant="ghost"
             size="sm"
@@ -196,12 +183,12 @@ export const FeatureCard = ({
 
           {/* Title and Description */}
           <div className="space-y-2">
-            <h3 className="text-lg font-semibold">{title}</h3>
-            <p className="text-gray-600 text-sm">{description}</p>
+            <h3 className="text-lg font-semibold text-left">{title}</h3>
+            <p className="text-gray-600 text-sm text-left">{description}</p>
           </div>
 
           {/* Reporter Info */}
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 text-left">
             Reported by: {reporter}
             {experimentOwner && ` • Experiment Owner: ${experimentOwner}`}
           </p>
@@ -257,7 +244,7 @@ export const FeatureCard = ({
 
           {/* Comments Section */}
           {showComments && (
-            <div className="space-y-4">
+            <div className="space-y-4 border-t pt-4 mt-4">
               <ScrollArea className="h-[200px] w-full rounded-md border p-4">
                 {comments.map((comment) => (
                   <div key={comment.id} className="mb-4 last:mb-0 border-b last:border-0 pb-3">
