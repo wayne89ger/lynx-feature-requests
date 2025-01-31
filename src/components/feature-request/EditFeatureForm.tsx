@@ -151,6 +151,7 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
                 <SelectValue placeholder="Select a product" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="bug">Bug</SelectItem>
                 <SelectItem value="website-demand-capture">Website / Demand Capture</SelectItem>
                 <SelectItem value="dof-onboarding">DOF / Onboarding</SelectItem>
               </SelectContent>
