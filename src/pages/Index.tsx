@@ -40,18 +40,55 @@ const Index = () => {
   const [formType, setFormType] = useState<"feature" | "bug">("feature");
   const { toast } = useToast();
 
-  const handleFeatureSubmit = (feature: Omit<Feature, "id" | "votes" | "comments">) => {
+  const handleFeatureSubmit = (formData: { 
+    title: string;
+    description: string;
+    product: string;
+    location?: string;
+    canContact: boolean;
+    attachment?: File;
+  }) => {
     const newFeature: Feature = {
-      ...feature,
       id: features.length + 1,
+      title: formData.title,
+      description: formData.description,
+      status: "new",
+      product: formData.product,
+      location: formData.location,
       votes: 0,
       comments: [],
-      reporter: "LYNX - Wanja Aram"
+      reporter: "LYNX - Wanja Aram",
+      attachment: formData.attachment ? URL.createObjectURL(formData.attachment) : undefined
     };
     setFeatures([...features, newFeature]);
     toast({
       title: "Success",
       description: "Feature request submitted successfully!"
+    });
+  };
+
+  const handleBugSubmit = (bugData: {
+    title: string;
+    currentSituation: string;
+    expectedBehavior: string;
+    url: string;
+    screenshot?: File;
+  }) => {
+    const newFeature: Feature = {
+      id: features.length + 1,
+      title: bugData.title,
+      description: `Current Situation: ${bugData.currentSituation}\nExpected Behavior: ${bugData.expectedBehavior}\nURL: ${bugData.url}`,
+      status: "new",
+      product: "bug",
+      votes: 0,
+      comments: [],
+      reporter: "LYNX - Wanja Aram",
+      attachment: bugData.screenshot ? URL.createObjectURL(bugData.screenshot) : undefined
+    };
+    setFeatures([...features, newFeature]);
+    toast({
+      title: "Success",
+      description: "Bug report submitted successfully!"
     });
   };
 
@@ -94,13 +131,13 @@ const Index = () => {
       {formType === "feature" ? (
         <FeatureForm onSubmit={handleFeatureSubmit} />
       ) : (
-        <BugReportForm onSubmit={handleFeatureSubmit} />
+        <BugReportForm onSubmit={handleBugSubmit} />
       )}
 
       {showEditForm && selectedFeature && (
         <EditFeatureForm
           feature={selectedFeature}
-          onSubmit={handleFeatureUpdate}
+          onUpdate={handleFeatureUpdate}
           onCancel={() => {
             setShowEditForm(false);
             setSelectedFeature(null);
@@ -112,7 +149,7 @@ const Index = () => {
         {features.map((feature) => (
           <FeatureCard
             key={feature.id}
-            feature={feature}
+            {...feature}
             onEdit={() => handleEdit(feature)}
           />
         ))}

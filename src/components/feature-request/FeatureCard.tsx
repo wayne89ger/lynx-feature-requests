@@ -19,6 +19,20 @@ interface Comment {
   timestamp: string;
 }
 
+interface Feature {
+  id: number;
+  title: string;
+  description: string;
+  status: "new" | "review" | "progress" | "completed";
+  product: string;
+  location?: string;
+  votes: number;
+  comments: Comment[];
+  attachment?: string;
+  reporter: string;
+  experimentOwner?: string;
+}
+
 interface FeatureCardProps {
   id: number;
   title: string;
@@ -33,7 +47,7 @@ interface FeatureCardProps {
   experimentOwner?: string;
   onStatusChange?: (id: number, newStatus: "new" | "review" | "progress" | "completed") => void;
   onAddComment?: (id: number, text: string) => void;
-  onEdit?: (feature: any) => void;
+  onEdit?: (feature: Feature) => void;
 }
 
 const statusConfig = {
@@ -58,7 +72,7 @@ export const FeatureCard = ({
   id,
   title,
   description,
-  status,
+  status = "new", // Provide default value
   product,
   location,
   votes,
