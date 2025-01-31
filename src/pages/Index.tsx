@@ -66,6 +66,8 @@ const Index = () => {
   const [selectedProduct, setSelectedProduct] = useState<string>("all");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
   const [selectedLocation, setSelectedLocation] = useState<string>("all");
+  const [selectedRequester, setSelectedRequester] = useState<string>("all");
+  const [selectedExperimentOwner, setSelectedExperimentOwner] = useState<string>("all");
   const { toast } = useToast();
 
   const handleFeatureSubmit = (formData: { 
@@ -143,9 +145,15 @@ const Index = () => {
     .filter(feature => 
       (selectedProduct === "all" || feature.product === selectedProduct) &&
       (selectedStatus === "all" || feature.status === selectedStatus) &&
-      (selectedLocation === "all" || feature.location === selectedLocation)
+      (selectedLocation === "all" || feature.location === selectedLocation) &&
+      (selectedRequester === "all" || feature.reporter === selectedRequester) &&
+      (selectedExperimentOwner === "all" || feature.experimentOwner === selectedExperimentOwner)
     )
     .sort((a, b) => b.votes - a.votes);
+
+  // Get unique requesters and experiment owners for filters
+  const uniqueRequesters = Array.from(new Set(features.map(f => f.reporter))).filter(Boolean);
+  const uniqueExperimentOwners = Array.from(new Set(features.map(f => f.experimentOwner))).filter(Boolean);
 
   return (
     <div className="container mx-auto p-4">
@@ -207,6 +215,30 @@ const Index = () => {
             <SelectItem value="knowledge-portal">Knowledge Portal</SelectItem>
             <SelectItem value="marketing-section">Marketing Section</SelectItem>
             <SelectItem value="service-portal">Service Portal</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={selectedRequester} onValueChange={setSelectedRequester}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filter by Requester" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Requesters</SelectItem>
+            {uniqueRequesters.map((requester) => (
+              <SelectItem key={requester} value={requester}>{requester}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Select value={selectedExperimentOwner} onValueChange={setSelectedExperimentOwner}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filter by Experiment Owner" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Experiment Owners</SelectItem>
+            {uniqueExperimentOwners.map((owner) => (
+              <SelectItem key={owner} value={owner}>{owner}</SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
