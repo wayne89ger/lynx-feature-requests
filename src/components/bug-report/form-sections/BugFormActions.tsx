@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, Ticket } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface BugFormActionsProps {
@@ -26,6 +26,19 @@ export const BugFormActions = ({ onSubmit }: BugFormActionsProps) => {
       >
         <Plus className="w-4 h-4 mr-2" />
         Create story in shortcut
+      </Button>
+      <Button 
+        type="button" 
+        variant="outline"
+        onClick={() => {
+          toast({
+            title: "Coming soon",
+            description: "This feature will be implemented soon.",
+          });
+        }}
+      >
+        <Ticket className="w-4 h-4 mr-2" />
+        Create itop ticket
       </Button>
     </div>
   );
