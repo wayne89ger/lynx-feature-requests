@@ -17,7 +17,6 @@ export const BugFormActions = ({ onSubmit }: BugFormActionsProps) => {
       <Button 
         type="button" 
         variant="outline"
-        size="icon"
         onClick={() => {
           toast({
             title: "Coming soon",
@@ -25,12 +24,12 @@ export const BugFormActions = ({ onSubmit }: BugFormActionsProps) => {
           });
         }}
       >
-        <Plus className="w-4 h-4" />
+        <Plus className="w-4 h-4 mr-2" />
+        Shortcut
       </Button>
       <Button 
         type="button" 
         variant="outline"
-        size="icon"
         onClick={() => {
           toast({
             title: "Coming soon",
@@ -38,7 +37,8 @@ export const BugFormActions = ({ onSubmit }: BugFormActionsProps) => {
           });
         }}
       >
-        <Ticket className="w-4 h-4" />
+        <Ticket className="w-4 h-4 mr-2" />
+        iTop
       </Button>
     </div>
   );
