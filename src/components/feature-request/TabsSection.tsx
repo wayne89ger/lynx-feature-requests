@@ -8,6 +8,7 @@ interface TabsSectionProps {
   filteredFeatures: Feature[];
   filteredBugs: Feature[];
   onEdit: (feature: Feature) => void;
+  onEditBug: (bug: any) => void;
   selectedProduct: string;
   setSelectedProduct: (value: string) => void;
   selectedStatus: string;
@@ -24,6 +25,7 @@ export const TabsSection = ({
   filteredFeatures,
   filteredBugs,
   onEdit,
+  onEditBug,
   selectedProduct,
   setSelectedProduct,
   selectedStatus,
@@ -85,7 +87,7 @@ export const TabsSection = ({
         </div>
         <BugList 
           bugs={filteredBugs}
-          onEdit={onEdit}
+          onEdit={onEditBug}
         />
       </TabsContent>
     </Tabs>
