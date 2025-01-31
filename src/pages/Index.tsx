@@ -134,6 +134,9 @@ const Index = () => {
     setShowEditForm(true);
   };
 
+  // Sort features by votes in descending order
+  const sortedFeatures = [...features].sort((a, b) => b.votes - a.votes);
+
   return (
     <div className="container mx-auto p-4">
       <div className="text-center mb-8">
@@ -161,7 +164,7 @@ const Index = () => {
       )}
 
       <div className="grid grid-cols-1 gap-4 mt-8">
-        {features.map((feature) => (
+        {sortedFeatures.map((feature) => (
           <FeatureCard
             key={feature.id}
             {...feature}
