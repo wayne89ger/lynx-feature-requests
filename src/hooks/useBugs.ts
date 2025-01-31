@@ -9,12 +9,18 @@ export const useBugs = () => {
 
   const fetchBugs = async () => {
     try {
+      console.log('Fetching bugs...');
       const { data, error } = await supabase
         .from('bugs')
         .select('*')
         .order('votes', { ascending: false });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching bugs:', error);
+        throw error;
+      }
+
+      console.log('Bugs data:', data);
 
       const bugsAsFeatures = (data || []).map(bug => ({
         id: bug.id,
@@ -29,10 +35,10 @@ export const useBugs = () => {
         updated_at: bug.updated_at
       })) as Feature[];
 
-      console.log('Fetched bugs:', bugsAsFeatures);
+      console.log('Bugs as features:', bugsAsFeatures);
       setBugs(bugsAsFeatures);
     } catch (error) {
-      console.error('Error fetching bugs:', error);
+      console.error('Error in useBugs:', error);
       toast({
         title: "Error fetching bugs",
         description: "Please try again later",
