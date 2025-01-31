@@ -1,38 +1,13 @@
 import { useState } from "react";
-import { FeatureCard } from "@/components/feature-request/FeatureCard";
 import { FeatureForm } from "@/components/feature-request/FeatureForm";
 import { BugReportForm } from "@/components/bug-report/BugReportForm";
-import { useToast } from "@/hooks/use-toast";
 import { EditFeatureForm } from "@/components/feature-request/EditFeatureForm";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { EXPERIMENT_OWNERS } from "@/constants/experimentOwners";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-interface Comment {
-  id: number;
-  text: string;
-  timestamp: string;
-}
-
-interface Feature {
-  id: number;
-  title: string;
-  description: string;
-  status: "new" | "review" | "progress" | "completed";
-  product: string;
-  location?: string;
-  votes: number;
-  comments: Comment[];
-  attachment?: string;
-  reporter: string;
-  experimentOwner?: string;
-}
-
-const productLabels = {
-  "website-demand-capture": "Website / Demand Capture",
-  "dof-onboarding": "DOF / Onboarding",
-  "lynx-plus": "LYNX+ / Client Experience"
-};
+import { Feature } from "@/types/feature";
+import { Filters } from "@/components/feature-request/Filters";
+import { FeatureList } from "@/components/feature-request/FeatureList";
+import { BugList } from "@/components/bug-report/BugList";
+import { EXPERIMENT_OWNERS } from "@/constants/experimentOwners";
 
 const Index = () => {
   const [features, setFeatures] = useState<Feature[]>([
@@ -88,7 +63,6 @@ const Index = () => {
     }
   ]);
 
-  // Add example bugs
   const [bugs, setBugs] = useState<Feature[]>([
     {
       id: 4,
@@ -131,7 +105,6 @@ const Index = () => {
   const [selectedLocation, setSelectedLocation] = useState<string>("all");
   const [selectedRequester, setSelectedRequester] = useState<string>("all");
   const [selectedExperimentOwner, setSelectedExperimentOwner] = useState<string>("all");
-  const { toast } = useToast();
 
   const handleFeatureSubmit = (formData: { 
     title: string;
@@ -154,10 +127,6 @@ const Index = () => {
       attachment: formData.attachment ? URL.createObjectURL(formData.attachment) : undefined
     };
     setFeatures([...features, newFeature]);
-    toast({
-      title: "Success",
-      description: "Feature request submitted successfully!"
-    });
   };
 
   const handleBugSubmit = (bugData: {
@@ -167,8 +136,8 @@ const Index = () => {
     url: string;
     screenshot?: File;
   }) => {
-    const newFeature: Feature = {
-      id: features.length + 1,
+    const newBug: Feature = {
+      id: bugs.length + 1,
       title: bugData.title,
       description: `Current Situation: ${bugData.currentSituation}\nExpected Behavior: ${bugData.expectedBehavior}\nURL: ${bugData.url}`,
       status: "new",
@@ -178,11 +147,7 @@ const Index = () => {
       reporter: EXPERIMENT_OWNERS[0],
       attachment: bugData.screenshot ? URL.createObjectURL(bugData.screenshot) : undefined
     };
-    setFeatures([...features, newFeature]);
-    toast({
-      title: "Success",
-      description: "Bug report submitted successfully!"
-    });
+    setBugs([...bugs, newBug]);
   };
 
   const handleFeatureUpdate = (id: number, updatedFeature: any) => {
@@ -192,18 +157,8 @@ const Index = () => {
     setFeatures(updatedFeatures);
     setShowEditForm(false);
     setSelectedFeature(null);
-    toast({
-      title: "Success",
-      description: "Feature updated successfully!"
-    });
   };
 
-  const handleEdit = (feature: Feature) => {
-    setSelectedFeature(feature);
-    setShowEditForm(true);
-  };
-
-  // Filter features and bugs separately
   const filteredAndSortedFeatures = [...features]
     .filter(feature => feature.product !== "bug" &&
       (selectedProduct === "all" || feature.product === selectedProduct) &&
@@ -215,7 +170,6 @@ const Index = () => {
     .sort((a, b) => b.votes - a.votes);
 
   const filteredAndSortedBugs = [...bugs]
-    .filter(bug => bug.product === "bug")
     .sort((a, b) => b.votes - a.votes);
 
   return (
@@ -258,69 +212,37 @@ const Index = () => {
           </TabsTrigger>
         </TabsList>
 
-        <div className="space-y-4 mb-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <Select value={selectedProduct} onValueChange={setSelectedProduct}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Filter by Product" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Products</SelectItem>
-                {Object.entries(productLabels).map(([value, label]) => (
-                  <SelectItem key={value} value={value}>{label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Filter by Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value="new">New</SelectItem>
-                <SelectItem value="review">Under Review</SelectItem>
-                <SelectItem value="progress">In Progress</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Filter by Location" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Locations</SelectItem>
-                <SelectItem value="knowledge-portal">Knowledge Portal</SelectItem>
-                <SelectItem value="marketing-section">Marketing Section</SelectItem>
-                <SelectItem value="service-portal">Service Portal</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
+        <Filters
+          selectedProduct={selectedProduct}
+          setSelectedProduct={setSelectedProduct}
+          selectedStatus={selectedStatus}
+          setSelectedStatus={setSelectedStatus}
+          selectedLocation={selectedLocation}
+          setSelectedLocation={setSelectedLocation}
+          selectedRequester={selectedRequester}
+          setSelectedRequester={setSelectedRequester}
+          selectedExperimentOwner={selectedExperimentOwner}
+          setSelectedExperimentOwner={setSelectedExperimentOwner}
+        />
 
         <TabsContent value="features">
-          <div className="grid grid-cols-1 gap-4">
-            {filteredAndSortedFeatures.map((feature) => (
-              <FeatureCard
-                key={feature.id}
-                {...feature}
-                onEdit={() => handleEdit(feature)}
-              />
-            ))}
-          </div>
+          <FeatureList 
+            features={filteredAndSortedFeatures} 
+            onEdit={(feature) => {
+              setSelectedFeature(feature);
+              setShowEditForm(true);
+            }}
+          />
         </TabsContent>
 
         <TabsContent value="bugs">
-          <div className="grid grid-cols-1 gap-4">
-            {filteredAndSortedBugs.map((bug) => (
-              <FeatureCard
-                key={bug.id}
-                {...bug}
-                onEdit={() => handleEdit(bug)}
-              />
-            ))}
-          </div>
+          <BugList 
+            bugs={filteredAndSortedBugs}
+            onEdit={(bug) => {
+              setSelectedFeature(bug);
+              setShowEditForm(true);
+            }}
+          />
         </TabsContent>
       </Tabs>
     </div>
