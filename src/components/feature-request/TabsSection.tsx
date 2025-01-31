@@ -67,7 +67,7 @@ export const TabsSection = ({
         setSelectedExperimentOwner={setSelectedExperimentOwner}
       />
 
-      <TabsContent value="features" className="space-y-6">
+      <TabsContent value="features" className="space-y-6 border-2 border-primary/20 rounded-lg p-6 mt-6">
         <div className="text-center">
           <h2 className="text-xl font-semibold text-primary">Feature Requests</h2>
           <p className="text-sm text-muted-foreground">Browse and vote on proposed features</p>
@@ -78,7 +78,7 @@ export const TabsSection = ({
         />
       </TabsContent>
 
-      <TabsContent value="bugs" className="space-y-6">
+      <TabsContent value="bugs" className="space-y-6 border-2 border-destructive/20 rounded-lg p-6 mt-6">
         <div className="text-center">
           <h2 className="text-xl font-semibold text-destructive">Bug Reports</h2>
           <p className="text-sm text-muted-foreground">Help us track and fix issues</p>
