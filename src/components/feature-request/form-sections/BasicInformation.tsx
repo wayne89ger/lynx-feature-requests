@@ -12,11 +12,15 @@ import {
 interface BasicInformationProps {
   title: string;
   description: string;
+  expectedBehavior?: string;
+  url?: string;
   product: string;
   location: string;
   isBug: boolean;
   setTitle: (value: string) => void;
   setDescription: (value: string) => void;
+  setExpectedBehavior?: (value: string) => void;
+  setUrl?: (value: string) => void;
   setProduct: (value: string) => void;
   setLocation: (value: string) => void;
 }
@@ -24,11 +28,15 @@ interface BasicInformationProps {
 export const BasicInformation = ({
   title,
   description,
+  expectedBehavior,
+  url,
   product,
   location,
   isBug,
   setTitle,
   setDescription,
+  setExpectedBehavior,
+  setUrl,
   setProduct,
   setLocation,
 }: BasicInformationProps) => {
@@ -53,6 +61,27 @@ export const BasicInformation = ({
           className="min-h-[100px]"
         />
       </div>
+      {isBug && (
+        <>
+          <div className="space-y-2">
+            <Label htmlFor="expectedBehavior">Expected Behavior</Label>
+            <Textarea
+              id="expectedBehavior"
+              value={expectedBehavior}
+              onChange={(e) => setExpectedBehavior?.(e.target.value)}
+              className="min-h-[100px]"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="url">URL</Label>
+            <Input
+              id="url"
+              value={url}
+              onChange={(e) => setUrl?.(e.target.value)}
+            />
+          </div>
+        </>
+      )}
       <div className="space-y-2">
         <Label htmlFor="product">Product</Label>
         <Select value={product} onValueChange={setProduct}>

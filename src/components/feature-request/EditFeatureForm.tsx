@@ -10,24 +10,16 @@ import { ActionButtons } from "./form-sections/ActionButtons";
 import { BasicInformation } from "./form-sections/BasicInformation";
 import { FeatureSpecificFields } from "./form-sections/FeatureSpecificFields";
 
-const defaultMetrics = [
-  "Avg. Organic Position",
-  "Visits / Users",
-  "Number of Leads / Conversions",
-  "DOF Prefill CVR",
-  "DOF Compl. CVR",
-  "Bounce Rate",
-  "Time spend on page",
-  "Engagement Rate",
-];
-
 interface EditFeatureFormProps {
   feature: {
     id: number;
     title: string;
-    description: string;
+    description?: string;
+    current_situation?: string;
+    expected_behavior?: string;
     product: string;
     location?: string;
+    url?: string;
   };
   open: boolean;
   onClose: () => void;
@@ -36,7 +28,10 @@ interface EditFeatureFormProps {
 
 export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureFormProps) => {
   const [title, setTitle] = useState(feature.title);
-  const [description, setDescription] = useState(feature.description);
+  const [description, setDescription] = useState(feature.description || "");
+  const [currentSituation, setCurrentSituation] = useState(feature.current_situation || "");
+  const [expectedBehavior, setExpectedBehavior] = useState(feature.expected_behavior || "");
+  const [url, setUrl] = useState(feature.url || "");
   const [product, setProduct] = useState(feature.product);
   const [location, setLocation] = useState(feature.location || "");
   const [hypothesis, setHypothesis] = useState("");
@@ -49,17 +44,15 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
   const [impact, setImpact] = useState<number>(1);
   const [confidence, setConfidence] = useState<number>(1);
   const [effort, setEffort] = useState<number>(1);
-  const [metrics, setMetrics] = useState<string[]>(defaultMetrics);
-  const [newMetric, setNewMetric] = useState("");
   const [experimentOwner, setExperimentOwner] = useState<string>("");
   const [hasShortcutStory, setHasShortcutStory] = useState(false);
   const [hasConfluenceDoc, setHasConfluenceDoc] = useState(false);
   const { toast } = useToast();
 
-  const isBug = feature.product === "bug";
+  const isBug = product === "bug";
 
   const handleSubmit = () => {
-    if (!title || !description || !product) {
+    if (!title || (!description && !currentSituation) || !product) {
       toast({
         title: "Please fill in all required fields",
         variant: "destructive",
@@ -69,7 +62,9 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
 
     const updatedData = isBug ? {
       title,
-      current_situation: description,
+      current_situation: currentSituation,
+      expected_behavior: expectedBehavior,
+      url,
       product,
     } : {
       title,
@@ -112,12 +107,16 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
         <div className="space-y-6 mt-4 max-h-[70vh] overflow-y-auto">
           <BasicInformation
             title={title}
-            description={description}
+            description={isBug ? currentSituation : description}
+            expectedBehavior={expectedBehavior}
+            url={url}
             product={product}
             location={location}
             isBug={isBug}
             setTitle={setTitle}
-            setDescription={setDescription}
+            setDescription={isBug ? setCurrentSituation : setDescription}
+            setExpectedBehavior={setExpectedBehavior}
+            setUrl={setUrl}
             setProduct={setProduct}
             setLocation={setLocation}
           />
@@ -138,10 +137,6 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
               setMvpStates={setMvpStates}
               experimentOwner={experimentOwner}
               setExperimentOwner={setExperimentOwner}
-              metrics={metrics}
-              setMetrics={setMetrics}
-              newMetric={newMetric}
-              setNewMetric={setNewMetric}
               reach={reach}
               impact={impact}
               confidence={confidence}
