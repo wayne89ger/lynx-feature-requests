@@ -54,7 +54,7 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
   const isBug = product === "bug";
 
   const handleSubmit = () => {
-    if (!title || (!description && !currentSituation) || !product) {
+    if (!title || (!isBug && !description) || (isBug && !currentSituation) || !product) {
       toast({
         title: "Please fill in all required fields",
         variant: "destructive",
