@@ -5,6 +5,7 @@ import { BugReportForm } from "@/components/bug-report/BugReportForm";
 import { useToast } from "@/hooks/use-toast";
 import { EditFeatureForm } from "@/components/feature-request/EditFeatureForm";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { EXPERIMENT_OWNERS } from "@/constants/experimentOwners";
 
 interface Comment {
   id: number;
@@ -54,7 +55,7 @@ const Index = () => {
           timestamp: "2024-03-15 15:45"
         }
       ],
-      reporter: "LYNX - Wanja Aram"
+      reporter: EXPERIMENT_OWNERS[0]
     },
     {
       id: 2,
@@ -76,7 +77,7 @@ const Index = () => {
           timestamp: "2024-03-14 10:30"
         }
       ],
-      reporter: "LYNX - Wanja Aram"
+      reporter: EXPERIMENT_OWNERS[0]
     },
     {
       id: 3,
@@ -92,8 +93,8 @@ const Index = () => {
           timestamp: "2024-03-13 16:20"
         }
       ],
-      reporter: "LYNX - Wanja Aram",
-      experimentOwner: "John Smith"
+      reporter: EXPERIMENT_OWNERS[0],
+      experimentOwner: EXPERIMENT_OWNERS[0]
     }
   ]);
   const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
@@ -122,7 +123,7 @@ const Index = () => {
       location: formData.location,
       votes: 0,
       comments: [],
-      reporter: "LYNX - Wanja Aram",
+      reporter: EXPERIMENT_OWNERS[0],
       attachment: formData.attachment ? URL.createObjectURL(formData.attachment) : undefined
     };
     setFeatures([...features, newFeature]);
@@ -147,7 +148,7 @@ const Index = () => {
       product: "bug",
       votes: 0,
       comments: [],
-      reporter: "LYNX - Wanja Aram",
+      reporter: EXPERIMENT_OWNERS[0],
       attachment: bugData.screenshot ? URL.createObjectURL(bugData.screenshot) : undefined
     };
     setFeatures([...features, newFeature]);
@@ -188,7 +189,7 @@ const Index = () => {
 
   // Get unique requesters and experiment owners for filters
   const uniqueRequesters = Array.from(new Set(features.map(f => f.reporter))).filter(Boolean);
-  const uniqueExperimentOwners = Array.from(new Set(features.map(f => f.experimentOwner))).filter(Boolean);
+  const uniqueExperimentOwners = Array.from(new Set([...EXPERIMENT_OWNERS])).filter(Boolean);
 
   return (
     <div className="container mx-auto p-4">
@@ -292,4 +293,3 @@ const Index = () => {
 };
 
 export default Index;
-

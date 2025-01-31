@@ -20,6 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 import { MetricsSection } from "./form-sections/MetricsSection";
 import { RiceScoreSection } from "./form-sections/RiceScoreSection";
 import { ActionButtons } from "./form-sections/ActionButtons";
+import { EXPERIMENT_OWNERS } from "@/constants/experimentOwners";
 
 const defaultMetrics = [
   "Avg. Organic Position",
@@ -67,7 +68,7 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
   const [effort, setEffort] = useState<number>(1);
   const [metrics, setMetrics] = useState<string[]>(defaultMetrics);
   const [newMetric, setNewMetric] = useState("");
-  const [experimentOwner, setExperimentOwner] = useState<string>("LYNX - Wanja Aram");
+  const [experimentOwner, setExperimentOwner] = useState<string>(EXPERIMENT_OWNERS[0]);
   const [hasShortcutStory, setHasShortcutStory] = useState(false);
   const [hasConfluenceDoc, setHasConfluenceDoc] = useState(false);
   const { toast } = useToast();
