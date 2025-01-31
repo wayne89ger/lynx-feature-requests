@@ -2,6 +2,7 @@ export interface Comment {
   id: number;
   text: string;
   timestamp: string;
+  reporter: string;
 }
 
 export interface Feature {

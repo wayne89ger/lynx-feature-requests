@@ -17,6 +17,7 @@ interface Comment {
   id: number;
   text: string;
   timestamp: string;
+  reporter: string;
 }
 
 interface Feature {
@@ -251,9 +252,15 @@ export const FeatureCard = ({
             <div className="mt-4 space-y-4">
               <ScrollArea className="h-[200px] w-full rounded-md border p-4">
                 {comments.map((comment) => (
-                  <div key={comment.id} className="mb-3 last:mb-0">
-                    <p className="text-sm text-gray-600">{comment.text}</p>
-                    <span className="text-xs text-gray-400">{comment.timestamp}</span>
+                  <div key={comment.id} className="mb-4 last:mb-0 border-b last:border-0 pb-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="text-sm text-gray-600">{comment.text}</p>
+                    </div>
+                    <div className="mt-1 flex items-center gap-2 text-xs text-gray-400">
+                      <span className="font-medium text-gray-500">{comment.reporter}</span>
+                      <span>•</span>
+                      <span>{comment.timestamp}</span>
+                    </div>
                   </div>
                 ))}
               </ScrollArea>

@@ -23,12 +23,14 @@ const Index = () => {
         {
           id: 1,
           text: "This would be great for reducing eye strain during night shifts!",
-          timestamp: "2024-03-15 14:30"
+          timestamp: "2024-03-15 14:30",
+          reporter: "John Smith"
         },
         {
           id: 2,
           text: "Could we also add a system preference detection?",
-          timestamp: "2024-03-15 15:45"
+          timestamp: "2024-03-15 15:45",
+          reporter: "Sarah Johnson"
         }
       ],
       reporter: EXPERIMENT_OWNERS[0]
@@ -45,7 +47,8 @@ const Index = () => {
         {
           id: 3,
           text: "The tables are currently overflowing on mobile devices",
-          timestamp: "2024-03-14 09:15"
+          timestamp: "2024-03-14 09:15",
+          reporter: "Alice Brown"
         }
       ],
       reporter: EXPERIMENT_OWNERS[0]
@@ -75,7 +78,8 @@ const Index = () => {
         {
           id: 6,
           text: "Confirmed on iPhone 13 with iOS 16",
-          timestamp: "2024-03-16 10:00"
+          timestamp: "2024-03-16 10:00",
+          reporter: "Mark Taylor"
         }
       ],
       reporter: EXPERIMENT_OWNERS[0]
@@ -91,7 +95,8 @@ const Index = () => {
         {
           id: 7,
           text: "This is causing major issues for our users",
-          timestamp: "2024-03-16 11:30"
+          timestamp: "2024-03-16 11:30",
+          reporter: "Emma Wilson"
         }
       ],
       reporter: EXPERIMENT_OWNERS[1]
