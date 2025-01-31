@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowBigUp, MessageCircle, Paperclip } from "lucide-react";
+import { ArrowBigUp, MessageCircle, Paperclip, Edit } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Select,
@@ -31,6 +31,7 @@ interface FeatureCardProps {
   attachment?: string;
   onStatusChange?: (id: number, newStatus: "new" | "review" | "progress" | "completed") => void;
   onAddComment?: (id: number, text: string) => void;
+  onEdit?: (feature: any) => void;
 }
 
 const statusConfig = {
@@ -63,6 +64,7 @@ export const FeatureCard = ({
   attachment,
   onStatusChange,
   onAddComment,
+  onEdit,
 }: FeatureCardProps) => {
   const [currentVotes, setCurrentVotes] = useState(votes);
   const [hasVoted, setHasVoted] = useState(false);
@@ -105,29 +107,42 @@ export const FeatureCard = ({
     <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200 animate-scale-in">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <Select value={status} onValueChange={handleStatusChange}>
-              <SelectTrigger className={cn(
-                "h-6 text-xs font-medium px-2.5 py-0.5 rounded-full w-auto min-w-32",
-                statusConfig[status].bg,
-                statusConfig[status].text
-              )}>
-                <SelectValue placeholder={statusConfig[status].label} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="new">New</SelectItem>
-                <SelectItem value="review">Under Review</SelectItem>
-                <SelectItem value="progress">In Progress</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-              </SelectContent>
-            </Select>
-            <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600">
-              {productLabels[product as keyof typeof productLabels]}
-            </span>
-            {location && (
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <Select value={status} onValueChange={handleStatusChange}>
+                <SelectTrigger className={cn(
+                  "h-6 text-xs font-medium px-2.5 py-0.5 rounded-full w-auto min-w-32",
+                  statusConfig[status].bg,
+                  statusConfig[status].text
+                )}>
+                  <SelectValue placeholder={statusConfig[status].label} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="new">New</SelectItem>
+                  <SelectItem value="review">Under Review</SelectItem>
+                  <SelectItem value="progress">In Progress</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                </SelectContent>
+              </Select>
               <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600">
-                {locationLabels[location as keyof typeof locationLabels]}
+                {productLabels[product as keyof typeof productLabels]}
               </span>
+              {location && (
+                <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600">
+                  {locationLabels[location as keyof typeof locationLabels]}
+                </span>
+              )}
+            </div>
+            {onEdit && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="gap-1"
+                onClick={() => onEdit({ id, title, description, product, location })}
+              >
+                <Edit className="w-4 h-4" />
+                Edit
+              </Button>
             )}
           </div>
           <h3 className="text-lg font-semibold mb-2">{title}</h3>

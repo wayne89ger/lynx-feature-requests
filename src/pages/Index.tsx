@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { EditFeatureForm } from "@/components/feature-request/EditFeatureForm";
 
 interface Comment {
   id: number;
@@ -28,7 +29,19 @@ interface Feature {
   votes: number;
   comments: Comment[];
   attachment?: string;
-  canContact?: boolean;
+  hypothesis?: string;
+  expectedOutcome?: string;
+  type?: "ab-test" | "seo-experiment";
+  selectedMetrics?: string[];
+  userResearch?: string;
+  mvpStates?: string;
+  riceScore?: {
+    reach: number;
+    impact: number;
+    confidence: number;
+    effort: number;
+    total: string;
+  };
 }
 
 const initialFeatures: Feature[] = [
@@ -72,6 +85,7 @@ const Index = () => {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [locationFilter, setLocationFilter] = useState<string>("all");
   const { toast } = useToast();
+  const [editingFeature, setEditingFeature] = useState<Feature | null>(null);
 
   const handleSubmit = async (newFeature: {
     title: string;
@@ -148,6 +162,19 @@ const Index = () => {
     return matchesProduct && matchesStatus && matchesLocation;
   });
 
+  const handleEdit = (feature: Feature) => {
+    setEditingFeature(feature);
+  };
+
+  const handleSaveEdit = (id: number, updatedFeature: Partial<Feature>) => {
+    setFeatures((prev) =>
+      prev.map((feature) =>
+        feature.id === id ? { ...feature, ...updatedFeature } : feature
+      )
+    );
+    setEditingFeature(null);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 animate-fade-in">
       <div className="max-w-4xl mx-auto px-4 py-12">
@@ -221,9 +248,19 @@ const Index = () => {
               {...feature} 
               onStatusChange={handleStatusChange}
               onAddComment={handleAddComment}
+              onEdit={handleEdit}
             />
           ))}
         </div>
+
+        {editingFeature && (
+          <EditFeatureForm
+            feature={editingFeature}
+            open={!!editingFeature}
+            onClose={() => setEditingFeature(null)}
+            onSave={handleSaveEdit}
+          />
+        )}
       </div>
     </div>
   );
