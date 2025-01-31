@@ -33,11 +33,6 @@ const defaultMetrics = [
   "Engagement Rate",
 ];
 
-const experimentOwners = [
-  "LYNX - Wanja Aram",
-  "LYNX - Raquell Serrano"
-];
-
 interface EditFeatureFormProps {
   feature: {
     id: number;
@@ -73,9 +68,7 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
   const [hasConfluenceDoc, setHasConfluenceDoc] = useState(false);
   const { toast } = useToast();
 
-  const calculateRICEScore = () => {
-    return ((reach * impact * confidence) / effort).toFixed(2);
-  };
+  const isBug = product === "bug";
 
   const handleSubmit = () => {
     if (!title || !description || !product) {
@@ -86,7 +79,11 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
       return;
     }
 
-    onSave(feature.id, {
+    const updatedData = isBug ? {
+      title,
+      current_situation: description,
+      product,
+    } : {
       title,
       description,
       product,
@@ -103,30 +100,16 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
         impact,
         confidence,
         effort,
-        total: calculateRICEScore(),
+        total: ((reach * impact * confidence) / effort).toFixed(2),
       },
-    });
+    };
 
+    onSave(feature.id, updatedData);
     onClose();
+    
     toast({
-      title: product === "bug" ? "Bug updated" : "Feature updated",
+      title: isBug ? "Bug updated" : "Feature updated",
       description: "Your changes have been saved successfully.",
-    });
-  };
-
-  const handleShortcutAction = () => {
-    setHasShortcutStory(true);
-    toast({
-      title: hasShortcutStory ? "Synced with Shortcut" : "Added to Shortcut",
-      description: "This functionality will be implemented soon",
-    });
-  };
-
-  const handleConfluenceAction = () => {
-    setHasConfluenceDoc(true);
-    toast({
-      title: hasConfluenceDoc ? "Synced with Confluence" : "Added to Confluence",
-      description: "This functionality will be implemented soon",
     });
   };
 
@@ -135,7 +118,7 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>
-            {product === "bug" ? "Edit bug report" : "Edit feature request"}
+            {isBug ? "Edit bug report" : "Edit feature request"}
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-6 mt-4 max-h-[70vh] overflow-y-auto">
@@ -149,7 +132,9 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">
+              {isBug ? "Current Situation" : "Description"}
+            </Label>
             <Textarea
               id="description"
               value={description}
@@ -158,7 +143,7 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
             />
           </div>
 
-          {/* Product and Location */}
+          {/* Product Selection */}
           <div className="space-y-2">
             <Label htmlFor="product">Product</Label>
             <Select value={product} onValueChange={setProduct}>
@@ -172,49 +157,64 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
             </Select>
           </div>
 
-          {product === "website-demand-capture" && (
-            <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
-              <Select value={location} onValueChange={setLocation}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a location" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="knowledge-portal">Knowledge Portal</SelectItem>
-                  <SelectItem value="marketing-section">Marketing Section</SelectItem>
-                  <SelectItem value="service-portal">Service Portal</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          {/* Feature-specific fields */}
+          {!isBug && (
+            <>
+              {product === "website-demand-capture" && (
+                <div className="space-y-2">
+                  <Label htmlFor="location">Location</Label>
+                  <Select value={location} onValueChange={setLocation}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a location" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="knowledge-portal">Knowledge Portal</SelectItem>
+                      <SelectItem value="marketing-section">Marketing Section</SelectItem>
+                      <SelectItem value="service-portal">Service Portal</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              <MetricsSection
+                metrics={metrics}
+                selectedMetrics={selectedMetrics}
+                newMetric={newMetric}
+                setNewMetric={setNewMetric}
+                setMetrics={setMetrics}
+                setSelectedMetrics={setSelectedMetrics}
+              />
+
+              <RiceScoreSection
+                reach={reach}
+                impact={impact}
+                confidence={confidence}
+                effort={effort}
+                setReach={setReach}
+                setImpact={setImpact}
+                setConfidence={setConfidence}
+                setEffort={setEffort}
+              />
+            </>
           )}
-
-          {/* Metrics Section */}
-          <MetricsSection
-            metrics={metrics}
-            selectedMetrics={selectedMetrics}
-            newMetric={newMetric}
-            setNewMetric={setNewMetric}
-            setMetrics={setMetrics}
-            setSelectedMetrics={setSelectedMetrics}
-          />
-
-          {/* RICE Score Section */}
-          <RiceScoreSection
-            reach={reach}
-            impact={impact}
-            confidence={confidence}
-            effort={effort}
-            setReach={setReach}
-            setImpact={setImpact}
-            setConfidence={setConfidence}
-            setEffort={setEffort}
-          />
 
           {/* Action Buttons */}
           <ActionButtons
             onSubmit={handleSubmit}
-            onShortcutAction={handleShortcutAction}
-            onConfluenceAction={handleConfluenceAction}
+            onShortcutAction={() => {
+              setHasShortcutStory(true);
+              toast({
+                title: hasShortcutStory ? "Synced with Shortcut" : "Added to Shortcut",
+                description: "This functionality will be implemented soon",
+              });
+            }}
+            onConfluenceAction={() => {
+              setHasConfluenceDoc(true);
+              toast({
+                title: hasConfluenceDoc ? "Synced with Confluence" : "Added to Confluence",
+                description: "This functionality will be implemented soon",
+              });
+            }}
             hasShortcutStory={hasShortcutStory}
             hasConfluenceDoc={hasConfluenceDoc}
           />
