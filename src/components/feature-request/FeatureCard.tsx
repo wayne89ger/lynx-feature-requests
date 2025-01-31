@@ -29,6 +29,8 @@ interface FeatureCardProps {
   votes: number;
   comments: Comment[];
   attachment?: string;
+  reporter?: string;
+  experimentOwner?: string;
   onStatusChange?: (id: number, newStatus: "new" | "review" | "progress" | "completed") => void;
   onAddComment?: (id: number, text: string) => void;
   onEdit?: (feature: any) => void;
@@ -62,6 +64,8 @@ export const FeatureCard = ({
   votes,
   comments,
   attachment,
+  reporter = "LYNX - Wanja Aram",
+  experimentOwner,
   onStatusChange,
   onAddComment,
   onEdit,
@@ -146,7 +150,11 @@ export const FeatureCard = ({
             )}
           </div>
           <h3 className="text-lg font-semibold mb-2">{title}</h3>
-          <p className="text-gray-600 text-sm mb-4">{description}</p>
+          <p className="text-gray-600 text-sm mb-2">{description}</p>
+          <p className="text-xs text-gray-500 mb-4">
+            Reported by: {reporter}
+            {experimentOwner && ` • Experiment Owner: ${experimentOwner}`}
+          </p>
           {attachment && (
             <div className="mb-4">
               <a 

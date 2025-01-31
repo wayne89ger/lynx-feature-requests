@@ -18,7 +18,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
-import { Plus, X } from "lucide-react";
+import { Plus, X, FileText, Bookmark } from "lucide-react";
 
 interface EditFeatureFormProps {
   feature: {
@@ -61,6 +61,9 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
   const [effort, setEffort] = useState<number>(1);
   const [metrics, setMetrics] = useState<string[]>(defaultMetrics);
   const [newMetric, setNewMetric] = useState("");
+  const [experimentOwner, setExperimentOwner] = useState<string>("LYNX - Wanja Aram");
+  const [hasShortcutStory, setHasShortcutStory] = useState(false);
+  const [hasConfluenceDoc, setHasConfluenceDoc] = useState(false);
   const { toast } = useToast();
 
   const handleMetricSelect = (metric: string) => {
@@ -128,6 +131,7 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
       selectedMetrics,
       userResearch,
       mvpStates,
+      experimentOwner,
       riceScore: {
         reach,
         impact,
@@ -141,6 +145,22 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
     toast({
       title: "Feature updated",
       description: "Your changes have been saved successfully.",
+    });
+  };
+
+  const handleShortcutAction = () => {
+    setHasShortcutStory(true);
+    toast({
+      title: hasShortcutStory ? "Synced with Shortcut" : "Added to Shortcut",
+      description: "This functionality will be implemented soon",
+    });
+  };
+
+  const handleConfluenceAction = () => {
+    setHasConfluenceDoc(true);
+    toast({
+      title: hasConfluenceDoc ? "Synced with Confluence" : "Added to Confluence",
+      description: "This functionality will be implemented soon",
     });
   };
 
@@ -334,9 +354,31 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
               <Label>Total RICE Score: {calculateRICEScore()}</Label>
             </div>
           </div>
-          <Button onClick={handleSubmit} className="w-full">
-            Save Changes
-          </Button>
+          <div className="space-y-2">
+            <Label htmlFor="experimentOwner">Experiment Owner</Label>
+            <Select value={experimentOwner} onValueChange={setExperimentOwner}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="LYNX - Wanja Aram">LYNX - Wanja Aram</SelectItem>
+                <SelectItem value="LYNX - Raquell Serrano">LYNX - Raquell Serrano</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex gap-2">
+            <Button onClick={handleSubmit} className="flex-1">
+              Save Changes
+            </Button>
+            <Button onClick={handleShortcutAction} variant="outline" className="gap-2">
+              <Bookmark className="w-4 h-4" />
+              {hasShortcutStory ? "Sync with Shortcut" : "Add to Shortcut Story"}
+            </Button>
+            <Button onClick={handleConfluenceAction} variant="outline" className="gap-2">
+              <FileText className="w-4 h-4" />
+              {hasConfluenceDoc ? "Sync with Confluence" : "Add to Confluence"}
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

@@ -42,6 +42,7 @@ interface Feature {
     effort: number;
     total: string;
   };
+  reporter?: string;
 }
 
 const initialFeatures: Feature[] = [
@@ -52,6 +53,7 @@ const initialFeatures: Feature[] = [
     status: "progress",
     product: "website-demand-capture",
     votes: 202,
+    reporter: "LYNX - Wanja Aram",
     comments: [
       { id: 1, text: "This would be really helpful!", timestamp: "2024-01-30 10:00" },
       { id: 2, text: "Looking forward to this feature", timestamp: "2024-01-30 11:30" }
@@ -64,6 +66,7 @@ const initialFeatures: Feature[] = [
     status: "review",
     product: "dof-onboarding",
     votes: 132,
+    reporter: "LYNX - Wanja Aram",
     comments: [
       { id: 3, text: "This would make organization much easier", timestamp: "2024-01-29 15:20" }
     ],
@@ -75,6 +78,7 @@ const initialFeatures: Feature[] = [
     status: "new",
     product: "website-demand-capture",
     votes: 111,
+    reporter: "LYNX - Wanja Aram",
     comments: [],
   },
 ];
@@ -108,6 +112,7 @@ const Index = () => {
       votes: 0,
       comments: [],
       attachment: attachmentUrl,
+      reporter: "LYNX - Wanja Aram",
     };
     
     setFeatures((prev) => [feature, ...prev]);
