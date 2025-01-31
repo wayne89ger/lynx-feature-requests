@@ -71,11 +71,6 @@ const Index = () => {
           id: 3,
           text: "The tables are currently overflowing on mobile devices",
           timestamp: "2024-03-14 09:15"
-        },
-        {
-          id: 4,
-          text: "We should prioritize this for our field teams",
-          timestamp: "2024-03-14 10:30"
         }
       ],
       reporter: EXPERIMENT_OWNERS[0]
@@ -87,17 +82,48 @@ const Index = () => {
       status: "review",
       product: "dof-onboarding",
       votes: 3,
-      comments: [
-        {
-          id: 5,
-          text: "This would help with offline documentation needs",
-          timestamp: "2024-03-13 16:20"
-        }
-      ],
+      comments: [],
       reporter: EXPERIMENT_OWNERS[0],
       experimentOwner: EXPERIMENT_OWNERS[0]
     }
   ]);
+
+  // Add example bugs
+  const [bugs, setBugs] = useState<Feature[]>([
+    {
+      id: 4,
+      title: "Login button unresponsive on Safari",
+      description: "Users report that the login button doesn't work on Safari mobile browsers",
+      status: "new",
+      product: "website-demand-capture",
+      votes: 12,
+      comments: [
+        {
+          id: 6,
+          text: "Confirmed on iPhone 13 with iOS 16",
+          timestamp: "2024-03-16 10:00"
+        }
+      ],
+      reporter: EXPERIMENT_OWNERS[0]
+    },
+    {
+      id: 5,
+      title: "Data not saving in forms",
+      description: "Form data is lost when switching between tabs in the onboarding process",
+      status: "progress",
+      product: "dof-onboarding",
+      votes: 15,
+      comments: [
+        {
+          id: 7,
+          text: "This is causing major issues for our users",
+          timestamp: "2024-03-16 11:30"
+        }
+      ],
+      reporter: EXPERIMENT_OWNERS[1]
+    }
+  ]);
+
   const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
   const [showEditForm, setShowEditForm] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<string>("all");
@@ -188,22 +214,26 @@ const Index = () => {
     )
     .sort((a, b) => b.votes - a.votes);
 
-  const filteredAndSortedBugs = [...features]
-    .filter(feature => feature.product === "bug")
+  const filteredAndSortedBugs = [...bugs]
+    .filter(bug => bug.product === "bug")
     .sort((a, b) => b.votes - a.votes);
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 max-w-5xl">
       <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold text-lynx-text mb-2">Help Shape Our Product</h1>
-        <p className="text-lynx-text-secondary">
+        <h1 className="text-2xl sm:text-3xl font-bold text-lynx-text mb-2">Help Shape Our Product</h1>
+        <p className="text-lynx-text-secondary text-sm sm:text-base">
           Your feedback is valuable! Submit feature requests or report bugs to help us improve.
         </p>
       </div>
 
       <div className="flex flex-col sm:flex-row justify-center gap-4 mb-8">
-        <FeatureForm onSubmit={handleFeatureSubmit} />
-        <BugReportForm onSubmit={handleBugSubmit} />
+        <div className="w-full sm:w-1/2">
+          <FeatureForm onSubmit={handleFeatureSubmit} />
+        </div>
+        <div className="w-full sm:w-1/2">
+          <BugReportForm onSubmit={handleBugSubmit} />
+        </div>
       </div>
 
       {showEditForm && selectedFeature && (
@@ -220,14 +250,18 @@ const Index = () => {
 
       <Tabs defaultValue="features" className="w-full">
         <TabsList className="grid w-full grid-cols-2 max-w-[400px] mx-auto mb-8">
-          <TabsTrigger value="features">Feature Requests ({filteredAndSortedFeatures.length})</TabsTrigger>
-          <TabsTrigger value="bugs">Bug Reports ({filteredAndSortedBugs.length})</TabsTrigger>
+          <TabsTrigger value="features" className="text-sm sm:text-base">
+            Feature Requests ({filteredAndSortedFeatures.length})
+          </TabsTrigger>
+          <TabsTrigger value="bugs" className="text-sm sm:text-base">
+            Bug Reports ({filteredAndSortedBugs.length})
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="features">
-          <div className="flex flex-wrap gap-4 mb-6 justify-center">
+        <div className="space-y-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <Select value={selectedProduct} onValueChange={setSelectedProduct}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Filter by Product" />
               </SelectTrigger>
               <SelectContent>
@@ -239,7 +273,7 @@ const Index = () => {
             </Select>
 
             <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Filter by Status" />
               </SelectTrigger>
               <SelectContent>
@@ -252,7 +286,7 @@ const Index = () => {
             </Select>
 
             <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Filter by Location" />
               </SelectTrigger>
               <SelectContent>
@@ -262,32 +296,10 @@ const Index = () => {
                 <SelectItem value="service-portal">Service Portal</SelectItem>
               </SelectContent>
             </Select>
-
-            <Select value={selectedRequester} onValueChange={setSelectedRequester}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Filter by Requester" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Requesters</SelectItem>
-                {Array.from(new Set(features.map(f => f.reporter))).filter(Boolean).map((requester) => (
-                  <SelectItem key={requester} value={requester}>{requester}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select value={selectedExperimentOwner} onValueChange={setSelectedExperimentOwner}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Filter by Experiment Owner" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Experiment Owners</SelectItem>
-                {Array.from(new Set([...EXPERIMENT_OWNERS])).filter(Boolean).map((owner) => (
-                  <SelectItem key={owner} value={owner}>{owner}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
           </div>
+        </div>
 
+        <TabsContent value="features">
           <div className="grid grid-cols-1 gap-4">
             {filteredAndSortedFeatures.map((feature) => (
               <FeatureCard
@@ -316,4 +328,3 @@ const Index = () => {
 };
 
 export default Index;
-
