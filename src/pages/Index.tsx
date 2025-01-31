@@ -92,9 +92,9 @@ const Index = () => {
     });
   };
 
-  const handleFeatureUpdate = (updatedFeature: Feature) => {
+  const handleFeatureUpdate = (id: number, updatedFeature: any) => {
     const updatedFeatures = features.map((f) =>
-      f.id === updatedFeature.id ? updatedFeature : f
+      f.id === id ? { ...f, ...updatedFeature } : f
     );
     setFeatures(updatedFeatures);
     setShowEditForm(false);
