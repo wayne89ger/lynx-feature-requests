@@ -1,4 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { EXPERIMENT_OWNERS } from "@/constants/experimentOwners";
 
 interface FiltersProps {
   selectedProduct: string;
@@ -73,6 +74,34 @@ export const Filters = ({
               <SelectItem value="knowledge-portal">Knowledge Portal</SelectItem>
               <SelectItem value="marketing-section">Marketing Section</SelectItem>
               <SelectItem value="service-portal">Service Portal</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="w-full sm:w-[200px]">
+          <Select value={selectedRequester} onValueChange={setSelectedRequester}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Filter by Requester" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Requesters</SelectItem>
+              {EXPERIMENT_OWNERS.map((owner) => (
+                <SelectItem key={owner} value={owner}>{owner}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="w-full sm:w-[200px]">
+          <Select value={selectedExperimentOwner} onValueChange={setSelectedExperimentOwner}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Filter by Experiment Owner" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Experiment Owners</SelectItem>
+              {EXPERIMENT_OWNERS.map((owner) => (
+                <SelectItem key={owner} value={owner}>{owner}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
