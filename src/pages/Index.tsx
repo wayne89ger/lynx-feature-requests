@@ -27,12 +27,34 @@ const Index = () => {
 
   const fetchFeatures = async () => {
     try {
-      const { data, error } = await supabase
+      // Fetch features
+      const { data: featuresData, error: featuresError } = await supabase
         .from('features')
         .select('*');
       
-      if (error) throw error;
-      setFeatures(data || []);
+      if (featuresError) throw featuresError;
+
+      // Fetch comments for all features
+      const { data: commentsData, error: commentsError } = await supabase
+        .from('comments')
+        .select('*');
+
+      if (commentsError) throw commentsError;
+
+      // Map comments to their respective features
+      const featuresWithComments = featuresData?.map(feature => ({
+        ...feature,
+        comments: commentsData
+          ?.filter(comment => comment.feature_id === feature.id)
+          ?.map(comment => ({
+            id: comment.id,
+            text: comment.text,
+            timestamp: comment.created_at,
+            reporter: comment.reporter
+          })) || []
+      })) as Feature[];
+
+      setFeatures(featuresWithComments || []);
     } catch (error) {
       console.error('Error fetching features:', error);
       toast({
@@ -50,7 +72,22 @@ const Index = () => {
         .select('*');
       
       if (error) throw error;
-      setBugs(data || []);
+
+      // Transform bugs to match Feature type
+      const bugsAsFeatures = (data || []).map(bug => ({
+        id: bug.id,
+        title: bug.title,
+        description: bug.current_situation, // Use current situation as description
+        status: bug.status,
+        product: bug.product,
+        votes: bug.votes || 0,
+        reporter: bug.reporter,
+        comments: [], // Add empty comments array to match Feature type
+        created_at: bug.created_at,
+        updated_at: bug.updated_at
+      })) as Feature[];
+
+      setBugs(bugsAsFeatures);
     } catch (error) {
       console.error('Error fetching bugs:', error);
       toast({
@@ -182,9 +219,9 @@ const Index = () => {
       (selectedRequester === "all" || feature.reporter === selectedRequester) &&
       (selectedExperimentOwner === "all" || feature.experimentOwner === selectedExperimentOwner)
     )
-    .sort((a, b) => b.votes - a.votes);
+    .sort((a, b) => (b.votes || 0) - (a.votes || 0));
 
-  const filteredAndSortedBugs = [...bugs].sort((a, b) => b.votes - a.votes);
+  const filteredAndSortedBugs = [...bugs].sort((a, b) => (b.votes || 0) - (a.votes || 0));
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 max-w-5xl">
