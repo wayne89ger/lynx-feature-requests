@@ -41,13 +41,13 @@ export const TabsSection = ({
         <TabsList className="grid w-full max-w-[400px] grid-cols-2 bg-secondary/20 p-1 rounded-lg">
           <TabsTrigger 
             value="features" 
-            className="rounded-md data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm"
+            className="rounded-md data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-md data-[state=active]:font-semibold transition-all"
           >
             Feature Requests ({filteredFeatures.length})
           </TabsTrigger>
           <TabsTrigger 
             value="bugs" 
-            className="rounded-md data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm"
+            className="rounded-md data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-md data-[state=active]:font-semibold transition-all"
           >
             Bug Reports ({filteredBugs.length})
           </TabsTrigger>
@@ -67,14 +67,22 @@ export const TabsSection = ({
         setSelectedExperimentOwner={setSelectedExperimentOwner}
       />
 
-      <TabsContent value="features">
+      <TabsContent value="features" className="space-y-6">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-primary">Feature Requests</h2>
+          <p className="text-sm text-muted-foreground">Browse and vote on proposed features</p>
+        </div>
         <FeatureList 
           features={filteredFeatures} 
           onEdit={onEdit}
         />
       </TabsContent>
 
-      <TabsContent value="bugs">
+      <TabsContent value="bugs" className="space-y-6">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-destructive">Bug Reports</h2>
+          <p className="text-sm text-muted-foreground">Help us track and fix issues</p>
+        </div>
         <BugList 
           bugs={filteredBugs}
           onEdit={onEdit}
