@@ -12,26 +12,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
+import { Feature } from "@/types/feature";
 
 interface Comment {
   id: number;
   text: string;
   timestamp: string;
   reporter: string;
-}
-
-interface Feature {
-  id: number;
-  title: string;
-  description: string;
-  status: "new" | "review" | "progress" | "completed";
-  product: string;
-  location?: string;
-  votes: number;
-  comments: Comment[];
-  attachment?: string;
-  reporter: string;
-  experimentOwner?: string;
 }
 
 interface FeatureCardProps extends Feature {
@@ -123,153 +110,146 @@ export const FeatureCard = ({
 
   return (
     <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
-      <div className="flex gap-6">
-        {/* Voting Section - Left Side */}
-        <div className="flex flex-col items-center gap-1 pt-8">
+      {/* Header Row */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <Select value={status} onValueChange={handleStatusChange}>
+            <SelectTrigger className={cn(
+              "h-8 text-xs font-medium px-2.5 py-0.5 rounded-full w-auto",
+              statusConfig[status].bg,
+              statusConfig[status].text
+            )}>
+              <SelectValue placeholder={statusConfig[status].label} />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(statusConfig).map(([key, config]) => (
+                <SelectItem key={key} value={key}>
+                  {config.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600">
+            {productLabels[product as keyof typeof productLabels]}
+          </span>
+          {location && (
+            <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600">
+              {locationLabels[location as keyof typeof locationLabels]}
+            </span>
+          )}
+        </div>
+        {onEdit && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-1"
+            onClick={() => onEdit({
+              id,
+              title,
+              description,
+              status,
+              product,
+              location,
+              votes,
+              comments,
+              attachment,
+              reporter,
+              experimentOwner
+            })}
+          >
+            <Edit className="w-4 h-4" />
+            Edit
+          </Button>
+        )}
+      </div>
+
+      {/* Content */}
+      <div className="space-y-2 mb-4">
+        <h3 className="text-lg font-semibold">{title}</h3>
+        <p className="text-gray-600 text-sm">{description}</p>
+        <p className="text-xs text-gray-500">
+          Reported by: {reporter}
+          {experimentOwner && ` • Experiment Owner: ${experimentOwner}`}
+        </p>
+      </div>
+
+      {/* Footer Row */}
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
           <Button
             variant="ghost"
             size="sm"
             className={cn(
-              "p-2 hover:bg-gray-100",
+              "p-1 hover:bg-gray-100",
               voteStatus === 'up' && "text-primary bg-primary/10 hover:bg-primary/20"
             )}
             onClick={() => handleVote('up')}
           >
-            <ArrowBigUp className="h-5 w-5" />
+            <ArrowBigUp className="h-4 w-4" />
           </Button>
-          <span className="text-sm font-medium">{currentVotes}</span>
+          <span className="text-sm font-medium min-w-[1ch] text-center">{currentVotes}</span>
           <Button
             variant="ghost"
             size="sm"
             className={cn(
-              "p-2 hover:bg-gray-100",
+              "p-1 hover:bg-gray-100",
               voteStatus === 'down' && "text-destructive bg-destructive/10 hover:bg-destructive/20"
             )}
             onClick={() => handleVote('down')}
           >
-            <ArrowBigDown className="h-5 w-5" />
+            <ArrowBigDown className="h-4 w-4" />
           </Button>
         </div>
 
-        {/* Main Content Section */}
-        <div className="flex-1 space-y-4">
-          {/* Status and Tags Row */}
-          <div className="flex flex-wrap items-center gap-2">
-            <Select value={status} onValueChange={handleStatusChange}>
-              <SelectTrigger className={cn(
-                "h-8 text-xs font-medium px-2.5 py-0.5 rounded-full w-auto",
-                statusConfig[status].bg,
-                statusConfig[status].text
-              )}>
-                <SelectValue placeholder={statusConfig[status].label} />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.entries(statusConfig).map(([key, config]) => (
-                  <SelectItem key={key} value={key}>
-                    {config.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600">
-              {productLabels[product as keyof typeof productLabels]}
-            </span>
-            {location && (
-              <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600">
-                {locationLabels[location as keyof typeof locationLabels]}
-              </span>
-            )}
-          </div>
+        {attachment && (
+          <a 
+            href={attachment} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-flex items-center text-sm text-primary hover:underline"
+          >
+            <Paperclip className="w-4 h-4 mr-1" />
+            View attachment
+          </a>
+        )}
 
-          {/* Title and Description */}
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-left">{title}</h3>
-            <p className="text-gray-600 text-sm text-left">{description}</p>
-          </div>
-
-          {/* Reporter Info */}
-          <p className="text-xs text-gray-500 text-left">
-            Reported by: {reporter}
-            {experimentOwner && ` • Experiment Owner: ${experimentOwner}`}
-          </p>
-
-          {/* Actions Row */}
-          <div className="flex items-center gap-4">
-            {onEdit && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="gap-1"
-                onClick={() => onEdit({
-                  id,
-                  title,
-                  description,
-                  status,
-                  product,
-                  location,
-                  votes,
-                  comments,
-                  attachment,
-                  reporter,
-                  experimentOwner
-                })}
-              >
-                <Edit className="w-4 h-4" />
-                Edit
-              </Button>
-            )}
-
-            {attachment && (
-              <a 
-                href={attachment} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center text-sm text-primary hover:underline"
-              >
-                <Paperclip className="w-4 h-4 mr-1" />
-                View attachment
-              </a>
-            )}
-
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="gap-1"
-              onClick={() => setShowComments(!showComments)}
-            >
-              <MessageCircle className="w-4 h-4" />
-              <span>{comments.length}</span>
-            </Button>
-          </div>
-
-          {/* Comments Section */}
-          {showComments && (
-            <div className="space-y-4 border-t pt-4 mt-4">
-              <ScrollArea className="h-[200px] w-full rounded-md border p-4">
-                {comments.map((comment) => (
-                  <div key={comment.id} className="mb-4 last:mb-0 border-b last:border-0 pb-3">
-                    <p className="text-sm text-gray-600">{comment.text}</p>
-                    <div className="mt-1 flex items-center gap-2 text-xs text-gray-400">
-                      <span className="font-medium text-gray-500">{comment.reporter}</span>
-                      <span>•</span>
-                      <span>{comment.timestamp}</span>
-                    </div>
-                  </div>
-                ))}
-              </ScrollArea>
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Add a comment..."
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  className="flex-1"
-                />
-                <Button onClick={handleAddComment}>Comment</Button>
-              </div>
-            </div>
-          )}
-        </div>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="gap-1"
+          onClick={() => setShowComments(!showComments)}
+        >
+          <MessageCircle className="w-4 h-4" />
+          <span>{comments.length}</span>
+        </Button>
       </div>
+
+      {/* Comments Section */}
+      {showComments && (
+        <div className="space-y-4 border-t pt-4 mt-4">
+          <ScrollArea className="h-[200px] w-full rounded-md border p-4">
+            {comments.map((comment) => (
+              <div key={comment.id} className="mb-4 last:mb-0 border-b last:border-0 pb-3">
+                <p className="text-sm text-gray-600">{comment.text}</p>
+                <div className="mt-1 flex items-center gap-2 text-xs text-gray-400">
+                  <span className="font-medium text-gray-500">{comment.reporter}</span>
+                  <span>•</span>
+                  <span>{comment.timestamp}</span>
+                </div>
+              </div>
+            ))}
+          </ScrollArea>
+          <div className="flex gap-2">
+            <Input
+              placeholder="Add a comment..."
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              className="flex-1"
+            />
+            <Button onClick={handleAddComment}>Comment</Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
