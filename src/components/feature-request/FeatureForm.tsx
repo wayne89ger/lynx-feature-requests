@@ -19,13 +19,16 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Upload } from "lucide-react";
 
 interface FeatureFormProps {
   onSubmit: (feature: {
     title: string;
     description: string;
     product: string;
+    location?: string;
     canContact: boolean;
+    attachment?: File;
   }) => void;
 }
 
@@ -34,28 +37,69 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [product, setProduct] = useState("");
+  const [location, setLocation] = useState("");
   const [canContact, setCanContact] = useState(false);
+  const [attachment, setAttachment] = useState<File | null>(null);
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title || !description || !product) {
       toast({
-        title: "Please fill in all fields",
+        title: "Please fill in all required fields",
         variant: "destructive",
       });
       return;
     }
-    onSubmit({ title, description, product, canContact });
+
+    if (product === "website-demand-capture" && !location) {
+      toast({
+        title: "Please select a location",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    onSubmit({ 
+      title, 
+      description, 
+      product, 
+      location: product === "website-demand-capture" ? location : undefined,
+      canContact,
+      attachment: attachment || undefined
+    });
+    
     setTitle("");
     setDescription("");
     setProduct("");
+    setLocation("");
     setCanContact(false);
+    setAttachment(null);
     setOpen(false);
+    
     toast({
       title: "Feature request submitted",
       description: "Thank you for your feedback!",
     });
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        toast({
+          title: "File too large",
+          description: "Please upload a file smaller than 5MB",
+          variant: "destructive",
+        });
+        return;
+      }
+      setAttachment(file);
+      toast({
+        title: "File attached",
+        description: file.name,
+      });
+    }
   };
 
   return (
@@ -91,7 +135,12 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
           </div>
           <div className="space-y-2">
             <Label htmlFor="product">Product</Label>
-            <Select value={product} onValueChange={setProduct}>
+            <Select value={product} onValueChange={(value) => {
+              setProduct(value);
+              if (value !== "website-demand-capture") {
+                setLocation("");
+              }
+            }}>
               <SelectTrigger>
                 <SelectValue placeholder="Select a product" />
               </SelectTrigger>
@@ -100,6 +149,42 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
                 <SelectItem value="dof-onboarding">DOF / Onboarding</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+          {product === "website-demand-capture" && (
+            <div className="space-y-2">
+              <Label htmlFor="location">Location</Label>
+              <Select value={location} onValueChange={setLocation}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a location" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="knowledge-portal">Knowledge Portal</SelectItem>
+                  <SelectItem value="marketing-section">Marketing Section</SelectItem>
+                  <SelectItem value="service-portal">Service Portal</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+          <div className="space-y-2">
+            <Label htmlFor="attachment">Attachment</Label>
+            <div className="flex items-center gap-2">
+              <Input
+                id="attachment"
+                type="file"
+                onChange={handleFileChange}
+                accept=".jpg,.png,.gif,.mp4"
+                className="hidden"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => document.getElementById("attachment")?.click()}
+                className="w-full"
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                {attachment ? attachment.name : "Upload jpg, png, gif, mp4"}
+              </Button>
+            </div>
           </div>
           <div className="flex items-center space-x-2">
             <Checkbox

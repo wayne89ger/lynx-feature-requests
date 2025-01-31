@@ -23,8 +23,10 @@ interface Feature {
   description: string;
   status: "new" | "review" | "progress" | "completed";
   product: string;
+  location?: string;
   votes: number;
   comments: Comment[];
+  attachment?: string;
   canContact?: boolean;
 }
 
@@ -67,21 +69,34 @@ const Index = () => {
   const [features, setFeatures] = useState<Feature[]>(initialFeatures);
   const [productFilter, setProductFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [locationFilter, setLocationFilter] = useState<string>("all");
   const { toast } = useToast();
 
-  const handleSubmit = (newFeature: {
+  const handleSubmit = async (newFeature: {
     title: string;
     description: string;
     product: string;
+    location?: string;
     canContact: boolean;
+    attachment?: File;
   }) => {
+    let attachmentUrl: string | undefined;
+    
+    if (newFeature.attachment) {
+      // In a real application, you would upload the file to a server here
+      // For now, we'll create a temporary URL
+      attachmentUrl = URL.createObjectURL(newFeature.attachment);
+    }
+
     const feature: Feature = {
       id: features.length + 1,
       ...newFeature,
       status: "new",
       votes: 0,
       comments: [],
+      attachment: attachmentUrl,
     };
+    
     setFeatures((prev) => [feature, ...prev]);
   };
 
@@ -119,7 +134,8 @@ const Index = () => {
   const filteredFeatures = features.filter((feature) => {
     const matchesProduct = productFilter === "all" || feature.product === productFilter;
     const matchesStatus = statusFilter === "all" || feature.status === statusFilter;
-    return matchesProduct && matchesStatus;
+    const matchesLocation = locationFilter === "all" || feature.location === locationFilter;
+    return matchesProduct && matchesStatus && matchesLocation;
   });
 
   return (
@@ -132,10 +148,15 @@ const Index = () => {
         </div>
 
         <div className="bg-white rounded-lg p-6 mb-8 shadow-sm">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div className="space-y-2">
               <Label>Filter by Product</Label>
-              <Select value={productFilter} onValueChange={setProductFilter}>
+              <Select value={productFilter} onValueChange={(value) => {
+                setProductFilter(value);
+                if (value !== "website-demand-capture") {
+                  setLocationFilter("all");
+                }
+              }}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select product" />
                 </SelectTrigger>
@@ -146,6 +167,22 @@ const Index = () => {
                 </SelectContent>
               </Select>
             </div>
+            {productFilter === "website-demand-capture" && (
+              <div className="space-y-2">
+                <Label>Filter by Location</Label>
+                <Select value={locationFilter} onValueChange={setLocationFilter}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select location" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Locations</SelectItem>
+                    <SelectItem value="knowledge-portal">Knowledge Portal</SelectItem>
+                    <SelectItem value="marketing-section">Marketing Section</SelectItem>
+                    <SelectItem value="service-portal">Service Portal</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
             <div className="space-y-2">
               <Label>Filter by Status</Label>
               <Select value={statusFilter} onValueChange={setStatusFilter}>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowBigUp, MessageCircle } from "lucide-react";
+import { ArrowBigUp, MessageCircle, Paperclip } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Select,
@@ -25,8 +25,10 @@ interface FeatureCardProps {
   description: string;
   status: "new" | "review" | "progress" | "completed";
   product: string;
+  location?: string;
   votes: number;
   comments: Comment[];
+  attachment?: string;
   onStatusChange?: (id: number, newStatus: "new" | "review" | "progress" | "completed") => void;
   onAddComment?: (id: number, text: string) => void;
 }
@@ -43,14 +45,22 @@ const productLabels = {
   "dof-onboarding": "DOF / Onboarding"
 };
 
+const locationLabels = {
+  "knowledge-portal": "Knowledge Portal",
+  "marketing-section": "Marketing Section",
+  "service-portal": "Service Portal"
+};
+
 export const FeatureCard = ({
   id,
   title,
   description,
   status,
   product,
+  location,
   votes,
   comments,
+  attachment,
   onStatusChange,
   onAddComment,
 }: FeatureCardProps) => {
@@ -114,9 +124,27 @@ export const FeatureCard = ({
             <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600">
               {productLabels[product as keyof typeof productLabels]}
             </span>
+            {location && (
+              <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600">
+                {locationLabels[location as keyof typeof locationLabels]}
+              </span>
+            )}
           </div>
           <h3 className="text-lg font-semibold mb-2">{title}</h3>
           <p className="text-gray-600 text-sm mb-4">{description}</p>
+          {attachment && (
+            <div className="mb-4">
+              <a 
+                href={attachment} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-sm text-primary hover:underline"
+              >
+                <Paperclip className="w-4 h-4 mr-1" />
+                View attachment
+              </a>
+            </div>
+          )}
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
