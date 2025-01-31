@@ -134,40 +134,32 @@ export const FeatureCard = ({
   };
 
   return (
-    <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200 animate-scale-in">
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex-1">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <Select value={status} onValueChange={handleStatusChange}>
-                <SelectTrigger className={cn(
-                  "h-6 text-xs font-medium px-2.5 py-0.5 rounded-full w-auto min-w-32",
-                  statusConfig[status].bg,
-                  statusConfig[status].text
-                )}>
-                  <SelectValue placeholder={statusConfig[status].label} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="new">New</SelectItem>
-                  <SelectItem value="review">Under Review</SelectItem>
-                  <SelectItem value="progress">In Progress</SelectItem>
-                  <SelectItem value="completed">Completed</SelectItem>
-                </SelectContent>
-              </Select>
-              <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600">
+    <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow duration-200 animate-scale-in">
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <Select value={status} onValueChange={handleStatusChange}>
+              <SelectTrigger className={cn(
+                "h-6 text-xs font-medium px-2.5 py-0.5 rounded-full w-auto min-w-32",
+                statusConfig[status].bg,
+                statusConfig[status].text
+              )}>
+                <SelectValue placeholder={statusConfig[status].label} />
+              </SelectTrigger>
+              <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600 whitespace-nowrap">
                 {productLabels[product as keyof typeof productLabels]}
               </span>
               {location && (
-                <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600">
+                <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600 whitespace-nowrap">
                   {locationLabels[location as keyof typeof locationLabels]}
                 </span>
               )}
-            </div>
+            </Select>
             {onEdit && (
               <Button
                 variant="ghost"
                 size="sm"
-                className="gap-1"
+                className="gap-1 self-start sm:self-auto"
                 onClick={() => onEdit({
                   id,
                   title,
@@ -187,14 +179,16 @@ export const FeatureCard = ({
               </Button>
             )}
           </div>
-          <h3 className="text-lg font-semibold mb-2">{title}</h3>
-          <p className="text-gray-600 text-sm mb-2">{description}</p>
-          <p className="text-xs text-gray-500 mb-4">
-            Reported by: {reporter}
-            {experimentOwner && ` • Experiment Owner: ${experimentOwner}`}
-          </p>
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold">{title}</h3>
+            <p className="text-gray-600 text-sm">{description}</p>
+            <p className="text-xs text-gray-500">
+              Reported by: {reporter}
+              {experimentOwner && ` • Experiment Owner: ${experimentOwner}`}
+            </p>
+          </div>
           {attachment && (
-            <div className="mb-4">
+            <div>
               <a 
                 href={attachment} 
                 target="_blank" 
@@ -206,7 +200,7 @@ export const FeatureCard = ({
               </a>
             </div>
           )}
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-1">
               <Button
                 variant="ghost"
@@ -253,14 +247,14 @@ export const FeatureCard = ({
                   </div>
                 ))}
               </ScrollArea>
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <Input
                   placeholder="Add a comment..."
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   className="flex-1"
                 />
-                <Button onClick={handleAddComment}>Comment</Button>
+                <Button onClick={handleAddComment} className="w-full sm:w-auto">Comment</Button>
               </div>
             </div>
           )}
