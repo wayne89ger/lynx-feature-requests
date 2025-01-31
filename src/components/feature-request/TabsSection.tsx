@@ -41,13 +41,13 @@ export const TabsSection = ({
         <TabsList className="grid w-full max-w-[400px] grid-cols-2 bg-secondary/20 p-1 rounded-lg">
           <TabsTrigger 
             value="features" 
-            className="rounded-md data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-md data-[state=active]:font-semibold transition-all"
+            className="rounded-md data-[state=active]:bg-[#F2FCE2] data-[state=active]:text-primary data-[state=active]:shadow-md data-[state=active]:font-semibold transition-all"
           >
             Feature Requests ({filteredFeatures.length})
           </TabsTrigger>
           <TabsTrigger 
             value="bugs" 
-            className="rounded-md data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-md data-[state=active]:font-semibold transition-all"
+            className="rounded-md data-[state=active]:bg-[#FFDEE2] data-[state=active]:text-destructive data-[state=active]:shadow-md data-[state=active]:font-semibold transition-all"
           >
             Bug Reports ({filteredBugs.length})
           </TabsTrigger>
