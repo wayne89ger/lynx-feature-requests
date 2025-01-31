@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Ticket } from "lucide-react";
+import { Plus, Ticket } from "lucide-react";
 
 interface EditBugFormProps {
   bug: {
@@ -64,6 +64,13 @@ export const EditBugForm = ({ bug, open, onClose, onSave }: EditBugFormProps) =>
     toast({
       title: "Coming soon",
       description: "iTop integration will be implemented soon.",
+    });
+  };
+
+  const handleShortcut = () => {
+    toast({
+      title: "Coming soon",
+      description: "This feature will be implemented soon.",
     });
   };
 
@@ -125,7 +132,19 @@ export const EditBugForm = ({ bug, open, onClose, onSave }: EditBugFormProps) =>
               placeholder="Page URL where the issue occurred"
             />
           </div>
-          <div className="flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <Button type="submit" className="bg-primary text-white">
+              Save changes
+            </Button>
+            <Button 
+              type="button" 
+              variant="outline"
+              onClick={handleShortcut}
+              className="gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Shortcut
+            </Button>
             <Button 
               type="button" 
               variant="outline"
@@ -133,14 +152,8 @@ export const EditBugForm = ({ bug, open, onClose, onSave }: EditBugFormProps) =>
               className="gap-2"
             >
               <Ticket className="w-4 h-4" />
-              Create iTop ticket
+              iTop
             </Button>
-            <div className="flex gap-2">
-              <Button variant="outline" type="button" onClick={onClose}>
-                Cancel
-              </Button>
-              <Button type="submit">Save changes</Button>
-            </div>
           </div>
         </form>
       </DialogContent>
