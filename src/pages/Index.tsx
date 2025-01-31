@@ -1,107 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { EditFeatureForm } from "@/components/feature-request/EditFeatureForm";
 import { Feature } from "@/types/feature";
 import { EXPERIMENT_OWNERS } from "@/constants/experimentOwners";
 import { PageHeader } from "@/components/feature-request/PageHeader";
 import { FormActions } from "@/components/feature-request/FormActions";
 import { TabsSection } from "@/components/feature-request/TabsSection";
-
-const initialFeatures: Feature[] = [
-  {
-    id: 1,
-    title: "Add dark mode support",
-    description: "Implement a dark mode theme for better visibility in low-light conditions",
-    status: "new",
-    product: "website-demand-capture",
-    location: "knowledge-portal",
-    votes: 5,
-    comments: [
-      {
-        id: 1,
-        text: "This would be great for reducing eye strain during night shifts!",
-        timestamp: "2024-03-15 14:30",
-        reporter: "LYNX - Wanja Aram"
-      },
-      {
-        id: 2,
-        text: "Could we also add a system preference detection?",
-        timestamp: "2024-03-15 15:45",
-        reporter: "LYNX - Raquell Serrano"
-      }
-    ],
-    reporter: EXPERIMENT_OWNERS[0]
-  },
-    {
-      id: 2,
-      title: "Improve mobile responsiveness",
-      description: "Enhance the mobile experience across all pages",
-      status: "progress",
-      product: "website-demand-capture",
-      location: "service-portal",
-      votes: 8,
-      comments: [
-        {
-          id: 3,
-          text: "The tables are currently overflowing on mobile devices",
-          timestamp: "2024-03-14 09:15",
-          reporter: "LYNX - Wanja Aram"
-        }
-      ],
-      reporter: EXPERIMENT_OWNERS[0]
-    },
-    {
-      id: 3,
-      title: "Add export to PDF feature",
-      description: "Allow users to export their data to PDF format",
-      status: "review",
-      product: "dof-onboarding",
-      votes: 3,
-      comments: [],
-      reporter: EXPERIMENT_OWNERS[0],
-      experimentOwner: EXPERIMENT_OWNERS[0]
-    }
-];
-
-const initialBugs: Feature[] = [
-  {
-    id: 4,
-    title: "Login button unresponsive on Safari",
-    description: "Users report that the login button doesn't work on Safari mobile browsers",
-    status: "new",
-    product: "website-demand-capture",
-    votes: 12,
-    comments: [
-      {
-        id: 6,
-        text: "Confirmed on iPhone 13 with iOS 16",
-        timestamp: "2024-03-16 10:00",
-        reporter: "LYNX - Wanja Aram"
-      }
-    ],
-    reporter: EXPERIMENT_OWNERS[0]
-  },
-    {
-      id: 5,
-      title: "Data not saving in forms",
-      description: "Form data is lost when switching between tabs in the onboarding process",
-      status: "progress",
-      product: "dof-onboarding",
-      votes: 15,
-      comments: [
-        {
-          id: 7,
-          text: "This is causing major issues for our users",
-          timestamp: "2024-03-16 11:30",
-          reporter: "LYNX - Raquell Serrano"
-        }
-      ],
-      reporter: EXPERIMENT_OWNERS[1]
-    }
-];
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
-  const [features, setFeatures] = useState<Feature[]>(initialFeatures);
-  const [bugs, setBugs] = useState<Feature[]>(initialBugs);
+  const [features, setFeatures] = useState<Feature[]>([]);
+  const [bugs, setBugs] = useState<Feature[]>([]);
   const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
   const [showEditForm, setShowEditForm] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<string>("all");
@@ -109,8 +18,50 @@ const Index = () => {
   const [selectedLocation, setSelectedLocation] = useState<string>("all");
   const [selectedRequester, setSelectedRequester] = useState<string>("all");
   const [selectedExperimentOwner, setSelectedExperimentOwner] = useState<string>("all");
+  const { toast } = useToast();
 
-  const handleFeatureSubmit = (formData: {
+  useEffect(() => {
+    fetchFeatures();
+    fetchBugs();
+  }, []);
+
+  const fetchFeatures = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('features')
+        .select('*');
+      
+      if (error) throw error;
+      setFeatures(data || []);
+    } catch (error) {
+      console.error('Error fetching features:', error);
+      toast({
+        title: "Error fetching features",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const fetchBugs = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('bugs')
+        .select('*');
+      
+      if (error) throw error;
+      setBugs(data || []);
+    } catch (error) {
+      console.error('Error fetching bugs:', error);
+      toast({
+        title: "Error fetching bugs",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleFeatureSubmit = async (formData: {
     title: string;
     description: string;
     product: string;
@@ -118,53 +69,113 @@ const Index = () => {
     canContact: boolean;
     attachment?: File;
   }) => {
-    const newFeature: Feature = {
-      id: features.length + 1,
-      title: formData.title,
-      description: formData.description,
-      status: "new",
-      product: formData.product,
-      location: formData.location,
-      votes: 0,
-      comments: [],
-      reporter: EXPERIMENT_OWNERS[0],
-      attachment: formData.attachment ? URL.createObjectURL(formData.attachment) : undefined
-    };
-    setFeatures([...features, newFeature]);
+    try {
+      const { data, error } = await supabase
+        .from('features')
+        .insert([{
+          title: formData.title,
+          description: formData.description,
+          product: formData.product,
+          location: formData.location,
+          reporter: EXPERIMENT_OWNERS[0],
+          votes: 0
+        }])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setFeatures([...features, data]);
+      toast({
+        title: "Feature submitted",
+        description: "Your feature request has been saved successfully.",
+      });
+    } catch (error) {
+      console.error('Error submitting feature:', error);
+      toast({
+        title: "Error submitting feature",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleBugSubmit = (bugData: {
+  const handleBugSubmit = async (bugData: {
     title: string;
     currentSituation: string;
     expectedBehavior: string;
     url: string;
     screenshot?: File;
   }) => {
-    const newBug: Feature = {
-      id: bugs.length + 1,
-      title: bugData.title,
-      description: `Current Situation: ${bugData.currentSituation}\nExpected Behavior: ${bugData.expectedBehavior}\nURL: ${bugData.url}`,
-      status: "new",
-      product: "bug",
-      votes: 0,
-      comments: [],
-      reporter: EXPERIMENT_OWNERS[0],
-      attachment: bugData.screenshot ? URL.createObjectURL(bugData.screenshot) : undefined
-    };
-    setBugs([...bugs, newBug]);
+    try {
+      const { data, error } = await supabase
+        .from('bugs')
+        .insert([{
+          title: bugData.title,
+          current_situation: bugData.currentSituation,
+          expected_behavior: bugData.expectedBehavior,
+          url: bugData.url,
+          product: "website-demand-capture",
+          reporter: EXPERIMENT_OWNERS[0],
+          votes: 0
+        }])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setBugs([...bugs, data]);
+      toast({
+        title: "Bug submitted",
+        description: "Your bug report has been saved successfully.",
+      });
+    } catch (error) {
+      console.error('Error submitting bug:', error);
+      toast({
+        title: "Error submitting bug",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleFeatureUpdate = (id: number, updatedFeature: any) => {
-    const updatedFeatures = features.map((f) =>
-      f.id === id ? { ...f, ...updatedFeature } : f
-    );
-    setFeatures(updatedFeatures);
-    setShowEditForm(false);
-    setSelectedFeature(null);
+  const handleFeatureUpdate = async (id: number, updatedFeature: any) => {
+    try {
+      const { data, error } = await supabase
+        .from('features')
+        .update({
+          title: updatedFeature.title,
+          description: updatedFeature.description,
+          product: updatedFeature.product,
+          location: updatedFeature.location,
+          status: updatedFeature.status,
+          experiment_owner: updatedFeature.experimentOwner
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setFeatures(features.map(f => f.id === id ? data : f));
+      setShowEditForm(false);
+      setSelectedFeature(null);
+      toast({
+        title: "Feature updated",
+        description: "Your changes have been saved successfully.",
+      });
+    } catch (error) {
+      console.error('Error updating feature:', error);
+      toast({
+        title: "Error updating feature",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+    }
   };
 
   const filteredAndSortedFeatures = [...features]
-    .filter(feature => feature.product !== "bug" &&
+    .filter(feature => 
       (selectedProduct === "all" || feature.product === selectedProduct) &&
       (selectedStatus === "all" || feature.status === selectedStatus) &&
       (selectedLocation === "all" || feature.location === selectedLocation) &&

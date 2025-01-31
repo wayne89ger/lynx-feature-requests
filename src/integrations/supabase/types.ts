@@ -9,7 +9,122 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      bugs: {
+        Row: {
+          created_at: string | null
+          current_situation: string
+          expected_behavior: string
+          id: number
+          product: string
+          reporter: string
+          status: Database["public"]["Enums"]["feature_status"] | null
+          title: string
+          updated_at: string | null
+          url: string
+          votes: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_situation: string
+          expected_behavior: string
+          id?: never
+          product: string
+          reporter: string
+          status?: Database["public"]["Enums"]["feature_status"] | null
+          title: string
+          updated_at?: string | null
+          url: string
+          votes?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          current_situation?: string
+          expected_behavior?: string
+          id?: never
+          product?: string
+          reporter?: string
+          status?: Database["public"]["Enums"]["feature_status"] | null
+          title?: string
+          updated_at?: string | null
+          url?: string
+          votes?: number | null
+        }
+        Relationships: []
+      }
+      comments: {
+        Row: {
+          created_at: string | null
+          feature_id: number | null
+          id: number
+          reporter: string
+          text: string
+        }
+        Insert: {
+          created_at?: string | null
+          feature_id?: number | null
+          id?: never
+          reporter: string
+          text: string
+        }
+        Update: {
+          created_at?: string | null
+          feature_id?: number | null
+          id?: never
+          reporter?: string
+          text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_feature_id_fkey"
+            columns: ["feature_id"]
+            isOneToOne: false
+            referencedRelation: "features"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      features: {
+        Row: {
+          created_at: string | null
+          description: string
+          experiment_owner: string | null
+          id: number
+          location: string | null
+          product: string
+          reporter: string
+          status: Database["public"]["Enums"]["feature_status"] | null
+          title: string
+          updated_at: string | null
+          votes: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          description: string
+          experiment_owner?: string | null
+          id?: never
+          location?: string | null
+          product: string
+          reporter: string
+          status?: Database["public"]["Enums"]["feature_status"] | null
+          title: string
+          updated_at?: string | null
+          votes?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string
+          experiment_owner?: string | null
+          id?: never
+          location?: string | null
+          product?: string
+          reporter?: string
+          status?: Database["public"]["Enums"]["feature_status"] | null
+          title?: string
+          updated_at?: string | null
+          votes?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +133,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      feature_status: "new" | "review" | "progress" | "completed"
     }
     CompositeTypes: {
       [_ in never]: never

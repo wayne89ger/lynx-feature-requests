@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { Feature } from "@/types/feature";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Comment {
   id: number;
@@ -94,7 +95,7 @@ export const FeatureCard = ({
   votes,
   comments,
   attachment,
-  reporter = "LYNX - Wanja Aram",
+  reporter,
   experimentOwner,
   onStatusChange,
   onAddComment,
@@ -106,30 +107,60 @@ export const FeatureCard = ({
   const [newComment, setNewComment] = useState("");
   const { toast } = useToast();
 
-  const handleVote = (direction: 'up' | 'down') => {
-    if (voteStatus === direction) {
-      setCurrentVotes(prev => direction === 'up' ? prev - 1 : prev + 1);
-      setVoteStatus('none');
-    } else {
-      if (voteStatus !== 'none') {
-        setCurrentVotes(prev => direction === 'up' ? prev + 2 : prev - 2);
-      } else {
-        setCurrentVotes(prev => direction === 'up' ? prev + 1 : prev - 1);
-      }
+  const handleVote = async (direction: 'up' | 'down') => {
+    try {
+      const voteChange = direction === 'up' ? 1 : -1;
+      const { data, error } = await supabase
+        .from(product === 'bug' ? 'bugs' : 'features')
+        .update({ votes: currentVotes + voteChange })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setCurrentVotes(data.votes);
       setVoteStatus(direction);
+      
+      toast({
+        title: "Vote recorded",
+        description: `You ${voteStatus === direction ? 'removed your vote' : direction === 'up' ? 'upvoted' : 'downvoted'} this ${product === 'bug' ? 'bug report' : 'feature request'}.`,
+      });
+    } catch (error) {
+      console.error('Error updating votes:', error);
+      toast({
+        title: "Error recording vote",
+        description: "Please try again later",
+        variant: "destructive",
+      });
     }
-
-    toast({
-      title: "Vote recorded",
-      description: `You ${voteStatus === direction ? 'removed your vote' : direction === 'up' ? 'upvoted' : 'downvoted'} this feature request.`,
-    });
   };
 
-  const handleStatusChange = (newStatus: "new" | "review" | "progress" | "completed") => {
-    onStatusChange?.(id, newStatus);
+  const handleStatusChange = async (newStatus: "new" | "review" | "progress" | "completed") => {
+    try {
+      const { error } = await supabase
+        .from(product === 'bug' ? 'bugs' : 'features')
+        .update({ status: newStatus })
+        .eq('id', id);
+
+      if (error) throw error;
+      onStatusChange?.(id, newStatus);
+      
+      toast({
+        title: "Status updated",
+        description: `Status changed to ${statusConfig[newStatus].label}`,
+      });
+    } catch (error) {
+      console.error('Error updating status:', error);
+      toast({
+        title: "Error updating status",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleAddComment = () => {
+  const handleAddComment = async () => {
     if (!newComment.trim()) {
       toast({
         title: "Error",
@@ -138,12 +169,35 @@ export const FeatureCard = ({
       });
       return;
     }
-    onAddComment?.(id, newComment);
-    setNewComment("");
-    toast({
-      title: "Comment added",
-      description: "Your comment has been added successfully.",
-    });
+
+    try {
+      const { data, error } = await supabase
+        .from('comments')
+        .insert([{
+          feature_id: id,
+          text: newComment.trim(),
+          reporter: reporter
+        }])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      onAddComment?.(id, newComment);
+      setNewComment("");
+      
+      toast({
+        title: "Comment added",
+        description: "Your comment has been added successfully.",
+      });
+    } catch (error) {
+      console.error('Error adding comment:', error);
+      toast({
+        title: "Error adding comment",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
