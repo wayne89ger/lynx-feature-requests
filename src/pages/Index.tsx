@@ -77,7 +77,7 @@ const Index = () => {
       const bugsAsFeatures = (data || []).map(bug => ({
         id: bug.id,
         title: bug.title,
-        description: bug.current_situation, // Use current situation as description
+        description: bug.current_situation,
         status: bug.status,
         product: bug.product,
         votes: bug.votes || 0,
@@ -122,7 +122,13 @@ const Index = () => {
 
       if (error) throw error;
 
-      setFeatures([...features, data]);
+      // Add empty comments array to match Feature type
+      const newFeature: Feature = {
+        ...data,
+        comments: []
+      };
+
+      setFeatures([...features, newFeature]);
       toast({
         title: "Feature submitted",
         description: "Your feature request has been saved successfully.",
@@ -161,7 +167,21 @@ const Index = () => {
 
       if (error) throw error;
 
-      setBugs([...bugs, data]);
+      // Transform bug to match Feature type
+      const newBug: Feature = {
+        id: data.id,
+        title: data.title,
+        description: data.current_situation,
+        status: data.status,
+        product: data.product,
+        votes: data.votes || 0,
+        reporter: data.reporter,
+        comments: [],
+        created_at: data.created_at,
+        updated_at: data.updated_at
+      };
+
+      setBugs([...bugs, newBug]);
       toast({
         title: "Bug submitted",
         description: "Your bug report has been saved successfully.",
@@ -194,7 +214,14 @@ const Index = () => {
 
       if (error) throw error;
 
-      setFeatures(features.map(f => f.id === id ? data : f));
+      // Preserve existing comments when updating
+      const existingFeature = features.find(f => f.id === id);
+      const updatedFeatureWithComments: Feature = {
+        ...data,
+        comments: existingFeature?.comments || []
+      };
+
+      setFeatures(features.map(f => f.id === id ? updatedFeatureWithComments : f));
       setShowEditForm(false);
       setSelectedFeature(null);
       toast({
