@@ -224,8 +224,9 @@ const Index = () => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Products</SelectItem>
-            <SelectItem value="website-demand-capture">Website / Demand Capture</SelectItem>
-            <SelectItem value="dof-onboarding">DOF / Onboarding</SelectItem>
+            {Object.entries(productLabels).map(([value, label]) => (
+              <SelectItem key={value} value={value}>{label}</SelectItem>
+            ))}
           </SelectContent>
         </Select>
 
