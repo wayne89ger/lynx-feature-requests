@@ -1,6 +1,6 @@
-import { FeatureCard } from "../feature-request/FeatureCard";
 import { Feature } from "@/types/feature";
 import { Bug } from "lucide-react";
+import { BugCard } from "./BugCard";
 
 interface BugListProps {
   bugs: Feature[];
@@ -13,10 +13,16 @@ export const BugList = ({ bugs, onEdit }: BugListProps) => {
       {bugs.map((bug) => (
         <div key={bug.id} className="relative">
           <Bug className="absolute left-4 top-4 text-destructive/70 w-5 h-5" />
-          <FeatureCard
-            {...bug}
-            product="bug"
-            onEdit={() => onEdit(bug)}
+          <BugCard
+            id={bug.id}
+            title={bug.title}
+            description={bug.description}
+            status={bug.status}
+            product={bug.product}
+            votes={bug.votes}
+            comments={bug.comments}
+            reporter={bug.reporter}
+            onEdit={onEdit}
           />
         </div>
       ))}
