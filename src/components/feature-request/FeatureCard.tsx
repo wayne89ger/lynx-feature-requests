@@ -72,7 +72,7 @@ export const FeatureCard = ({
   id,
   title,
   description,
-  status = "new", // Provide default value
+  status = "new",
   product,
   location,
   votes,
@@ -156,7 +156,19 @@ export const FeatureCard = ({
                 variant="ghost"
                 size="sm"
                 className="gap-1"
-                onClick={() => onEdit({ id, title, description, product, location })}
+                onClick={() => onEdit({
+                  id,
+                  title,
+                  description,
+                  status,
+                  product,
+                  location,
+                  votes,
+                  comments,
+                  attachment,
+                  reporter,
+                  experimentOwner
+                })}
               >
                 <Edit className="w-4 h-4" />
                 Edit

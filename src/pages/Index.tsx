@@ -137,11 +137,12 @@ const Index = () => {
       {showEditForm && selectedFeature && (
         <EditFeatureForm
           feature={selectedFeature}
-          onUpdate={handleFeatureUpdate}
-          onCancel={() => {
+          open={showEditForm}
+          onClose={() => {
             setShowEditForm(false);
             setSelectedFeature(null);
           }}
+          onSave={handleFeatureUpdate}
         />
       )}
 
