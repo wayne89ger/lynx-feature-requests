@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowBigUp, ArrowBigDown, MessageCircle, Paperclip, Edit } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -107,24 +107,108 @@ export const FeatureCard = ({
   const [newComment, setNewComment] = useState("");
   const { toast } = useToast();
 
+  useEffect(() => {
+    const checkVoteStatus = async () => {
+      try {
+        const { data: voteData, error } = await supabase
+          .from('feature_votes')
+          .select('vote_type')
+          .eq('feature_id', id)
+          .eq('reporter', reporter)
+          .single();
+
+        if (error) {
+          if (error.code !== 'PGRST116') { // PGRST116 is the error code for no rows returned
+            console.error('Error checking vote status:', error);
+          }
+          return;
+        }
+
+        if (voteData) {
+          setVoteStatus(voteData.vote_type);
+        }
+      } catch (error) {
+        console.error('Error checking vote status:', error);
+      }
+    };
+
+    checkVoteStatus();
+  }, [id, reporter]);
+
   const handleVote = async (direction: 'up' | 'down') => {
     try {
+      if (voteStatus === direction) {
+        const { error: deleteError } = await supabase
+          .from('feature_votes')
+          .delete()
+          .eq('feature_id', id)
+          .eq('reporter', reporter);
+
+        if (deleteError) throw deleteError;
+
+        const { data, error: updateError } = await supabase
+          .from('features')
+          .update({ votes: currentVotes - (direction === 'up' ? 1 : -1) })
+          .eq('id', id)
+          .select()
+          .single();
+
+        if (updateError) throw updateError;
+
+        setCurrentVotes(data.votes);
+        setVoteStatus('none');
+        
+        toast({
+          title: "Vote removed",
+          description: "Your vote has been removed.",
+        });
+        return;
+      }
+
+      if (voteStatus !== 'none') {
+        const { error: deleteError } = await supabase
+          .from('feature_votes')
+          .delete()
+          .eq('feature_id', id)
+          .eq('reporter', reporter);
+
+        if (deleteError) throw deleteError;
+
+        const voteAdjustment = voteStatus === 'up' ? -1 : 1;
+        await supabase
+          .from('features')
+          .update({ votes: currentVotes + voteAdjustment })
+          .eq('id', id);
+      }
+
+      const { error: insertError } = await supabase
+        .from('feature_votes')
+        .insert([{
+          feature_id: id,
+          reporter: reporter,
+          vote_type: direction
+        }]);
+
+      if (insertError) throw insertError;
+
       const voteChange = direction === 'up' ? 1 : -1;
-      const { data, error } = await supabase
-        .from(product === 'bug' ? 'bugs' : 'features')
-        .update({ votes: currentVotes + voteChange })
+      const { data, error: updateError } = await supabase
+        .from('features')
+        .update({ 
+          votes: currentVotes + voteChange + (voteStatus !== 'none' ? (voteStatus === 'up' ? -1 : 1) : 0)
+        })
         .eq('id', id)
         .select()
         .single();
 
-      if (error) throw error;
+      if (updateError) throw updateError;
 
       setCurrentVotes(data.votes);
       setVoteStatus(direction);
       
       toast({
         title: "Vote recorded",
-        description: `You ${voteStatus === direction ? 'removed your vote' : direction === 'up' ? 'upvoted' : 'downvoted'} this ${product === 'bug' ? 'bug report' : 'feature request'}.`,
+        description: `You ${direction === 'up' ? 'upvoted' : 'downvoted'} this feature request.`,
       });
     } catch (error) {
       console.error('Error updating votes:', error);
@@ -202,7 +286,6 @@ export const FeatureCard = ({
 
   return (
     <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
-      {/* Header Row */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Select value={status} onValueChange={handleStatusChange}>
@@ -272,7 +355,6 @@ export const FeatureCard = ({
         )}
       </div>
 
-      {/* Content */}
       <div className="space-y-2 mb-4">
         <h3 className="text-lg font-semibold">{title}</h3>
         <p className="text-gray-600 text-sm">{description}</p>
@@ -282,7 +364,6 @@ export const FeatureCard = ({
         </p>
       </div>
 
-      {/* Footer Row */}
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
           <Button
@@ -333,7 +414,6 @@ export const FeatureCard = ({
         </Button>
       </div>
 
-      {/* Comments Section */}
       {showComments && (
         <div className="space-y-4 border-t pt-4 mt-4">
           <ScrollArea className="h-[200px] w-full rounded-md border p-4">

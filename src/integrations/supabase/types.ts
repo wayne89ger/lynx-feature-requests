@@ -86,6 +86,38 @@ export type Database = {
           },
         ]
       }
+      feature_votes: {
+        Row: {
+          created_at: string | null
+          feature_id: number | null
+          id: number
+          reporter: string
+          vote_type: Database["public"]["Enums"]["vote_type"]
+        }
+        Insert: {
+          created_at?: string | null
+          feature_id?: number | null
+          id?: number
+          reporter: string
+          vote_type: Database["public"]["Enums"]["vote_type"]
+        }
+        Update: {
+          created_at?: string | null
+          feature_id?: number | null
+          id?: number
+          reporter?: string
+          vote_type?: Database["public"]["Enums"]["vote_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feature_votes_feature_id_fkey"
+            columns: ["feature_id"]
+            isOneToOne: false
+            referencedRelation: "features"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       features: {
         Row: {
           created_at: string | null
@@ -138,6 +170,7 @@ export type Database = {
     Enums: {
       bug_status: "new" | "review" | "progress" | "completed"
       feature_status: "new" | "review" | "progress" | "completed"
+      vote_type: "up" | "down"
     }
     CompositeTypes: {
       [_ in never]: never
