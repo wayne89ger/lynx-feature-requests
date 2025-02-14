@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import {
   Dialog,
@@ -9,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ActionButtons } from "./form-sections/ActionButtons";
 import { BasicInformation } from "./form-sections/BasicInformation";
 import { FeatureSpecificFields } from "./form-sections/FeatureSpecificFields";
+import { EXPERIMENT_OWNERS } from "@/constants/experimentOwners";
 
 interface EditFeatureFormProps {
   feature: {
@@ -20,6 +22,7 @@ interface EditFeatureFormProps {
     product: string;
     location?: string;
     url?: string;
+    experimentOwner?: string;
   };
   open: boolean;
   onClose: () => void;
@@ -50,7 +53,9 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
   const [impact, setImpact] = useState<number>(1);
   const [confidence, setConfidence] = useState<number>(1);
   const [effort, setEffort] = useState<number>(1);
-  const [experimentOwner, setExperimentOwner] = useState<string>("");
+  const [experimentOwner, setExperimentOwner] = useState<string>(feature.experimentOwner || EXPERIMENT_OWNERS[0]);
+  const [reviewers, setReviewers] = useState<string[]>([]);
+  const [timeframe, setTimeframe] = useState("3 month");
   
   const { toast } = useToast();
 
@@ -76,6 +81,19 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
       description,
       product,
       location: product === "website-demand-capture" ? location : undefined,
+      experimentOwner,
+      hypothesis,
+      expectedOutcome,
+      type,
+      selectedMetrics,
+      userResearch,
+      mvpStates,
+      reach,
+      impact,
+      confidence,
+      effort,
+      reviewers,
+      timeframe
     };
 
     onSave(feature.id, updatedData);
@@ -140,6 +158,10 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
               setImpact={setImpact}
               setConfidence={setConfidence}
               setEffort={setEffort}
+              reviewers={reviewers}
+              setReviewers={setReviewers}
+              timeframe={timeframe}
+              setTimeframe={setTimeframe}
             />
           )}
 
