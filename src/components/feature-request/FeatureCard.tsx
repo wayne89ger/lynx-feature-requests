@@ -115,12 +115,10 @@ export const FeatureCard = ({
           .select('vote_type')
           .eq('feature_id', id)
           .eq('reporter', reporter)
-          .single();
+          .maybeSingle();
 
         if (error) {
-          if (error.code !== 'PGRST116') { // PGRST116 is the error code for no rows returned
-            console.error('Error checking vote status:', error);
-          }
+          console.error('Error checking vote status:', error);
           return;
         }
 
