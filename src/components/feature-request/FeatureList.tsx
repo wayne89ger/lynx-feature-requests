@@ -1,23 +1,33 @@
 
-import { FeatureCard } from "./FeatureCard";
 import { Feature } from "@/types/feature";
+import { FeatureCard } from "./FeatureCard";
 
 interface FeatureListProps {
   features: Feature[];
   onEdit: (feature: Feature) => void;
   onDelete: (id: number) => void;
+  onStatusChange: (id: number, newStatus: Feature['status']) => void;
 }
 
-export const FeatureList = ({ features, onEdit, onDelete }: FeatureListProps) => {
+export const FeatureList = ({ features, onEdit, onDelete, onStatusChange }: FeatureListProps) => {
+  if (features.length === 0) {
+    return (
+      <div className="text-center py-8 text-gray-500">
+        No feature requests found.
+      </div>
+    );
+  }
+
   return (
-    <div className="grid grid-cols-1 gap-4">
+    <div className="space-y-4">
       {features.map((feature) => (
         <FeatureCard
           key={feature.id}
           {...feature}
           onEdit={() => onEdit(feature)}
           onDelete={onDelete}
-          className="border-0 shadow-sm hover:shadow transition-shadow"
+          onStatusChange={onStatusChange}
+          className="hover:border-primary/20 transition-colors"
         />
       ))}
     </div>

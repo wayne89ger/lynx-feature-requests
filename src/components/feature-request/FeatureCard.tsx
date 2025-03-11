@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, Paperclip } from "lucide-react";
@@ -36,6 +37,7 @@ export const FeatureCard = ({
   className = "",
 }: FeatureCardProps) => {
   const [currentVotes, setCurrentVotes] = useState(votes);
+  const [currentStatus, setCurrentStatus] = useState(status);
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState("");
   const { toast } = useToast();
@@ -44,12 +46,19 @@ export const FeatureCard = ({
   const handleStatusChange = async (newStatus: "new" | "review" | "progress" | "completed") => {
     try {
       const { error } = await supabase
-        .from(product === 'bug' ? 'bugs' : 'features')
+        .from('features')
         .update({ status: newStatus })
         .eq('id', id);
 
       if (error) throw error;
-      onStatusChange?.(id, newStatus);
+      
+      // Update local state
+      setCurrentStatus(newStatus);
+      
+      // Notify parent component
+      if (onStatusChange) {
+        onStatusChange(id, newStatus);
+      }
       
       toast({
         title: "Status updated",
@@ -199,7 +208,7 @@ export const FeatureCard = ({
   return (
     <div className={`bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200 border-2 border-[#F2FCE2] ${className}`}>
       <FeatureHeader
-        status={status}
+        status={currentStatus}
         product={product}
         location={location}
         onStatusChange={handleStatusChange}
@@ -207,10 +216,10 @@ export const FeatureCard = ({
           id,
           title,
           description,
-          status,
+          status: currentStatus,
           product,
           location,
-          votes,
+          votes: currentVotes,
           comments,
           attachment,
           reporter,

@@ -26,7 +26,7 @@ export const DataManager = () => {
 
   const { handleFeatureSubmit } = useFeatureSubmission(features, setFeatures);
   const { handleBugSubmit } = useBugSubmission(bugs, setBugs);
-  const { handleFeatureUpdate } = useFeatureUpdate(features, setFeatures);
+  const { handleFeatureUpdate, handleStatusUpdate } = useFeatureUpdate(features, setFeatures);
 
   const filteredAndSortedFeatures = features
     .filter(feature => 
@@ -67,6 +67,11 @@ export const DataManager = () => {
     if (success) {
       handleCloseEdit();
     }
+  };
+
+  const handleStatusChange = async (id: number, newStatus: Feature['status']) => {
+    console.log('Status change requested for feature', id, 'to', newStatus);
+    await handleStatusUpdate(id, newStatus);
   };
 
   const handleBugSave = async (id: number, updatedBug: any) => {
@@ -114,6 +119,7 @@ export const DataManager = () => {
         onEditBug={handleEditBug}
         onDeleteFeature={handleFeatureDelete}
         onDeleteBug={handleBugDelete}
+        onStatusChange={handleStatusChange}
         selectedProduct={selectedProduct}
         setSelectedProduct={setSelectedProduct}
         selectedStatus={selectedStatus}
