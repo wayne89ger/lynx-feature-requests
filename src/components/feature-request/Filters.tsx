@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 interface FiltersProps {
+  activeTab: string;
   selectedProduct: string;
   setSelectedProduct: (value: string) => void;
   selectedStatus: string;
@@ -21,10 +22,11 @@ interface FiltersProps {
 const productLabels = {
   "website-demand-capture": "Website / Demand Capture",
   "dof-onboarding": "DOF / Onboarding",
-  "lynx-plus": "LYNX+ / Client Experience"
+  "lynx-plus": "LYNX+ / Product Discovery"
 };
 
 export const Filters = ({
+  activeTab,
   selectedProduct,
   setSelectedProduct,
   selectedStatus,
