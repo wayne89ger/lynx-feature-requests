@@ -51,7 +51,7 @@ export const TabsSection = ({
         <TabsList className="mb-4 w-full">
           <TabsTrigger 
             value="features" 
-            className="relative flex-1 data-[state=active]:bg-[#F2FCE2] data-[state=active]:border-primary data-[state=active]:border-2"
+            className="relative flex-1 data-[state=active]:bg-[#F2FCE2]"
           >
             Feature Requests
             {filteredFeatures.length > 0 && (
@@ -62,7 +62,7 @@ export const TabsSection = ({
           </TabsTrigger>
           <TabsTrigger 
             value="bugs" 
-            className="relative flex-1 data-[state=active]:bg-red-50 data-[state=active]:border-[#ea384c] data-[state=active]:border-2"
+            className="relative flex-1 data-[state=active]:bg-red-50"
           >
             Bug Reports
             {filteredBugs.length > 0 && (
@@ -73,22 +73,27 @@ export const TabsSection = ({
           </TabsTrigger>
         </TabsList>
 
-        <Filters
-          activeTab={activeTab}
-          selectedProduct={selectedProduct}
-          setSelectedProduct={setSelectedProduct}
-          selectedStatus={selectedStatus}
-          setSelectedStatus={setSelectedStatus}
-          selectedLocation={selectedLocation}
-          setSelectedLocation={setSelectedLocation}
-          selectedRequester={selectedRequester}
-          setSelectedRequester={setSelectedRequester}
-          selectedExperimentOwner={selectedExperimentOwner}
-          setSelectedExperimentOwner={setSelectedExperimentOwner}
-        />
+        <div className="flex flex-row gap-3 mt-4 mb-6">
+          <Filters
+            activeTab={activeTab}
+            selectedProduct={selectedProduct}
+            setSelectedProduct={setSelectedProduct}
+            selectedStatus={selectedStatus}
+            setSelectedStatus={setSelectedStatus}
+            selectedLocation={selectedLocation}
+            setSelectedLocation={setSelectedLocation}
+            selectedRequester={selectedRequester}
+            setSelectedRequester={setSelectedRequester}
+            selectedExperimentOwner={selectedExperimentOwner}
+            setSelectedExperimentOwner={setSelectedExperimentOwner}
+          />
+        </div>
       </div>
 
-      <TabsContent value="features" className="mt-0">
+      <TabsContent value="features" className="mt-0 border-2 border-primary rounded-lg p-6">
+        <h2 className="text-2xl font-semibold text-center text-primary mb-2">Feature Requests</h2>
+        <p className="text-center text-muted-foreground mb-6">Browse and vote on proposed features</p>
+        
         {filteredFeatures.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground">
             No feature requests found. Try adjusting your filters or submit a new feature request.
@@ -102,7 +107,10 @@ export const TabsSection = ({
         )}
       </TabsContent>
 
-      <TabsContent value="bugs" className="mt-0">
+      <TabsContent value="bugs" className="mt-0 border-2 border-[#ea384c] rounded-lg p-6">
+        <h2 className="text-2xl font-semibold text-center text-destructive mb-2">Bug Reports</h2>
+        <p className="text-center text-muted-foreground mb-6">Help us track and fix issues</p>
+        
         {filteredBugs.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground">
             No bugs found. Try adjusting your filters or submit a new bug report.

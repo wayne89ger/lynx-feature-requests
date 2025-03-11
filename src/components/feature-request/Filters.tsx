@@ -1,7 +1,6 @@
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { EXPERIMENT_OWNERS } from "@/constants/experimentOwners";
-import { useState } from "react";
 
 interface FiltersProps {
   activeTab: string;
@@ -37,11 +36,11 @@ export const Filters = ({
   setSelectedExperimentOwner
 }: FiltersProps) => {
   return (
-    <div className="flex flex-wrap gap-4 my-4">
+    <>
       {/* Product filter */}
-      <div className="w-full sm:w-[200px]">
+      <div className="w-full">
         <Select value={selectedProduct} onValueChange={setSelectedProduct}>
-          <SelectTrigger className="w-full bg-white border-lynx-border shadow-sm hover:border-lynx-primary/50 transition-colors">
+          <SelectTrigger className="bg-white border-lynx-border shadow-sm">
             <SelectValue placeholder="All Products" />
           </SelectTrigger>
           <SelectContent>
@@ -54,9 +53,9 @@ export const Filters = ({
       </div>
 
       {/* Status filter */}
-      <div className="w-full sm:w-[200px]">
+      <div className="w-full">
         <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-          <SelectTrigger className="w-full bg-white border-lynx-border shadow-sm hover:border-lynx-primary/50 transition-colors">
+          <SelectTrigger className="bg-white border-lynx-border shadow-sm">
             <SelectValue placeholder="All Statuses" />
           </SelectTrigger>
           <SelectContent>
@@ -70,9 +69,9 @@ export const Filters = ({
       </div>
 
       {/* Location filter */}
-      <div className="w-full sm:w-[200px]">
+      <div className="w-full">
         <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-          <SelectTrigger className="w-full bg-white border-lynx-border shadow-sm hover:border-lynx-primary/50 transition-colors">
+          <SelectTrigger className="bg-white border-lynx-border shadow-sm">
             <SelectValue placeholder="All Locations" />
           </SelectTrigger>
           <SelectContent>
@@ -85,9 +84,9 @@ export const Filters = ({
       </div>
 
       {/* Requester filter */}
-      <div className="w-full sm:w-[200px]">
+      <div className="w-full">
         <Select value={selectedRequester} onValueChange={setSelectedRequester}>
-          <SelectTrigger className="w-full bg-white border-lynx-border shadow-sm hover:border-lynx-primary/50 transition-colors">
+          <SelectTrigger className="bg-white border-lynx-border shadow-sm">
             <SelectValue placeholder="All Requesters" />
           </SelectTrigger>
           <SelectContent>
@@ -100,9 +99,9 @@ export const Filters = ({
       </div>
 
       {/* Experiment Owner filter */}
-      <div className="w-full sm:w-[200px]">
+      <div className="w-full">
         <Select value={selectedExperimentOwner} onValueChange={setSelectedExperimentOwner}>
-          <SelectTrigger className="w-full bg-white border-lynx-border shadow-sm hover:border-lynx-primary/50 transition-colors">
+          <SelectTrigger className="bg-white border-lynx-border shadow-sm">
             <SelectValue placeholder="All Experiment Owners" />
           </SelectTrigger>
           <SelectContent>
@@ -113,6 +112,6 @@ export const Filters = ({
           </SelectContent>
         </Select>
       </div>
-    </div>
+    </>
   );
 };
