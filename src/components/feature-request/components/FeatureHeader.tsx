@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Edit } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -18,6 +18,7 @@ interface FeatureHeaderProps {
   location?: string;
   onStatusChange: (newStatus: Feature['status']) => void;
   onEdit?: () => void;
+  onDelete?: () => void;
 }
 
 export const FeatureHeader = ({
@@ -25,7 +26,8 @@ export const FeatureHeader = ({
   product,
   location,
   onStatusChange,
-  onEdit
+  onEdit,
+  onDelete
 }: FeatureHeaderProps) => {
   return (
     <div className="flex items-center justify-between mb-4">
@@ -70,19 +72,32 @@ export const FeatureHeader = ({
           </span>
         )}
       </div>
-      {onEdit && (
-        <Button
-          variant="ghost"
-          size="sm"
-          className="gap-1"
-          onClick={onEdit}
-        >
-          <Edit className="w-4 h-4" />
-          <span className="hidden sm:inline">
-            {product === "bug" ? "Edit Bug" : "Edit Feature"}
-          </span>
-        </Button>
-      )}
+      <div className="flex flex-col gap-1">
+        {onEdit && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-1 h-8 justify-start"
+            onClick={onEdit}
+          >
+            <Edit className="w-4 h-4" />
+            <span className="hidden sm:inline">
+              {product === "bug" ? "Edit Bug" : "Edit Feature"}
+            </span>
+          </Button>
+        )}
+        {onDelete && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-1 h-8 justify-start text-destructive hover:text-destructive hover:bg-destructive/10"
+            onClick={onDelete}
+          >
+            <Trash2 className="w-4 h-4" />
+            <span className="hidden sm:inline">Delete</span>
+          </Button>
+        )}
+      </div>
     </div>
   );
 };

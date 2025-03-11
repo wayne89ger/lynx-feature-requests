@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { ArrowBigUp, ArrowBigDown, MessageCircle, Paperclip, Edit, Bug, Trash2 } from "lucide-react";
+import { ArrowBigUp, ArrowBigDown, MessageCircle, Paperclip, Edit, Bug } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Select,
@@ -221,11 +221,11 @@ export const BugCard = ({
             </span>
           )}
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-1">
           <Button
             variant="ghost"
             size="sm"
-            className="gap-1"
+            className="gap-1 h-8 justify-start"
             onClick={() => onEdit({
               id,
               title,
@@ -240,15 +240,17 @@ export const BugCard = ({
             <Edit className="w-4 h-4" />
             <span className="hidden sm:inline">Edit Bug</span>
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="gap-1 text-destructive hover:text-destructive hover:bg-destructive/10"
-            onClick={handleDelete}
-          >
-            <Trash2 className="w-4 h-4" />
-            <span className="hidden sm:inline">Delete</span>
-          </Button>
+          {onDelete && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-1 h-8 justify-start text-destructive hover:text-destructive hover:bg-destructive/10"
+              onClick={handleDelete}
+            >
+              <Trash2 className="w-4 h-4" />
+              <span className="hidden sm:inline">Delete</span>
+            </Button>
+          )}
         </div>
       </div>
 

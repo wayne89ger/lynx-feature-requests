@@ -47,8 +47,8 @@ export const TabsSection = ({
 
   return (
     <Tabs defaultValue="features" className="mt-8" onValueChange={setActiveTab}>
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <TabsList>
+      <div className="mb-6">
+        <TabsList className="mb-4">
           <TabsTrigger value="features" className="relative">
             Features
             {filteredFeatures.length > 0 && (

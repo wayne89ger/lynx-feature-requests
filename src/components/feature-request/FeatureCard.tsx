@@ -1,8 +1,6 @@
-
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Paperclip, Trash2 } from "lucide-react";
+import { MessageCircle, Paperclip } from "lucide-react";
 import { Feature } from "@/types/feature";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -198,39 +196,26 @@ export const FeatureCard = ({
 
   return (
     <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
-      <div className="flex justify-between items-start mb-2">
-        <FeatureHeader
-          status={status}
-          product={product}
-          location={location}
-          onStatusChange={handleStatusChange}
-          onEdit={onEdit ? () => onEdit({
-            id,
-            title,
-            description,
-            status,
-            product,
-            location,
-            votes,
-            comments,
-            attachment,
-            reporter,
-            experimentOwner
-          }) : undefined}
-        />
-        
-        {onDelete && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="gap-1 text-destructive hover:text-destructive hover:bg-destructive/10"
-            onClick={handleDelete}
-          >
-            <Trash2 className="w-4 h-4" />
-            <span className="hidden sm:inline">Delete</span>
-          </Button>
-        )}
-      </div>
+      <FeatureHeader
+        status={status}
+        product={product}
+        location={location}
+        onStatusChange={handleStatusChange}
+        onEdit={onEdit ? () => onEdit({
+          id,
+          title,
+          description,
+          status,
+          product,
+          location,
+          votes,
+          comments,
+          attachment,
+          reporter,
+          experimentOwner
+        }) : undefined}
+        onDelete={onDelete ? () => onDelete(id) : undefined}
+      />
 
       <div className="space-y-2 mb-4">
         <h3 className="text-lg font-semibold">{title}</h3>
