@@ -38,6 +38,14 @@ export const productLabels = {
   "lynx-plus": {
     full: "LYNX+ / Product Discovery",
     mobile: "LYNX+"
+  },
+  "proactive-service": {
+    full: "Proactive Service",
+    mobile: "Proactive"
+  },
+  "operational-efficiency": {
+    full: "Operational Efficiency",
+    mobile: "Operations"
   }
 };
 

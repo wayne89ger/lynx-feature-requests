@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -98,7 +99,9 @@ export const BugReportForm = ({ onSubmit }: BugReportFormProps) => {
               <SelectContent>
                 <SelectItem value="website-demand-capture">Website / Demand Capture</SelectItem>
                 <SelectItem value="dof-onboarding">DOF / Onboarding</SelectItem>
-                <SelectItem value="lynx-plus">LYNX+ / Client Experience</SelectItem>
+                <SelectItem value="lynx-plus">LYNX+ / Product Discovery</SelectItem>
+                <SelectItem value="proactive-service">Proactive Service</SelectItem>
+                <SelectItem value="operational-efficiency">Operational Efficiency</SelectItem>
               </SelectContent>
             </Select>
           </div>

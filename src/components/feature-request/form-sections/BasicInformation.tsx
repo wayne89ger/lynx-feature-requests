@@ -1,3 +1,4 @@
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -91,7 +92,9 @@ export const BasicInformation = ({
           <SelectContent>
             <SelectItem value="website-demand-capture">Website / Demand Capture</SelectItem>
             <SelectItem value="dof-onboarding">DOF / Onboarding</SelectItem>
-            <SelectItem value="bug">Bug</SelectItem>
+            <SelectItem value="lynx-plus">LYNX+ / Product Discovery</SelectItem>
+            <SelectItem value="proactive-service">Proactive Service</SelectItem>
+            <SelectItem value="operational-efficiency">Operational Efficiency</SelectItem>
           </SelectContent>
         </Select>
       </div>
