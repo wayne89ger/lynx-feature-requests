@@ -90,7 +90,7 @@ export const TabsSection = ({
         </div>
       </div>
 
-      <TabsContent value="features" className="mt-0 border border-primary rounded-lg p-6">
+      <TabsContent value="features" className="mt-0 border border-[rgba(22,162,73,0.2)] rounded-lg p-6">
         <h2 className="text-2xl font-semibold text-center text-primary mb-2">Feature Requests</h2>
         <p className="text-center text-muted-foreground mb-6">Browse and vote on proposed features</p>
         
@@ -107,7 +107,7 @@ export const TabsSection = ({
         )}
       </TabsContent>
 
-      <TabsContent value="bugs" className="mt-0 border border-destructive rounded-lg p-6">
+      <TabsContent value="bugs" className="mt-0 border border-[rgba(239,68,68,0.2)] rounded-lg p-6">
         <h2 className="text-2xl font-semibold text-center text-destructive mb-2">Bug Reports</h2>
         <p className="text-center text-muted-foreground mb-6">Help us track and fix issues</p>
         

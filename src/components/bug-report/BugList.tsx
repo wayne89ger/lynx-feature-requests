@@ -26,7 +26,7 @@ export const BugList = ({ bugs, onEdit, onDelete }: BugListProps) => {
             reporter={bug.reporter}
             onEdit={onEdit}
             onDelete={onDelete}
-            className="border-0 shadow hover:shadow-md"
+            className="border-0 shadow-sm hover:shadow transition-shadow"
           />
         </div>
       ))}

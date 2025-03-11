@@ -17,6 +17,7 @@ export const FeatureList = ({ features, onEdit, onDelete }: FeatureListProps) =>
           {...feature}
           onEdit={() => onEdit(feature)}
           onDelete={onDelete}
+          className="border-0 shadow-sm hover:shadow transition-shadow"
         />
       ))}
     </div>
