@@ -13,6 +13,7 @@ interface TabsSectionProps {
   onEditBug: (bug: Feature) => void;
   onDeleteFeature: (id: number) => void;
   onDeleteBug: (id: number) => void;
+  onStatusChange: (id: number, newStatus: Feature['status']) => void;
   selectedProduct: string;
   setSelectedProduct: (product: string) => void;
   selectedStatus: string;
@@ -32,6 +33,7 @@ export const TabsSection = ({
   onEditBug,
   onDeleteFeature,
   onDeleteBug,
+  onStatusChange,
   selectedProduct,
   setSelectedProduct,
   selectedStatus,
@@ -103,6 +105,7 @@ export const TabsSection = ({
             features={filteredFeatures} 
             onEdit={onEdit}
             onDelete={onDeleteFeature}
+            onStatusChange={onStatusChange}
           />
         )}
       </TabsContent>
