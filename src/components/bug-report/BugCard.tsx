@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { ArrowBigUp, ArrowBigDown, MessageCircle, Paperclip, Edit, Bug } from "lucide-react";
+import { ArrowBigUp, ArrowBigDown, MessageCircle, Paperclip, Edit, Bug, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Select,
