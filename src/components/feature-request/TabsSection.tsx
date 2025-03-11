@@ -92,8 +92,8 @@ export const TabsSection = ({
         </div>
       </div>
 
-      <TabsContent value="features" className="mt-0 border border-[rgba(22,162,73,0.2)] rounded-lg p-6">
-        <h2 className="text-2xl font-semibold text-center text-primary mb-2">Feature Requests</h2>
+      <TabsContent value="features" className="mt-0 border border-[rgba(22,162,73,0.2)] rounded-lg p-4 sm:p-6">
+        <h2 className="text-xl sm:text-2xl font-semibold text-center text-primary mb-2">Feature Requests</h2>
         <p className="text-center text-muted-foreground mb-6">Browse and vote on proposed features</p>
         
         {filteredFeatures.length === 0 ? (
@@ -110,8 +110,8 @@ export const TabsSection = ({
         )}
       </TabsContent>
 
-      <TabsContent value="bugs" className="mt-0 border border-[rgba(239,68,68,0.2)] rounded-lg p-6">
-        <h2 className="text-2xl font-semibold text-center text-destructive mb-2">Bug Reports</h2>
+      <TabsContent value="bugs" className="mt-0 border border-[rgba(239,68,68,0.2)] rounded-lg p-4 sm:p-6">
+        <h2 className="text-xl sm:text-2xl font-semibold text-center text-destructive mb-2">Bug Reports</h2>
         <p className="text-center text-muted-foreground mb-6">Help us track and fix issues</p>
         
         {filteredBugs.length === 0 ? (

@@ -19,7 +19,7 @@ export const FeatureList = ({ features, onEdit, onDelete, onStatusChange }: Feat
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 sm:space-y-4">
       {features.map((feature) => (
         <FeatureCard
           key={feature.id}
@@ -27,7 +27,6 @@ export const FeatureList = ({ features, onEdit, onDelete, onStatusChange }: Feat
           onEdit={() => onEdit(feature)}
           onDelete={onDelete}
           onStatusChange={onStatusChange}
-          className="transition-all"
         />
       ))}
     </div>

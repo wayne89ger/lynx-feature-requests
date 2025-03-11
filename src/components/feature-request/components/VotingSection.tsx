@@ -11,12 +11,12 @@ interface VotingSectionProps {
 
 export const VotingSection = ({ votes, voteStatus, onVote }: VotingSectionProps) => {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1">
       <Button
         variant="ghost"
         size="sm"
         className={cn(
-          "p-1 hover:bg-gray-100",
+          "h-7 w-7 p-0 hover:bg-gray-100",
           voteStatus === 'up' && "text-primary bg-primary/10 hover:bg-primary/20"
         )}
         onClick={() => onVote('up')}
@@ -28,7 +28,7 @@ export const VotingSection = ({ votes, voteStatus, onVote }: VotingSectionProps)
         variant="ghost"
         size="sm"
         className={cn(
-          "p-1 hover:bg-gray-100",
+          "h-7 w-7 p-0 hover:bg-gray-100",
           voteStatus === 'down' && "text-destructive bg-destructive/10 hover:bg-destructive/20"
         )}
         onClick={() => onVote('down')}
