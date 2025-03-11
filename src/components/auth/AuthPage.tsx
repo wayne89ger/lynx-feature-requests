@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useAuth } from "./AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { Microsoft } from "lucide-react";
+import { LogIn } from "lucide-react";
 
 export default function AuthPage() {
   const { user, signInWithMicrosoft, loading } = useAuth();
@@ -39,7 +39,7 @@ export default function AuthPage() {
               onClick={signInWithMicrosoft} 
               className="w-full bg-[#2f2f2f] hover:bg-[#1f1f1f]"
             >
-              <Microsoft className="mr-2 h-4 w-4" />
+              <LogIn className="mr-2 h-4 w-4" />
               Sign in with Microsoft
             </Button>
           </div>
