@@ -36,7 +36,7 @@ export const productLabels = {
     mobile: "DOF"
   },
   "lynx-plus": {
-    full: "LYNX+ / Client Experience",
+    full: "LYNX+ / Product Discovery",
     mobile: "LYNX+"
   }
 };
