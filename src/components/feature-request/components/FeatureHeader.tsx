@@ -90,7 +90,7 @@ export const FeatureHeader = ({
           <Button
             variant="ghost"
             size="sm"
-            className="gap-1 h-8 justify-start text-destructive hover:text-destructive hover:bg-destructive/10"
+            className="gap-1 h-8 justify-start text-destructive hover:text-destructive hover:bg-destructive/10 hidden sm:flex"
             onClick={onDelete}
           >
             <Trash2 className="w-4 h-4" />

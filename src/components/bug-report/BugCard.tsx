@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { ArrowBigUp, ArrowBigDown, MessageCircle, Paperclip, Edit, Bug, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -246,7 +245,7 @@ export const BugCard = ({
             <Button
               variant="ghost"
               size="sm"
-              className="gap-1 h-8 justify-start text-destructive hover:text-destructive hover:bg-destructive/10"
+              className="gap-1 h-8 justify-start text-destructive hover:text-destructive hover:bg-destructive/10 hidden sm:flex"
               onClick={handleDelete}
             >
               <Trash2 className="w-4 h-4" />
