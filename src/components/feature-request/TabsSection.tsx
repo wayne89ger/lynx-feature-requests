@@ -51,29 +51,29 @@ export const TabsSection = ({
         <TabsList className="mb-4 w-full">
           <TabsTrigger 
             value="features" 
-            className="relative flex-1 data-[state=active]:bg-[#F2FCE2]"
+            className="relative flex-1 data-[state=active]:bg-[#F2FCE2] border-none"
           >
             Feature Requests
             {filteredFeatures.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              <span className="ml-2 px-2 py-0.5 bg-[#F2FCE2] text-primary text-xs rounded-full">
                 {filteredFeatures.length}
               </span>
             )}
           </TabsTrigger>
           <TabsTrigger 
             value="bugs" 
-            className="relative flex-1 data-[state=active]:bg-red-50"
+            className="relative flex-1 data-[state=active]:bg-red-50 border-none"
           >
             Bug Reports
             {filteredBugs.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-destructive text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              <span className="ml-2 px-2 py-0.5 bg-red-50 text-destructive text-xs rounded-full">
                 {filteredBugs.length}
               </span>
             )}
           </TabsTrigger>
         </TabsList>
 
-        <div className="flex flex-row gap-3 mt-4 mb-6">
+        <div className="mt-4 mb-6">
           <Filters
             activeTab={activeTab}
             selectedProduct={selectedProduct}
@@ -90,7 +90,7 @@ export const TabsSection = ({
         </div>
       </div>
 
-      <TabsContent value="features" className="mt-0 border-2 border-primary rounded-lg p-6">
+      <TabsContent value="features" className="mt-0 border border-primary rounded-lg p-6">
         <h2 className="text-2xl font-semibold text-center text-primary mb-2">Feature Requests</h2>
         <p className="text-center text-muted-foreground mb-6">Browse and vote on proposed features</p>
         
@@ -107,7 +107,7 @@ export const TabsSection = ({
         )}
       </TabsContent>
 
-      <TabsContent value="bugs" className="mt-0 border-2 border-[#ea384c] rounded-lg p-6">
+      <TabsContent value="bugs" className="mt-0 border border-destructive rounded-lg p-6">
         <h2 className="text-2xl font-semibold text-center text-destructive mb-2">Bug Reports</h2>
         <p className="text-center text-muted-foreground mb-6">Help us track and fix issues</p>
         

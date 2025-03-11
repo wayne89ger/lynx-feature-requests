@@ -36,9 +36,9 @@ export const Filters = ({
   setSelectedExperimentOwner
 }: FiltersProps) => {
   return (
-    <>
+    <div className="flex flex-row gap-3 w-full">
       {/* Product filter */}
-      <div className="w-full">
+      <div className="w-full max-w-[200px]">
         <Select value={selectedProduct} onValueChange={setSelectedProduct}>
           <SelectTrigger className="bg-white border-lynx-border shadow-sm">
             <SelectValue placeholder="All Products" />
@@ -53,7 +53,7 @@ export const Filters = ({
       </div>
 
       {/* Status filter */}
-      <div className="w-full">
+      <div className="w-full max-w-[200px]">
         <Select value={selectedStatus} onValueChange={setSelectedStatus}>
           <SelectTrigger className="bg-white border-lynx-border shadow-sm">
             <SelectValue placeholder="All Statuses" />
@@ -69,7 +69,7 @@ export const Filters = ({
       </div>
 
       {/* Location filter */}
-      <div className="w-full">
+      <div className="w-full max-w-[200px]">
         <Select value={selectedLocation} onValueChange={setSelectedLocation}>
           <SelectTrigger className="bg-white border-lynx-border shadow-sm">
             <SelectValue placeholder="All Locations" />
@@ -84,7 +84,7 @@ export const Filters = ({
       </div>
 
       {/* Requester filter */}
-      <div className="w-full">
+      <div className="w-full max-w-[200px]">
         <Select value={selectedRequester} onValueChange={setSelectedRequester}>
           <SelectTrigger className="bg-white border-lynx-border shadow-sm">
             <SelectValue placeholder="All Requesters" />
@@ -99,7 +99,7 @@ export const Filters = ({
       </div>
 
       {/* Experiment Owner filter */}
-      <div className="w-full">
+      <div className="w-full max-w-[200px]">
         <Select value={selectedExperimentOwner} onValueChange={setSelectedExperimentOwner}>
           <SelectTrigger className="bg-white border-lynx-border shadow-sm">
             <SelectValue placeholder="All Experiment Owners" />
@@ -112,6 +112,6 @@ export const Filters = ({
           </SelectContent>
         </Select>
       </div>
-    </>
+    </div>
   );
 };
