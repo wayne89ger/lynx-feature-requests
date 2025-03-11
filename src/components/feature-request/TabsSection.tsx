@@ -48,17 +48,23 @@ export const TabsSection = ({
   return (
     <Tabs defaultValue="features" className="mt-8" onValueChange={setActiveTab}>
       <div className="mb-6">
-        <TabsList className="mb-4">
-          <TabsTrigger value="features" className="relative">
-            Features
+        <TabsList className="mb-4 w-full">
+          <TabsTrigger 
+            value="features" 
+            className="relative flex-1 data-[state=active]:bg-[#F2FCE2] data-[state=active]:border-primary data-[state=active]:border-2"
+          >
+            Feature Requests
             {filteredFeatures.length > 0 && (
               <span className="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                 {filteredFeatures.length}
               </span>
             )}
           </TabsTrigger>
-          <TabsTrigger value="bugs" className="relative">
-            Bugs
+          <TabsTrigger 
+            value="bugs" 
+            className="relative flex-1 data-[state=active]:bg-red-50 data-[state=active]:border-[#ea384c] data-[state=active]:border-2"
+          >
+            Bug Reports
             {filteredBugs.length > 0 && (
               <span className="absolute -top-2 -right-2 bg-destructive text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                 {filteredBugs.length}

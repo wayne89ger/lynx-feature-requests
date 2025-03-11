@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, Paperclip } from "lucide-react";
@@ -195,7 +196,7 @@ export const FeatureCard = ({
   };
 
   return (
-    <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200 border-2 border-[#F2FCE2]">
       <FeatureHeader
         status={status}
         product={product}

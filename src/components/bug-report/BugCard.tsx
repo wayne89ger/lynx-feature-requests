@@ -187,7 +187,7 @@ export const BugCard = ({
   };
 
   return (
-    <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200 border-2 border-[#ea384c]">
       {/* Header Row */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
