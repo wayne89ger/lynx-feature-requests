@@ -206,7 +206,7 @@ export const FeatureCard = ({
   };
 
   return (
-    <div className={`bg-white rounded-lg p-4 sm:p-6 border border-gray-200 shadow-sm ${className}`}>
+    <div className={`bg-white rounded-lg p-3 sm:p-6 border border-gray-200 shadow-sm ${className}`}>
       <FeatureHeader
         status={currentStatus}
         product={product}
@@ -229,15 +229,15 @@ export const FeatureCard = ({
       />
 
       <div className="space-y-2 mb-4">
-        <h3 className="text-lg font-semibold break-words">{title}</h3>
-        <p className="text-gray-600 text-sm break-words">{description}</p>
-        <p className="text-xs text-gray-500 break-words">
+        <h3 className="text-base sm:text-lg font-semibold break-words">{title}</h3>
+        <p className="text-xs sm:text-sm text-gray-600 break-words">{description}</p>
+        <p className="text-[10px] sm:text-xs text-gray-500 break-words">
           Reported by: {reporter}
           {experimentOwner && ` • Experiment Owner: ${experimentOwner}`}
         </p>
       </div>
 
-      <div className="flex flex-wrap items-center gap-3 mt-3">
+      <div className="flex flex-wrap items-center gap-2 mt-3">
         <VotingSection
           votes={currentVotes}
           voteStatus={voteStatus}
@@ -249,7 +249,7 @@ export const FeatureCard = ({
             href={attachment} 
             target="_blank" 
             rel="noopener noreferrer"
-            className="inline-flex items-center text-xs sm:text-sm text-primary hover:underline"
+            className="inline-flex items-center text-[10px] sm:text-sm text-primary hover:underline"
           >
             <Paperclip className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
             <span className="whitespace-nowrap">View attachment</span>
@@ -259,11 +259,11 @@ export const FeatureCard = ({
         <Button 
           variant="ghost" 
           size="sm" 
-          className="h-8 gap-1 px-2 sm:px-3"
+          className="h-7 gap-1 px-1.5 sm:px-3"
           onClick={() => setShowComments(!showComments)}
         >
           <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4" />
-          <span>{comments.length}</span>
+          <span className="text-xs">{comments.length}</span>
         </Button>
       </div>
 
