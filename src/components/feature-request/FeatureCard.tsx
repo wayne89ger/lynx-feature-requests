@@ -206,7 +206,7 @@ export const FeatureCard = ({
   };
 
   return (
-    <div className={`bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-200 ${className}`}>
+    <div className={`bg-white rounded-lg p-6 border border-gray-200 shadow-[0_1px_3px_rgba(0,0,0,0.1)] hover:shadow-[0_2px_4px_rgba(0,0,0,0.1)] ${className}`}>
       <FeatureHeader
         status={currentStatus}
         product={product}

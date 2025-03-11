@@ -27,7 +27,7 @@ export const FeatureList = ({ features, onEdit, onDelete, onStatusChange }: Feat
           onEdit={() => onEdit(feature)}
           onDelete={onDelete}
           onStatusChange={onStatusChange}
-          className="hover:shadow-lg transition-all"
+          className="transition-all"
         />
       ))}
     </div>
