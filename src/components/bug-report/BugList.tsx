@@ -1,3 +1,4 @@
+
 import { Feature } from "@/types/feature";
 import { Bug } from "lucide-react";
 import { BugCard } from "./BugCard";
@@ -5,9 +6,10 @@ import { BugCard } from "./BugCard";
 interface BugListProps {
   bugs: Feature[];
   onEdit: (bug: Feature) => void;
+  onDelete: (id: number) => void;
 }
 
-export const BugList = ({ bugs, onEdit }: BugListProps) => {
+export const BugList = ({ bugs, onEdit, onDelete }: BugListProps) => {
   return (
     <div className="grid grid-cols-1 gap-4">
       {bugs.map((bug) => (
@@ -23,6 +25,7 @@ export const BugList = ({ bugs, onEdit }: BugListProps) => {
             comments={bug.comments}
             reporter={bug.reporter}
             onEdit={onEdit}
+            onDelete={onDelete}
           />
         </div>
       ))}

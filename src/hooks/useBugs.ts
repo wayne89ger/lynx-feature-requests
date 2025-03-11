@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Feature } from "@/types/feature";
 import { supabase } from "@/integrations/supabase/client";
@@ -97,9 +98,44 @@ export const useBugs = () => {
     }
   };
 
+  const deleteBug = async (id: number) => {
+    try {
+      // First delete any comments related to this bug
+      await supabase
+        .from('comments')
+        .delete()
+        .eq('bug_id', id);
+      
+      // Then delete the bug itself
+      const { error } = await supabase
+        .from('bugs')
+        .delete()
+        .eq('id', id);
+      
+      if (error) throw error;
+      
+      // Update local state
+      setBugs(bugs.filter(bug => bug.id !== id));
+      
+      toast({
+        title: "Bug deleted",
+        description: "The bug report has been successfully deleted.",
+      });
+      return true;
+    } catch (error) {
+      console.error('Error deleting bug:', error);
+      toast({
+        title: "Error deleting bug",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+      return false;
+    }
+  };
+
   useEffect(() => {
     fetchBugs();
   }, []);
 
-  return { bugs, setBugs, fetchBugs };
+  return { bugs, setBugs, fetchBugs, deleteBug };
 };

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Feature } from "@/types/feature";
 import { useFeatures } from "@/hooks/useFeatures";
@@ -11,8 +12,8 @@ import { useBugSubmission } from "./handlers/useBugSubmission";
 import { useFeatureUpdate } from "./handlers/useFeatureUpdate";
 
 export const DataManager = () => {
-  const { features, setFeatures } = useFeatures();
-  const { bugs, setBugs } = useBugs();
+  const { features, setFeatures, deleteFeature } = useFeatures();
+  const { bugs, setBugs, deleteBug } = useBugs();
   const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
   const [selectedBug, setSelectedBug] = useState<any>(null);
   const [showEditForm, setShowEditForm] = useState(false);
@@ -73,6 +74,14 @@ export const DataManager = () => {
     handleCloseBugEdit();
   };
 
+  const handleFeatureDelete = async (id: number) => {
+    await deleteFeature(id);
+  };
+
+  const handleBugDelete = async (id: number) => {
+    await deleteBug(id);
+  };
+
   return (
     <>
       <FormActions 
@@ -103,6 +112,8 @@ export const DataManager = () => {
         filteredBugs={filteredAndSortedBugs}
         onEdit={handleEdit}
         onEditBug={handleEditBug}
+        onDeleteFeature={handleFeatureDelete}
+        onDeleteBug={handleBugDelete}
         selectedProduct={selectedProduct}
         setSelectedProduct={setSelectedProduct}
         selectedStatus={selectedStatus}

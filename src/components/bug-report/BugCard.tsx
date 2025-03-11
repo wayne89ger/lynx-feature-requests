@@ -1,5 +1,6 @@
+
 import { Button } from "@/components/ui/button";
-import { ArrowBigUp, ArrowBigDown, MessageCircle, Paperclip, Edit, Bug } from "lucide-react";
+import { ArrowBigUp, ArrowBigDown, MessageCircle, Paperclip, Edit, Bug, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Select,
@@ -25,6 +26,7 @@ interface BugCardProps {
   comments: any[];
   reporter: string;
   onEdit: (bug: Feature) => void;
+  onDelete?: (id: number) => void;
 }
 
 const statusConfig = {
@@ -79,6 +81,7 @@ export const BugCard = ({
   comments,
   reporter,
   onEdit,
+  onDelete,
 }: BugCardProps) => {
   const [currentVotes, setCurrentVotes] = useState(votes);
   const [voteStatus, setVoteStatus] = useState<'none' | 'up' | 'down'>('none');
@@ -177,6 +180,12 @@ export const BugCard = ({
     }
   };
 
+  const handleDelete = async () => {
+    if (onDelete) {
+      onDelete(id);
+    }
+  };
+
   return (
     <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
       {/* Header Row */}
@@ -212,24 +221,35 @@ export const BugCard = ({
             </span>
           )}
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="gap-1"
-          onClick={() => onEdit({
-            id,
-            title,
-            description,
-            status,
-            product,
-            votes,
-            comments,
-            reporter
-          })}
-        >
-          <Edit className="w-4 h-4" />
-          <span className="hidden sm:inline">Edit Bug</span>
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-1"
+            onClick={() => onEdit({
+              id,
+              title,
+              description,
+              status,
+              product,
+              votes,
+              comments,
+              reporter
+            })}
+          >
+            <Edit className="w-4 h-4" />
+            <span className="hidden sm:inline">Edit Bug</span>
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-1 text-destructive hover:text-destructive hover:bg-destructive/10"
+            onClick={handleDelete}
+          >
+            <Trash2 className="w-4 h-4" />
+            <span className="hidden sm:inline">Delete</span>
+          </Button>
+        </div>
       </div>
 
       {/* Content */}

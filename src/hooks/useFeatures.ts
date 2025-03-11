@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Feature } from "@/types/feature";
 import { supabase } from "@/integrations/supabase/client";
@@ -69,9 +70,50 @@ export const useFeatures = () => {
     }
   };
 
+  const deleteFeature = async (id: number) => {
+    try {
+      // First delete any votes related to this feature
+      await supabase
+        .from('feature_votes')
+        .delete()
+        .eq('feature_id', id);
+      
+      // Then delete any comments related to this feature
+      await supabase
+        .from('comments')
+        .delete()
+        .eq('feature_id', id);
+      
+      // Finally delete the feature itself
+      const { error } = await supabase
+        .from('features')
+        .delete()
+        .eq('id', id);
+      
+      if (error) throw error;
+      
+      // Update local state
+      setFeatures(features.filter(feature => feature.id !== id));
+      
+      toast({
+        title: "Feature deleted",
+        description: "The feature request has been successfully deleted.",
+      });
+      return true;
+    } catch (error) {
+      console.error('Error deleting feature:', error);
+      toast({
+        title: "Error deleting feature",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+      return false;
+    }
+  };
+
   useEffect(() => {
     fetchFeatures();
   }, []);
 
-  return { features, setFeatures, fetchFeatures };
+  return { features, setFeatures, fetchFeatures, deleteFeature };
 };
