@@ -1,9 +1,6 @@
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { EXPERIMENT_OWNERS } from "@/constants/experimentOwners";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 interface FiltersProps {
@@ -39,15 +36,13 @@ export const Filters = ({
   selectedExperimentOwner,
   setSelectedExperimentOwner
 }: FiltersProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-
   return (
-    <div className="flex flex-wrap gap-4">
-      {/* Product filter - always visible */}
-      <div className="w-full sm:w-[200px]">
+    <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mt-8 mb-6">
+      {/* Product filter */}
+      <div>
         <Select value={selectedProduct} onValueChange={setSelectedProduct}>
-          <SelectTrigger className="w-full bg-white border-lynx-border shadow-sm hover:border-lynx-primary/50 transition-colors">
-            <SelectValue placeholder="Filter by Product" />
+          <SelectTrigger className="w-full border rounded-md shadow-sm focus:ring-primary focus:border-primary">
+            <SelectValue placeholder="All Products" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Products</SelectItem>
@@ -59,10 +54,10 @@ export const Filters = ({
       </div>
 
       {/* Status filter */}
-      <div className="w-full sm:w-[200px]">
+      <div>
         <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-          <SelectTrigger className="w-full bg-white border-lynx-border shadow-sm hover:border-lynx-primary/50 transition-colors">
-            <SelectValue placeholder="Filter by Status" />
+          <SelectTrigger className="w-full border rounded-md shadow-sm focus:ring-primary focus:border-primary">
+            <SelectValue placeholder="All Statuses" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Statuses</SelectItem>
@@ -75,10 +70,10 @@ export const Filters = ({
       </div>
 
       {/* Location filter */}
-      <div className="w-full sm:w-[200px]">
+      <div>
         <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-          <SelectTrigger className="w-full bg-white border-lynx-border shadow-sm hover:border-lynx-primary/50 transition-colors">
-            <SelectValue placeholder="Filter by Location" />
+          <SelectTrigger className="w-full border rounded-md shadow-sm focus:ring-primary focus:border-primary">
+            <SelectValue placeholder="All Locations" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Locations</SelectItem>
@@ -90,10 +85,10 @@ export const Filters = ({
       </div>
 
       {/* Requester filter */}
-      <div className="w-full sm:w-[200px]">
+      <div>
         <Select value={selectedRequester} onValueChange={setSelectedRequester}>
-          <SelectTrigger className="w-full bg-white border-lynx-border shadow-sm hover:border-lynx-primary/50 transition-colors">
-            <SelectValue placeholder="Filter by Requester" />
+          <SelectTrigger className="w-full border rounded-md shadow-sm focus:ring-primary focus:border-primary">
+            <SelectValue placeholder="All Requesters" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Requesters</SelectItem>
@@ -105,10 +100,10 @@ export const Filters = ({
       </div>
 
       {/* Experiment Owner filter */}
-      <div className="w-full sm:w-[200px]">
+      <div>
         <Select value={selectedExperimentOwner} onValueChange={setSelectedExperimentOwner}>
-          <SelectTrigger className="w-full bg-white border-lynx-border shadow-sm hover:border-lynx-primary/50 transition-colors">
-            <SelectValue placeholder="Filter by Experiment Owner" />
+          <SelectTrigger className="w-full border rounded-md shadow-sm focus:ring-primary focus:border-primary">
+            <SelectValue placeholder="All Experiment Owners" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Experiment Owners</SelectItem>
