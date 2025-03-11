@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, Paperclip } from "lucide-react";
@@ -15,6 +14,7 @@ interface FeatureCardProps extends Feature {
   onAddComment?: (id: number, text: string) => void;
   onEdit?: (feature: Feature) => void;
   onDelete?: (id: number) => void;
+  className?: string;
 }
 
 export const FeatureCard = ({
@@ -33,6 +33,7 @@ export const FeatureCard = ({
   onAddComment,
   onEdit,
   onDelete,
+  className = "",
 }: FeatureCardProps) => {
   const [currentVotes, setCurrentVotes] = useState(votes);
   const [showComments, setShowComments] = useState(false);
@@ -196,7 +197,7 @@ export const FeatureCard = ({
   };
 
   return (
-    <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200 border-2 border-[#F2FCE2]">
+    <div className={`bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200 border-2 border-[#F2FCE2] ${className}`}>
       <FeatureHeader
         status={status}
         product={product}
