@@ -2,22 +2,16 @@
 import { useState } from "react";
 import { Feature } from "@/types/feature";
 import { useFeatures } from "@/hooks/useFeatures";
-import { useBugs } from "@/hooks/useBugs";
 import { EditFeatureForm } from "./EditFeatureForm";
-import { EditBugForm } from "../bug-report/EditBugForm";
 import { FormActions } from "./FormActions";
 import { TabsSection } from "./TabsSection";
 import { useFeatureSubmission } from "./handlers/useFeatureSubmission";
-import { useBugSubmission } from "./handlers/useBugSubmission";
 import { useFeatureUpdate } from "./handlers/useFeatureUpdate";
 
 export const DataManager = () => {
   const { features, setFeatures, deleteFeature } = useFeatures();
-  const { bugs, setBugs, deleteBug } = useBugs();
   const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
-  const [selectedBug, setSelectedBug] = useState<any>(null);
   const [showEditForm, setShowEditForm] = useState(false);
-  const [showEditBugForm, setShowEditBugForm] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<string>("all");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
   const [selectedLocation, setSelectedLocation] = useState<string>("all");
@@ -25,7 +19,6 @@ export const DataManager = () => {
   const [selectedExperimentOwner, setSelectedExperimentOwner] = useState<string>("all");
 
   const { handleFeatureSubmit } = useFeatureSubmission(features, setFeatures);
-  const { handleBugSubmit } = useBugSubmission(bugs, setBugs);
   const { handleFeatureUpdate, handleStatusUpdate } = useFeatureUpdate(features, setFeatures);
 
   const filteredAndSortedFeatures = features
@@ -38,28 +31,14 @@ export const DataManager = () => {
     )
     .sort((a, b) => (b.votes || 0) - (a.votes || 0));
 
-  const filteredAndSortedBugs = bugs
-    .filter(bug => selectedProduct === "all" || bug.product === selectedProduct)
-    .sort((a, b) => (b.votes || 0) - (a.votes || 0));
-
   const handleEdit = (feature: Feature) => {
     setSelectedFeature(feature);
     setShowEditForm(true);
   };
 
-  const handleEditBug = (bug: any) => {
-    setSelectedBug(bug);
-    setShowEditBugForm(true);
-  };
-
   const handleCloseEdit = () => {
     setShowEditForm(false);
     setSelectedFeature(null);
-  };
-
-  const handleCloseBugEdit = () => {
-    setShowEditBugForm(false);
-    setSelectedBug(null);
   };
 
   const handleSave = async (id: number, updatedFeature: any) => {
@@ -74,24 +53,14 @@ export const DataManager = () => {
     await handleStatusUpdate(id, newStatus);
   };
 
-  const handleBugSave = async (id: number, updatedBug: any) => {
-    // This will be implemented later when we rebuild the bug edit form
-    handleCloseBugEdit();
-  };
-
   const handleFeatureDelete = async (id: number) => {
     await deleteFeature(id);
-  };
-
-  const handleBugDelete = async (id: number) => {
-    await deleteBug(id);
   };
 
   return (
     <>
       <FormActions 
         onFeatureSubmit={handleFeatureSubmit}
-        onBugSubmit={handleBugSubmit}
       />
 
       {showEditForm && selectedFeature && (
@@ -103,22 +72,10 @@ export const DataManager = () => {
         />
       )}
 
-      {showEditBugForm && selectedBug && (
-        <EditBugForm
-          bug={selectedBug}
-          open={showEditBugForm}
-          onSave={handleBugSave}
-          onClose={handleCloseBugEdit}
-        />
-      )}
-
       <TabsSection
         filteredFeatures={filteredAndSortedFeatures}
-        filteredBugs={filteredAndSortedBugs}
         onEdit={handleEdit}
-        onEditBug={handleEditBug}
         onDeleteFeature={handleFeatureDelete}
-        onDeleteBug={handleBugDelete}
         onStatusChange={handleStatusChange}
         selectedProduct={selectedProduct}
         setSelectedProduct={setSelectedProduct}
