@@ -53,7 +53,7 @@ export const useFeatures = () => {
             text: comment.text,
             timestamp: comment.created_at,
             reporter: comment.reporter,
-            attachment: comment.attachment
+            attachment: comment.attachment || undefined
           })) || [],
         created_at: feature.created_at,
         updated_at: feature.updated_at

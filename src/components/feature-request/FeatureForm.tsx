@@ -46,24 +46,24 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [product, setProduct] = useState(defaultProducts[0] || "");
-  const [squad, setSquad] = useState("demand-capture");
+  const [product, setProduct] = useState("");
+  const [squad, setSquad] = useState("");
   const [canContact, setCanContact] = useState(false);
   const [attachment, setAttachment] = useState<File | null>(null);
   const { toast } = useToast();
 
   // Update product options when squad changes
   useEffect(() => {
-    if (squad === "client-experience" && !clientExperienceProducts.includes(product)) {
+    if (squad === "client-experience" && product === "") {
       setProduct(clientExperienceProducts[0]);
-    } else if (squad === "onboarding" && !onboardingProducts.includes(product)) {
+    } else if (squad === "onboarding" && product === "") {
       setProduct(onboardingProducts[0]);
-    } else if (squad === "demand-capture" && !demandCaptureProducts.includes(product)) {
+    } else if (squad === "demand-capture" && product === "") {
       setProduct(demandCaptureProducts[0]);
-    } else if (squad === "cpi" && !cpiProducts.includes(product)) {
+    } else if (squad === "cpi" && product === "") {
       setProduct(cpiProducts[0]);
     } else if (squad !== "client-experience" && squad !== "onboarding" && 
-              squad !== "demand-capture" && squad !== "cpi" && !defaultProducts.includes(product)) {
+              squad !== "demand-capture" && squad !== "cpi" && product === "") {
       setProduct(defaultProducts[0]);
     }
   }, [squad, product]);
@@ -89,8 +89,8 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
     
     setTitle("");
     setDescription("");
-    setProduct(defaultProducts[0] || "");
-    setSquad("demand-capture");
+    setProduct("");
+    setSquad("");
     setCanContact(false);
     setAttachment(null);
     setOpen(false);
@@ -183,9 +183,9 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
           </div>
           <div className="space-y-2">
             <Label htmlFor="product">Product</Label>
-            <Select value={product} onValueChange={setProduct}>
+            <Select value={product} onValueChange={setProduct} disabled={!squad}>
               <SelectTrigger>
-                <SelectValue placeholder="Select a product" />
+                <SelectValue placeholder={!squad ? "Select a squad first" : "Select a product"} />
               </SelectTrigger>
               <SelectContent>
                 {productsToDisplay.map((productKey) => (
