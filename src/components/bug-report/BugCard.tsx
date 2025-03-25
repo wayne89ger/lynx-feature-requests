@@ -13,7 +13,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { Feature } from "@/types/feature";
 import { supabase } from "@/integrations/supabase/client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { AttachmentUpload } from "../feature-request/components/AttachmentUpload";
 
 interface BugCardProps {
   id: number;
@@ -88,6 +89,7 @@ export const BugCard = ({
   const [voteStatus, setVoteStatus] = useState<'none' | 'up' | 'down'>('none');
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState("");
+  const [attachment, setAttachment] = useState<File | null>(null);
   const { toast } = useToast();
 
   const handleVote = async (direction: 'up' | 'down') => {
@@ -143,22 +145,43 @@ export const BugCard = ({
   };
 
   const handleAddComment = async () => {
-    if (!newComment.trim()) {
+    if (!newComment.trim() && !attachment) {
       toast({
         title: "Error",
-        description: "Please enter a comment",
+        description: "Please enter a comment or attach a file",
         variant: "destructive",
       });
       return;
     }
 
     try {
+      let attachmentUrl = "";
+      
+      if (attachment) {
+        const fileName = `bug_${id}_${Date.now()}_${attachment.name}`;
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('attachments')
+          .upload(fileName, attachment);
+
+        if (uploadError) {
+          console.error('Error uploading attachment:', uploadError);
+          throw uploadError;
+        }
+
+        const { data: urlData } = supabase.storage
+          .from('attachments')
+          .getPublicUrl(fileName);
+          
+        attachmentUrl = urlData.publicUrl;
+      }
+
       const { data, error } = await supabase
         .from('comments')
         .insert([{
           bug_id: id,
-          text: newComment.trim(),
-          reporter: reporter
+          text: newComment.trim() || (attachment ? `Attached: ${attachment.name}` : ""),
+          reporter: reporter,
+          attachment: attachmentUrl || null
         }])
         .select()
         .single();
@@ -166,6 +189,7 @@ export const BugCard = ({
       if (error) throw error;
 
       setNewComment("");
+      setAttachment(null);
       
       toast({
         title: "Comment added",
@@ -189,7 +213,6 @@ export const BugCard = ({
 
   return (
     <div className={cn("bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200", className)}>
-      {/* Header Row */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Select value={status} onValueChange={handleStatusChange}>
@@ -255,7 +278,6 @@ export const BugCard = ({
         </div>
       </div>
 
-      {/* Content */}
       <div className="space-y-2 mb-4">
         <h3 className="text-lg font-semibold">{title}</h3>
         <p className="text-gray-600 text-sm">{description}</p>
@@ -264,7 +286,6 @@ export const BugCard = ({
         </p>
       </div>
 
-      {/* Footer Row */}
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
           <Button
@@ -303,13 +324,23 @@ export const BugCard = ({
         </Button>
       </div>
 
-      {/* Comments Section */}
       {showComments && (
         <div className="space-y-4 border-t pt-4 mt-4">
           <ScrollArea className="h-[200px] w-full rounded-md border p-4">
             {comments.map((comment) => (
               <div key={comment.id} className="mb-4 last:mb-0 border-b last:border-0 pb-3">
                 <p className="text-sm text-gray-600">{comment.text}</p>
+                {comment.attachment && (
+                  <a 
+                    href={comment.attachment} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center mt-1 text-xs text-primary hover:underline"
+                  >
+                    <Paperclip className="h-3 w-3 mr-1" />
+                    View attachment
+                  </a>
+                )}
                 <div className="mt-1 flex items-center gap-2 text-xs text-gray-400">
                   <span className="font-medium text-gray-500">{comment.reporter}</span>
                   <span>•</span>
@@ -318,14 +349,17 @@ export const BugCard = ({
               </div>
             ))}
           </ScrollArea>
-          <div className="flex gap-2">
-            <Input
-              placeholder="Add a comment..."
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              className="flex-1"
-            />
-            <Button onClick={handleAddComment}>Comment</Button>
+          <div className="space-y-2">
+            <AttachmentUpload attachment={attachment} setAttachment={setAttachment} />
+            <div className="flex gap-2">
+              <Input
+                placeholder="Add a comment..."
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                className="flex-1"
+              />
+              <Button onClick={handleAddComment}>Comment</Button>
+            </div>
           </div>
         </div>
       )}

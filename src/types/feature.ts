@@ -4,6 +4,7 @@ export interface Comment {
   text: string;
   timestamp: string;
   reporter: string;
+  attachment?: string;
 }
 
 export interface Feature {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, Paperclip } from "lucide-react";
 import { Feature } from "@/types/feature";
@@ -11,7 +11,7 @@ import { CommentsSection } from "./components/CommentsSection";
 
 interface FeatureCardProps extends Feature {
   onStatusChange?: (id: number, newStatus: "new" | "review" | "progress" | "completed") => void;
-  onAddComment?: (id: number, text: string) => void;
+  onAddComment?: (id: number, text: string, attachment?: string) => void;
   onEdit?: (feature: Feature) => void;
   onDelete?: (id: number) => void;
   className?: string;
@@ -48,17 +48,15 @@ export const FeatureCard = ({
     try {
       const { data: upvotesData, error: upvotesError } = await supabase
         .from('feature_votes')
-        .select('count')
+        .select('*')
         .eq('feature_id', id)
-        .eq('vote_type', 'up')
-        .count();
+        .eq('vote_type', 'up');
 
       const { data: downvotesData, error: downvotesError } = await supabase
         .from('feature_votes')
-        .select('count')
+        .select('*')
         .eq('feature_id', id)
-        .eq('vote_type', 'down')
-        .count();
+        .eq('vote_type', 'down');
 
       if (upvotesError || downvotesError) {
         console.error('Error fetching vote counts:', upvotesError || downvotesError);
@@ -101,30 +99,51 @@ export const FeatureCard = ({
     }
   };
 
-  const handleAddComment = async () => {
-    if (!newComment.trim()) {
+  const handleAddComment = async (attachment?: File) => {
+    if (!newComment.trim() && !attachment) {
       toast({
         title: "Error",
-        description: "Please enter a comment",
+        description: "Please enter a comment or attach a file",
         variant: "destructive",
       });
       return;
     }
 
     try {
+      let attachmentUrl = "";
+      
+      if (attachment) {
+        const fileName = `${id}_${Date.now()}_${attachment.name}`;
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('attachments')
+          .upload(fileName, attachment);
+
+        if (uploadError) {
+          console.error('Error uploading attachment:', uploadError);
+          throw uploadError;
+        }
+
+        const { data: urlData } = supabase.storage
+          .from('attachments')
+          .getPublicUrl(fileName);
+          
+        attachmentUrl = urlData.publicUrl;
+      }
+
       const { data, error } = await supabase
         .from('comments')
         .insert([{
           feature_id: id,
-          text: newComment.trim(),
-          reporter: reporter
+          text: newComment.trim() || (attachment ? `Attached: ${attachment.name}` : ""),
+          reporter: reporter,
+          attachment: attachmentUrl || null
         }])
         .select()
         .single();
 
       if (error) throw error;
 
-      onAddComment?.(id, newComment);
+      onAddComment?.(id, newComment, attachmentUrl);
       setNewComment("");
       
       toast({
@@ -250,9 +269,9 @@ export const FeatureCard = ({
     }
   };
 
-  useState(() => {
+  useEffect(() => {
     fetchVoteCounts();
-  });
+  }, [id]);
 
   return (
     <div className={`bg-white rounded-lg p-3 sm:p-6 border border-gray-200 shadow-sm ${className}`}>
