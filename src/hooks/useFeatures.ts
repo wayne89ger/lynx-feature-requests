@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Feature } from "@/types/feature";
 import { supabase } from "@/integrations/supabase/client";
@@ -42,8 +41,6 @@ export const useFeatures = () => {
         description: feature.description,
         status: feature.status || 'new',
         product: feature.product,
-        // Handle the case where squad might not exist in the database schema
-        squad: feature.squad || undefined,
         location: feature.location,
         votes: feature.votes || 0,
         reporter: feature.reporter,

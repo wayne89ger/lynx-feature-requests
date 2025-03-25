@@ -258,8 +258,9 @@ export const BugCard = ({
               product,
               votes,
               comments,
-              reporter
-            })}
+              reporter,
+              urgency: 'medium'
+            } as Feature)}
           >
             <Edit className="w-4 h-4" />
             <span className="hidden sm:inline">Edit Bug</span>

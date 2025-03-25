@@ -269,6 +269,25 @@ export const FeatureCard = ({
     }
   };
 
+  const handleEdit = () => {
+    if (onEdit) {
+      onEdit({
+        id,
+        title,
+        description,
+        status: currentStatus,
+        product,
+        location,
+        votes: currentVotes,
+        comments,
+        attachment,
+        reporter,
+        experimentOwner,
+        urgency: 'medium',
+      } as Feature);
+    }
+  };
+
   useEffect(() => {
     fetchVoteCounts();
   }, [id]);
@@ -280,19 +299,7 @@ export const FeatureCard = ({
         product={product}
         location={location}
         onStatusChange={handleStatusChange}
-        onEdit={onEdit ? () => onEdit({
-          id,
-          title,
-          description,
-          status: currentStatus,
-          product,
-          location,
-          votes: currentVotes,
-          comments,
-          attachment,
-          reporter,
-          experimentOwner
-        }) : undefined}
+        onEdit={onEdit ? handleEdit : undefined}
         onDelete={onDelete ? () => onDelete(id) : undefined}
       />
 
