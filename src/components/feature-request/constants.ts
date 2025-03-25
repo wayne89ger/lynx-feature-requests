@@ -126,7 +126,6 @@ export const productLabels = {
     full: "other",
     mobile: "other"
   },
-  // Demand Capture Products
   "ab-testing": {
     full: "A/B testing",
     mobile: "A/B"
@@ -166,6 +165,62 @@ export const productLabels = {
   "web-analytics": {
     full: "Web analytics",
     mobile: "Analytics"
+  },
+  "bi": {
+    full: "BI",
+    mobile: "BI"
+  },
+  "datacenter": {
+    full: "Datacenter",
+    mobile: "Datacenter"
+  },
+  "metabase": {
+    full: "Metabase",
+    mobile: "Metabase"
+  },
+  "crm": {
+    full: "CRM",
+    mobile: "CRM"
+  },
+  "bear": {
+    full: "BEAR",
+    mobile: "BEAR"
+  },
+  "panda": {
+    full: "PANDA",
+    mobile: "PANDA"
+  },
+  "goat": {
+    full: "GOAT",
+    mobile: "GOAT"
+  },
+  "dam": {
+    full: "DAM",
+    mobile: "DAM"
+  },
+  "cap-check": {
+    full: "CAP Check",
+    mobile: "CAP Check"
+  },
+  "transaction-monitoring": {
+    full: "Transaction Monitoring",
+    mobile: "Transaction"
+  },
+  "crm-customer-screening": {
+    full: "CRM customer screening",
+    mobile: "CRM screening"
+  },
+  "employee-transaction-monitoring": {
+    full: "Employee Transaction Monitoring",
+    mobile: "Employee TM"
+  },
+  "reimbursement-tool": {
+    full: "Reimbursement tool",
+    mobile: "Reimbursement"
+  },
+  "product-governance": {
+    full: "Product Governance",
+    mobile: "Governance"
   }
 };
 
@@ -242,6 +297,24 @@ export const demandCaptureProducts = [
   "multipliers",
   "seo",
   "web-analytics",
+  "other"
+];
+
+export const cpiProducts = [
+  "bi",
+  "datacenter",
+  "metabase",
+  "crm",
+  "bear",
+  "panda",
+  "goat",
+  "dam",
+  "cap-check",
+  "transaction-monitoring",
+  "crm-customer-screening",
+  "employee-transaction-monitoring",
+  "reimbursement-tool",
+  "product-governance",
   "other"
 ];
 

@@ -15,6 +15,7 @@ import {
   clientExperienceProducts,
   onboardingProducts,
   demandCaptureProducts,
+  cpiProducts,
   defaultProducts 
 } from "../constants";
 import { useEffect } from "react";
@@ -65,8 +66,11 @@ export const BasicInformation = ({
     } else if (squad === "demand-capture" && !demandCaptureProducts.includes(product)) {
       // Reset to first demand capture product when switching to that squad
       setProduct(demandCaptureProducts[0]);
+    } else if (squad === "cpi" && !cpiProducts.includes(product)) {
+      // Reset to first CPI product when switching to CPI squad
+      setProduct(cpiProducts[0]);
     } else if (squad !== "client-experience" && squad !== "onboarding" && 
-              squad !== "demand-capture" && !defaultProducts.includes(product)) {
+              squad !== "demand-capture" && squad !== "cpi" && !defaultProducts.includes(product)) {
       // Reset to first default product when switching from specialized squads
       setProduct(defaultProducts[0]);
     }
@@ -80,6 +84,8 @@ export const BasicInformation = ({
       return onboardingProducts;
     } else if (squad === "demand-capture") {
       return demandCaptureProducts;
+    } else if (squad === "cpi") {
+      return cpiProducts;
     } else {
       return defaultProducts;
     }

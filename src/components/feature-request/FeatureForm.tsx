@@ -27,7 +27,8 @@ import {
   defaultProducts, 
   clientExperienceProducts,
   onboardingProducts,
-  demandCaptureProducts
+  demandCaptureProducts,
+  cpiProducts
 } from "./constants";
 
 interface FeatureFormProps {
@@ -59,8 +60,10 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
       setProduct(onboardingProducts[0]);
     } else if (squad === "demand-capture" && !demandCaptureProducts.includes(product)) {
       setProduct(demandCaptureProducts[0]);
+    } else if (squad === "cpi" && !cpiProducts.includes(product)) {
+      setProduct(cpiProducts[0]);
     } else if (squad !== "client-experience" && squad !== "onboarding" && 
-              squad !== "demand-capture" && !defaultProducts.includes(product)) {
+              squad !== "demand-capture" && squad !== "cpi" && !defaultProducts.includes(product)) {
       setProduct(defaultProducts[0]);
     }
   }, [squad, product]);
@@ -125,6 +128,8 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
       return onboardingProducts;
     } else if (squad === "demand-capture") {
       return demandCaptureProducts;
+    } else if (squad === "cpi") {
+      return cpiProducts;
     } else {
       return defaultProducts;
     }

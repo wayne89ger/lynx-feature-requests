@@ -14,7 +14,8 @@ import {
   defaultProducts, 
   clientExperienceProducts,
   onboardingProducts,
-  demandCaptureProducts
+  demandCaptureProducts,
+  cpiProducts
 } from "@/components/feature-request/constants";
 
 interface EditBugFormFieldsProps {
@@ -47,7 +48,8 @@ export const EditBugFormFields = ({
     ...defaultProducts, 
     ...clientExperienceProducts, 
     ...onboardingProducts,
-    ...demandCaptureProducts
+    ...demandCaptureProducts,
+    ...cpiProducts
   ];
   // Remove duplicates if any
   const uniqueProducts = [...new Set(allProducts)];
