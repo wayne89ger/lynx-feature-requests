@@ -16,7 +16,6 @@ export const DataManager = () => {
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
   const [selectedLocation, setSelectedLocation] = useState<string>("all");
   const [selectedRequester, setSelectedRequester] = useState<string>("all");
-  const [selectedExperimentOwner, setSelectedExperimentOwner] = useState<string>("all");
 
   const { handleFeatureSubmit } = useFeatureSubmission(features, setFeatures);
   const { handleFeatureUpdate, handleStatusUpdate } = useFeatureUpdate(features, setFeatures);
@@ -26,8 +25,7 @@ export const DataManager = () => {
       (selectedProduct === "all" || feature.product === selectedProduct) &&
       (selectedStatus === "all" || feature.status === selectedStatus) &&
       (selectedLocation === "all" || feature.location === selectedLocation) &&
-      (selectedRequester === "all" || feature.reporter === selectedRequester) &&
-      (selectedExperimentOwner === "all" || feature.experimentOwner === selectedExperimentOwner)
+      (selectedRequester === "all" || feature.reporter === selectedRequester)
     )
     .sort((a, b) => (b.votes || 0) - (a.votes || 0));
 
@@ -85,8 +83,6 @@ export const DataManager = () => {
         setSelectedLocation={setSelectedLocation}
         selectedRequester={selectedRequester}
         setSelectedRequester={setSelectedRequester}
-        selectedExperimentOwner={selectedExperimentOwner}
-        setSelectedExperimentOwner={setSelectedExperimentOwner}
       />
     </>
   );

@@ -40,7 +40,7 @@ export const productLabels = {
     mobile: "LYNX+"
   },
   "proactive-service": {
-    full: "Proactive Service",
+    full: "Proactive Service/CE",
     mobile: "Proactive"
   },
   "operational-efficiency-ce": {

@@ -93,8 +93,8 @@ export const BasicInformation = ({
             <SelectItem value="website-demand-capture">Website / Demand Capture</SelectItem>
             <SelectItem value="dof-onboarding">DOF / Onboarding</SelectItem>
             <SelectItem value="lynx-plus">LYNX+ / Product Discovery</SelectItem>
-            <SelectItem value="proactive-service">Proactive Service</SelectItem>
-            <SelectItem value="operational-efficiency">Operational Efficiency</SelectItem>
+            <SelectItem value="proactive-service">Proactive Service/CE</SelectItem>
+            <SelectItem value="operational-efficiency-ce">Operational Efficiency/CE</SelectItem>
           </SelectContent>
         </Select>
       </div>
