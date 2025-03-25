@@ -13,7 +13,8 @@ import {
   productLabels, 
   defaultProducts, 
   clientExperienceProducts,
-  onboardingProducts 
+  onboardingProducts,
+  demandCaptureProducts
 } from "@/components/feature-request/constants";
 
 interface EditBugFormFieldsProps {
@@ -42,7 +43,12 @@ export const EditBugFormFields = ({
   setProduct,
 }: EditBugFormFieldsProps) => {
   // Combine all product options for bugs - they don't have squad selection
-  const allProducts = [...defaultProducts, ...clientExperienceProducts, ...onboardingProducts];
+  const allProducts = [
+    ...defaultProducts, 
+    ...clientExperienceProducts, 
+    ...onboardingProducts,
+    ...demandCaptureProducts
+  ];
   // Remove duplicates if any
   const uniqueProducts = [...new Set(allProducts)];
 

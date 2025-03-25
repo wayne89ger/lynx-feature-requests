@@ -14,6 +14,7 @@ import {
   squadLabels, 
   clientExperienceProducts,
   onboardingProducts,
+  demandCaptureProducts,
   defaultProducts 
 } from "../constants";
 import { useEffect } from "react";
@@ -61,9 +62,12 @@ export const BasicInformation = ({
     } else if (squad === "onboarding" && !onboardingProducts.includes(product)) {
       // Reset to first onboarding product when switching to onboarding squad
       setProduct(onboardingProducts[0]);
+    } else if (squad === "demand-capture" && !demandCaptureProducts.includes(product)) {
+      // Reset to first demand capture product when switching to that squad
+      setProduct(demandCaptureProducts[0]);
     } else if (squad !== "client-experience" && squad !== "onboarding" && 
-              !defaultProducts.includes(product)) {
-      // Reset to first default product when switching from CE or onboarding squad
+              squad !== "demand-capture" && !defaultProducts.includes(product)) {
+      // Reset to first default product when switching from specialized squads
       setProduct(defaultProducts[0]);
     }
   }, [squad, product, setProduct]);
@@ -74,6 +78,8 @@ export const BasicInformation = ({
       return clientExperienceProducts;
     } else if (squad === "onboarding") {
       return onboardingProducts;
+    } else if (squad === "demand-capture") {
+      return demandCaptureProducts;
     } else {
       return defaultProducts;
     }

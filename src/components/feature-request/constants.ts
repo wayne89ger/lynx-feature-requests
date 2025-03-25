@@ -1,4 +1,3 @@
-
 export const statusConfig = {
   new: { 
     label: "New", 
@@ -126,6 +125,47 @@ export const productLabels = {
   "other": {
     full: "other",
     mobile: "other"
+  },
+  // Demand Capture Products
+  "ab-testing": {
+    full: "A/B testing",
+    mobile: "A/B"
+  },
+  "affiliates": {
+    full: "Affiliates",
+    mobile: "Affiliates"
+  },
+  "articles": {
+    full: "Articles",
+    mobile: "Articles"
+  },
+  "campaign-tracking": {
+    full: "Campaign tracking",
+    mobile: "Campaigns"
+  },
+  "email-flows": {
+    full: "E-mail flows",
+    mobile: "Email"
+  },
+  "influencer": {
+    full: "Influencer",
+    mobile: "Influencer"
+  },
+  "marketing-website": {
+    full: "Marketing website",
+    mobile: "Marketing"
+  },
+  "multipliers": {
+    full: "Multipliers",
+    mobile: "Multipliers"
+  },
+  "seo": {
+    full: "SEO",
+    mobile: "SEO"
+  },
+  "web-analytics": {
+    full: "Web analytics",
+    mobile: "Analytics"
   }
 };
 
@@ -191,10 +231,23 @@ export const onboardingProducts = [
   "other"
 ];
 
+export const demandCaptureProducts = [
+  "ab-testing",
+  "affiliates",
+  "articles",
+  "campaign-tracking",
+  "email-flows",
+  "influencer",
+  "marketing-website",
+  "multipliers",
+  "seo",
+  "web-analytics",
+  "other"
+];
+
 export const defaultProducts = [
   "dof-onboarding",
   "lynx-plus",
   "proactive-service-ce",
   "operational-efficiency-ce"
 ];
-

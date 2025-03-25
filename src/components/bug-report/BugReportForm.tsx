@@ -17,7 +17,8 @@ import {
   productLabels, 
   defaultProducts, 
   clientExperienceProducts,
-  onboardingProducts
+  onboardingProducts,
+  demandCaptureProducts
 } from "../feature-request/constants";
 
 interface BugReportFormProps {
