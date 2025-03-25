@@ -12,7 +12,8 @@ import {
 import { 
   productLabels, 
   squadLabels, 
-  clientExperienceProducts, 
+  clientExperienceProducts,
+  onboardingProducts,
   defaultProducts 
 } from "../constants";
 import { useEffect } from "react";
@@ -52,21 +53,33 @@ export const BasicInformation = ({
   setLocation,
   setSquad,
 }: BasicInformationProps) => {
-  // When squad changes to or from "client-experience", reset the product
+  // When squad changes, reset the product based on squad
   useEffect(() => {
     if (squad === "client-experience" && !clientExperienceProducts.includes(product)) {
       // Reset to first CE product when switching to CE squad
       setProduct(clientExperienceProducts[0]);
-    } else if (squad !== "client-experience" && !defaultProducts.includes(product)) {
-      // Reset to first default product when switching from CE squad
+    } else if (squad === "onboarding" && !onboardingProducts.includes(product)) {
+      // Reset to first onboarding product when switching to onboarding squad
+      setProduct(onboardingProducts[0]);
+    } else if (squad !== "client-experience" && squad !== "onboarding" && 
+              !defaultProducts.includes(product)) {
+      // Reset to first default product when switching from CE or onboarding squad
       setProduct(defaultProducts[0]);
     }
   }, [squad, product, setProduct]);
 
   // Get the products to display based on squad selection
-  const productsToDisplay = squad === "client-experience" 
-    ? clientExperienceProducts 
-    : defaultProducts;
+  const getProductsToDisplay = () => {
+    if (squad === "client-experience") {
+      return clientExperienceProducts;
+    } else if (squad === "onboarding") {
+      return onboardingProducts;
+    } else {
+      return defaultProducts;
+    }
+  };
+
+  const productsToDisplay = getProductsToDisplay();
 
   return (
     <>

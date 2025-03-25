@@ -1,3 +1,4 @@
+
 export const statusConfig = {
   new: { 
     label: "New", 
@@ -94,6 +95,34 @@ export const productLabels = {
     full: "TWS",
     mobile: "TWS"
   },
+  "aaos": {
+    full: "AAOS",
+    mobile: "AAOS"
+  },
+  "car-apps": {
+    full: "CAR Apps",
+    mobile: "CAR Apps"
+  },
+  "dof": {
+    full: "DOF",
+    mobile: "DOF"
+  },
+  "fourthline": {
+    full: "Fourthline",
+    mobile: "Fourthline"
+  },
+  "mfa": {
+    full: "MFA",
+    mobile: "MFA"
+  },
+  "onecent-payment": {
+    full: "OneCent Payment",
+    mobile: "OneCent"
+  },
+  "postident": {
+    full: "PostIdent",
+    mobile: "PostIdent"
+  },
   "other": {
     full: "other",
     mobile: "other"
@@ -151,9 +180,21 @@ export const clientExperienceProducts = [
   "other"
 ];
 
+export const onboardingProducts = [
+  "aaos",
+  "car-apps",
+  "dof",
+  "fourthline",
+  "mfa",
+  "onecent-payment",
+  "postident",
+  "other"
+];
+
 export const defaultProducts = [
   "dof-onboarding",
   "lynx-plus",
   "proactive-service-ce",
   "operational-efficiency-ce"
 ];
+

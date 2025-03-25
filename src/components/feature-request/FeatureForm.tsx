@@ -21,7 +21,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Upload } from "lucide-react";
-import { productLabels, squadLabels, defaultProducts, clientExperienceProducts } from "./constants";
+import { 
+  productLabels, 
+  squadLabels, 
+  defaultProducts, 
+  clientExperienceProducts,
+  onboardingProducts
+} from "./constants";
 
 interface FeatureFormProps {
   onSubmit: (feature: {
@@ -48,7 +54,10 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
   useEffect(() => {
     if (squad === "client-experience" && !clientExperienceProducts.includes(product)) {
       setProduct(clientExperienceProducts[0]);
-    } else if (squad !== "client-experience" && !defaultProducts.includes(product)) {
+    } else if (squad === "onboarding" && !onboardingProducts.includes(product)) {
+      setProduct(onboardingProducts[0]);
+    } else if (squad !== "client-experience" && squad !== "onboarding" && 
+              !defaultProducts.includes(product)) {
       setProduct(defaultProducts[0]);
     }
   }, [squad, product]);
@@ -106,9 +115,17 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
   };
 
   // Get the products to display based on squad selection
-  const productsToDisplay = squad === "client-experience" 
-    ? clientExperienceProducts 
-    : defaultProducts;
+  const getProductsToDisplay = () => {
+    if (squad === "client-experience") {
+      return clientExperienceProducts;
+    } else if (squad === "onboarding") {
+      return onboardingProducts;
+    } else {
+      return defaultProducts;
+    }
+  };
+
+  const productsToDisplay = getProductsToDisplay();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

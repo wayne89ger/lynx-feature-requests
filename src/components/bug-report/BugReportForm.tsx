@@ -13,7 +13,12 @@ import { ScreenshotUpload } from "./form-sections/ScreenshotUpload";
 import { BugFormActions } from "./form-sections/BugFormActions";
 import { EditBugFormFields } from "./form-sections/EditBugFormFields"; 
 import { useToast } from "@/hooks/use-toast";
-import { productLabels, defaultProducts } from "../feature-request/constants";
+import { 
+  productLabels, 
+  defaultProducts, 
+  clientExperienceProducts,
+  onboardingProducts
+} from "../feature-request/constants";
 
 interface BugReportFormProps {
   onSubmit: (bug: {

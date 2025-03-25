@@ -9,7 +9,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { productLabels, defaultProducts, clientExperienceProducts } from "@/components/feature-request/constants";
+import { 
+  productLabels, 
+  defaultProducts, 
+  clientExperienceProducts,
+  onboardingProducts 
+} from "@/components/feature-request/constants";
 
 interface EditBugFormFieldsProps {
   title: string;
@@ -37,7 +42,7 @@ export const EditBugFormFields = ({
   setProduct,
 }: EditBugFormFieldsProps) => {
   // Combine all product options for bugs - they don't have squad selection
-  const allProducts = [...defaultProducts, ...clientExperienceProducts];
+  const allProducts = [...defaultProducts, ...clientExperienceProducts, ...onboardingProducts];
   // Remove duplicates if any
   const uniqueProducts = [...new Set(allProducts)];
 
