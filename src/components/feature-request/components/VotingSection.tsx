@@ -7,9 +7,15 @@ interface VotingSectionProps {
   votes: number;
   voteStatus: 'none' | 'up' | 'down';
   onVote: (direction: 'up' | 'down') => void;
+  upvotes?: number;
+  downvotes?: number;
 }
 
-export const VotingSection = ({ votes, voteStatus, onVote }: VotingSectionProps) => {
+export const VotingSection = ({ votes, voteStatus, onVote, upvotes = 0, downvotes = 0 }: VotingSectionProps) => {
+  // If upvotes and downvotes are provided, use them; otherwise calculate from total votes
+  const displayUpvotes = upvotes || (voteStatus === 'up' ? votes : Math.max(0, votes));
+  const displayDownvotes = downvotes || (voteStatus === 'down' ? Math.abs(votes) : 0);
+
   return (
     <div className="flex items-center gap-0.5 sm:gap-1">
       <Button
@@ -23,7 +29,8 @@ export const VotingSection = ({ votes, voteStatus, onVote }: VotingSectionProps)
       >
         <ArrowBigUp className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
       </Button>
-      <span className="text-xs sm:text-sm font-medium min-w-[1ch] text-center">{votes}</span>
+      <span className="text-xs sm:text-sm font-medium min-w-[1ch] text-center text-primary">{displayUpvotes}</span>
+      
       <Button
         variant="ghost"
         size="sm"
@@ -35,6 +42,7 @@ export const VotingSection = ({ votes, voteStatus, onVote }: VotingSectionProps)
       >
         <ArrowBigDown className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
       </Button>
+      <span className="text-xs sm:text-sm font-medium min-w-[1ch] text-center text-destructive">{displayDownvotes}</span>
     </div>
   );
 };

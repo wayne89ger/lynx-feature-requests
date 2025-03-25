@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, Paperclip } from "lucide-react";
@@ -37,11 +36,41 @@ export const FeatureCard = ({
   className = "",
 }: FeatureCardProps) => {
   const [currentVotes, setCurrentVotes] = useState(votes);
+  const [upvotes, setUpvotes] = useState(0);
+  const [downvotes, setDownvotes] = useState(0);
   const [currentStatus, setCurrentStatus] = useState(status);
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState("");
   const { toast } = useToast();
   const { voteStatus, setVoteStatus } = useVoteStatus(id, reporter);
+
+  const fetchVoteCounts = async () => {
+    try {
+      const { data: upvotesData, error: upvotesError } = await supabase
+        .from('feature_votes')
+        .select('count')
+        .eq('feature_id', id)
+        .eq('vote_type', 'up')
+        .count();
+
+      const { data: downvotesData, error: downvotesError } = await supabase
+        .from('feature_votes')
+        .select('count')
+        .eq('feature_id', id)
+        .eq('vote_type', 'down')
+        .count();
+
+      if (upvotesError || downvotesError) {
+        console.error('Error fetching vote counts:', upvotesError || downvotesError);
+        return;
+      }
+
+      setUpvotes(upvotesData?.length || 0);
+      setDownvotes(downvotesData?.length || 0);
+    } catch (error) {
+      console.error('Error in fetchVoteCounts:', error);
+    }
+  };
 
   const handleStatusChange = async (newStatus: "new" | "review" | "progress" | "completed") => {
     try {
@@ -52,10 +81,8 @@ export const FeatureCard = ({
 
       if (error) throw error;
       
-      // Update local state
       setCurrentStatus(newStatus);
       
-      // Notify parent component
       if (onStatusChange) {
         onStatusChange(id, newStatus);
       }
@@ -137,6 +164,12 @@ export const FeatureCard = ({
         setCurrentVotes(data.votes);
         setVoteStatus('none');
         
+        if (direction === 'up') {
+          setUpvotes(prev => Math.max(0, prev - 1));
+        } else {
+          setDownvotes(prev => Math.max(0, prev - 1));
+        }
+        
         toast({
           title: "Vote removed",
           description: "Your vote has been removed.",
@@ -158,6 +191,12 @@ export const FeatureCard = ({
           .from('features')
           .update({ votes: currentVotes + voteAdjustment })
           .eq('id', id);
+          
+        if (voteStatus === 'up') {
+          setUpvotes(prev => Math.max(0, prev - 1));
+        } else {
+          setDownvotes(prev => Math.max(0, prev - 1));
+        }
       }
 
       const { error: insertError } = await supabase
@@ -185,6 +224,12 @@ export const FeatureCard = ({
       setCurrentVotes(data.votes);
       setVoteStatus(direction);
       
+      if (direction === 'up') {
+        setUpvotes(prev => prev + 1);
+      } else {
+        setDownvotes(prev => prev + 1);
+      }
+      
       toast({
         title: "Vote recorded",
         description: `You ${direction === 'up' ? 'upvoted' : 'downvoted'} this feature request.`,
@@ -204,6 +249,10 @@ export const FeatureCard = ({
       onDelete(id);
     }
   };
+
+  useState(() => {
+    fetchVoteCounts();
+  });
 
   return (
     <div className={`bg-white rounded-lg p-3 sm:p-6 border border-gray-200 shadow-sm ${className}`}>
@@ -242,6 +291,8 @@ export const FeatureCard = ({
           votes={currentVotes}
           voteStatus={voteStatus}
           onVote={handleVote}
+          upvotes={upvotes}
+          downvotes={downvotes}
         />
 
         {attachment && (
