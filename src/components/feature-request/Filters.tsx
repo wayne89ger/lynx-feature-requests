@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { productLabels, locationLabels } from "./constants";
 
 interface FiltersProps {
   activeTab: string;
@@ -15,12 +16,6 @@ interface FiltersProps {
   selectedRequester: string;
   setSelectedRequester: (value: string) => void;
 }
-
-const productLabels = {
-  "website-demand-capture": "Website / Demand Capture",
-  "dof-onboarding": "DOF / Onboarding",
-  "lynx-plus": "LYNX+ / Product Discovery"
-};
 
 export const Filters = ({
   activeTab,
@@ -49,7 +44,7 @@ export const Filters = ({
             <SelectContent>
               <SelectItem value="all">All Products</SelectItem>
               {Object.entries(productLabels).map(([value, label]) => (
-                <SelectItem key={value} value={value}>{label}</SelectItem>
+                <SelectItem key={value} value={value}>{label.full}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -91,9 +86,9 @@ export const Filters = ({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Locations</SelectItem>
-                  <SelectItem value="knowledge-portal">Knowledge Portal</SelectItem>
-                  <SelectItem value="marketing-section">Marketing Section</SelectItem>
-                  <SelectItem value="service-portal">Service Portal</SelectItem>
+                  {Object.entries(locationLabels).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>{label.full}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -129,7 +124,7 @@ export const Filters = ({
           <SelectContent>
             <SelectItem value="all">All Products</SelectItem>
             {Object.entries(productLabels).map(([value, label]) => (
-              <SelectItem key={value} value={value}>{label}</SelectItem>
+                <SelectItem key={value} value={value}>{label.full}</SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -159,9 +154,9 @@ export const Filters = ({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Locations</SelectItem>
-            <SelectItem value="knowledge-portal">Knowledge Portal</SelectItem>
-            <SelectItem value="marketing-section">Marketing Section</SelectItem>
-            <SelectItem value="service-portal">Service Portal</SelectItem>
+            {Object.entries(locationLabels).map(([value, label]) => (
+                <SelectItem key={value} value={value}>{label.full}</SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>

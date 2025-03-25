@@ -21,6 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Upload } from "lucide-react";
+import { productLabels, locationLabels } from "./constants";
 
 interface FeatureFormProps {
   onSubmit: (feature: {
@@ -146,11 +147,9 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
                 <SelectValue placeholder="Select a product" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="website-demand-capture">Website / Demand Capture</SelectItem>
-                <SelectItem value="dof-onboarding">DOF / Onboarding</SelectItem>
-                <SelectItem value="lynx-plus">LYNX+ / Product Discovery</SelectItem>
-                <SelectItem value="proactive-service">Proactive Service</SelectItem>
-                <SelectItem value="operational-efficiency">Operational Efficiency</SelectItem>
+                {Object.entries(productLabels).map(([value, label]) => (
+                  <SelectItem key={value} value={value}>{label.full}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -162,9 +161,9 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
                   <SelectValue placeholder="Select a location" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="knowledge-portal">Knowledge Portal</SelectItem>
-                  <SelectItem value="marketing-section">Marketing Section</SelectItem>
-                  <SelectItem value="service-portal">Service Portal</SelectItem>
+                  {Object.entries(locationLabels).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>{label.full}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

@@ -43,8 +43,8 @@ export const productLabels = {
     full: "Proactive Service",
     mobile: "Proactive"
   },
-  "operational-efficiency": {
-    full: "Operational Efficiency",
+  "operational-efficiency-ce": {
+    full: "Operational Efficiency/CE",
     mobile: "Operations"
   }
 };
