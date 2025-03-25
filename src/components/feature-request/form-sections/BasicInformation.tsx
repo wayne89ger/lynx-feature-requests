@@ -78,7 +78,10 @@ export const BasicInformation = ({
 
   // Get the products to display based on squad selection
   const getProductsToDisplay = () => {
-    if (squad === "client-experience") {
+    if (squad === "") {
+      // Return empty array if no squad selected
+      return [];
+    } else if (squad === "client-experience") {
       return clientExperienceProducts;
     } else if (squad === "onboarding") {
       return onboardingProducts;
@@ -152,9 +155,9 @@ export const BasicInformation = ({
       )}
       <div className="space-y-2">
         <Label htmlFor="product">Product</Label>
-        <Select value={product} onValueChange={setProduct}>
+        <Select value={product} onValueChange={setProduct} disabled={!isBug && squad === ""}>
           <SelectTrigger>
-            <SelectValue placeholder="Select a product" />
+            <SelectValue placeholder={!isBug && squad === "" ? "Select a squad first" : "Select a product"} />
           </SelectTrigger>
           <SelectContent>
             {productsToDisplay.map((productKey) => (
