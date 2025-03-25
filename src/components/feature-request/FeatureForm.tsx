@@ -20,7 +20,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Upload } from "lucide-react";
+import { Upload, Clock } from "lucide-react";
 import { 
   productLabels, 
   squadLabels, 
@@ -30,6 +30,10 @@ import {
   demandCaptureProducts,
   cpiProducts
 } from "./constants";
+import {
+  RadioGroup,
+  RadioGroupItem
+} from "@/components/ui/radio-group";
 
 interface FeatureFormProps {
   onSubmit: (feature: {
@@ -38,6 +42,7 @@ interface FeatureFormProps {
     product: string;
     squad: string;
     canContact: boolean;
+    urgency?: string;
     attachment?: File;
   }) => void;
 }
@@ -50,6 +55,7 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
   const [squad, setSquad] = useState("");
   const [canContact, setCanContact] = useState(false);
   const [attachment, setAttachment] = useState<File | null>(null);
+  const [urgency, setUrgency] = useState("medium");
   const { toast } = useToast();
 
   // Update product options when squad changes
@@ -84,6 +90,7 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
       product, 
       squad,
       canContact,
+      urgency,
       attachment: attachment || undefined
     });
     
@@ -92,6 +99,7 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
     setProduct("");
     setSquad("");
     setCanContact(false);
+    setUrgency("medium");
     setAttachment(null);
     setOpen(false);
     
@@ -195,6 +203,27 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
                 ))}
               </SelectContent>
             </Select>
+          </div>
+          <div className="space-y-2">
+            <Label>Urgency</Label>
+            <RadioGroup 
+              value={urgency} 
+              onValueChange={setUrgency}
+              className="grid grid-cols-3 gap-2"
+            >
+              <div className="flex items-center space-x-2 border rounded-md p-2 hover:bg-gray-50 cursor-pointer">
+                <RadioGroupItem value="low" id="low" className="text-gray-400" />
+                <Label htmlFor="low" className="cursor-pointer">Low</Label>
+              </div>
+              <div className="flex items-center space-x-2 border rounded-md p-2 hover:bg-gray-50 cursor-pointer">
+                <RadioGroupItem value="medium" id="medium" className="text-amber-500" />
+                <Label htmlFor="medium" className="cursor-pointer">Medium</Label>
+              </div>
+              <div className="flex items-center space-x-2 border rounded-md p-2 hover:bg-gray-50 cursor-pointer">
+                <RadioGroupItem value="high" id="high" className="text-red-500" />
+                <Label htmlFor="high" className="cursor-pointer">High</Label>
+              </div>
+            </RadioGroup>
           </div>
           <div className="space-y-2">
             <Label htmlFor="attachment">Attachment</Label>

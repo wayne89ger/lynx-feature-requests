@@ -45,6 +45,7 @@ export const useFeatures = () => {
         location: feature.location,
         votes: feature.votes || 0,
         reporter: feature.reporter,
+        urgency: feature.urgency || 'medium',
         experimentOwner: feature.experiment_owner,
         comments: commentsData
           ?.filter(comment => comment.feature_id === feature.id)

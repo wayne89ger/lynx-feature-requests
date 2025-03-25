@@ -14,6 +14,7 @@ export const useFeatureSubmission = (features: Feature[], setFeatures: (features
     squad: string;
     location?: string;
     canContact: boolean;
+    urgency?: string;
     attachment?: File;
   }) => {
     try {
@@ -26,7 +27,8 @@ export const useFeatureSubmission = (features: Feature[], setFeatures: (features
           squad: formData.squad,
           location: formData.location,
           reporter: EXPERIMENT_OWNERS[0],
-          votes: 0
+          votes: 0,
+          urgency: formData.urgency || 'medium'
         }])
         .select()
         .single();

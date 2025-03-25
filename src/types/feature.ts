@@ -18,6 +18,7 @@ export interface Feature {
   votes: number;
   comments: Comment[];
   attachment?: string;
+  urgency?: "low" | "medium" | "high";
   reporter: string;
   experimentOwner?: string;
   created_at?: string;
