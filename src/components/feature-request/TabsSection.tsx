@@ -18,8 +18,6 @@ interface TabsSectionProps {
   setSelectedLocation: (location: string) => void;
   selectedRequester: string;
   setSelectedRequester: (requester: string) => void;
-  selectedExperimentOwner: string;
-  setSelectedExperimentOwner: (owner: string) => void;
 }
 
 export const TabsSection = ({
@@ -35,8 +33,6 @@ export const TabsSection = ({
   setSelectedLocation,
   selectedRequester,
   setSelectedRequester,
-  selectedExperimentOwner,
-  setSelectedExperimentOwner,
 }: TabsSectionProps) => {
   const [activeTab] = useState("features");
 
@@ -65,8 +61,6 @@ export const TabsSection = ({
             setSelectedLocation={setSelectedLocation}
             selectedRequester={selectedRequester}
             setSelectedRequester={setSelectedRequester}
-            selectedExperimentOwner={selectedExperimentOwner}
-            setSelectedExperimentOwner={setSelectedExperimentOwner}
           />
         </div>
       </div>

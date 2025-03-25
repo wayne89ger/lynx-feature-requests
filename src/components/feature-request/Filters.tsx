@@ -1,7 +1,6 @@
 
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { EXPERIMENT_OWNERS } from "@/constants/experimentOwners";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
@@ -15,8 +14,6 @@ interface FiltersProps {
   setSelectedLocation: (value: string) => void;
   selectedRequester: string;
   setSelectedRequester: (value: string) => void;
-  selectedExperimentOwner: string;
-  setSelectedExperimentOwner: (value: string) => void;
 }
 
 const productLabels = {
@@ -35,8 +32,6 @@ export const Filters = ({
   setSelectedLocation,
   selectedRequester,
   setSelectedRequester,
-  selectedExperimentOwner,
-  setSelectedExperimentOwner
 }: FiltersProps) => {
   const isMobile = useIsMobile();
   const [showAllFilters, setShowAllFilters] = useState(false);
@@ -111,24 +106,8 @@ export const Filters = ({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Requesters</SelectItem>
-                  {EXPERIMENT_OWNERS.map((owner) => (
-                    <SelectItem key={owner} value={owner}>{owner}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Experiment Owner filter */}
-            <div className="w-full">
-              <Select value={selectedExperimentOwner} onValueChange={setSelectedExperimentOwner}>
-                <SelectTrigger className="bg-white border-lynx-border shadow-sm">
-                  <SelectValue placeholder="All Experiment Owners" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Experiment Owners</SelectItem>
-                  {EXPERIMENT_OWNERS.map((owner) => (
-                    <SelectItem key={owner} value={owner}>{owner}</SelectItem>
-                  ))}
+                  <SelectItem value="wanja-aram">Wanja Aram</SelectItem>
+                  <SelectItem value="raquell-serrano">Raquell Serrano</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -195,24 +174,8 @@ export const Filters = ({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Requesters</SelectItem>
-            {EXPERIMENT_OWNERS.map((owner) => (
-              <SelectItem key={owner} value={owner}>{owner}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Experiment Owner filter */}
-      <div className="w-full max-w-[200px]">
-        <Select value={selectedExperimentOwner} onValueChange={setSelectedExperimentOwner}>
-          <SelectTrigger className="bg-white border-lynx-border shadow-sm">
-            <SelectValue placeholder="All Experiment Owners" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Experiment Owners</SelectItem>
-            {EXPERIMENT_OWNERS.map((owner) => (
-              <SelectItem key={owner} value={owner}>{owner}</SelectItem>
-            ))}
+            <SelectItem value="wanja-aram">Wanja Aram</SelectItem>
+            <SelectItem value="raquell-serrano">Raquell Serrano</SelectItem>
           </SelectContent>
         </Select>
       </div>
