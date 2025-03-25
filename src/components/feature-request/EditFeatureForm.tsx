@@ -10,7 +10,6 @@ import { useToast } from "@/hooks/use-toast";
 import { ActionButtons } from "./form-sections/ActionButtons";
 import { BasicInformation } from "./form-sections/BasicInformation";
 import { FeatureSpecificFields } from "./form-sections/FeatureSpecificFields";
-import { EXPERIMENT_OWNERS } from "@/constants/experimentOwners";
 
 interface EditFeatureFormProps {
   feature: {
@@ -23,7 +22,6 @@ interface EditFeatureFormProps {
     squad?: string;
     location?: string;
     url?: string;
-    experimentOwner?: string;
   };
   open: boolean;
   onClose: () => void;
@@ -42,22 +40,8 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
   const [hasShortcutStory, setHasShortcutStory] = useState(false);
   const [hasConfluenceDoc, setHasConfluenceDoc] = useState(false);
   
-  // Feature-specific states
-  const [hypothesis, setHypothesis] = useState("");
-  const [expectedOutcome, setExpectedOutcome] = useState("");
-  const [type, setType] = useState<"ab-test" | "seo-experiment">("ab-test");
-  const [selectedMetrics, setSelectedMetrics] = useState<string[]>([]);
-  const [metrics, setMetrics] = useState<string[]>([]);
-  const [newMetric, setNewMetric] = useState("");
-  const [userResearch, setUserResearch] = useState("");
-  const [mvpStates, setMvpStates] = useState("");
-  const [reach, setReach] = useState<number>(1);
-  const [impact, setImpact] = useState<number>(1);
-  const [confidence, setConfidence] = useState<number>(1);
-  const [effort, setEffort] = useState<number>(1);
-  const [experimentOwner, setExperimentOwner] = useState<string>(feature.experimentOwner || EXPERIMENT_OWNERS[0]);
+  // Feature-specific states - simplified
   const [reviewers, setReviewers] = useState<string[]>([]);
-  const [timeframe, setTimeframe] = useState("3 month");
   
   const { toast } = useToast();
 
@@ -84,19 +68,7 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
       product,
       squad,
       location,
-      experimentOwner,
-      hypothesis,
-      expectedOutcome,
-      type,
-      selectedMetrics,
-      userResearch,
-      mvpStates,
-      reach,
-      impact,
-      confidence,
-      effort,
-      reviewers,
-      timeframe
+      reviewers
     };
 
     onSave(feature.id, updatedData);
@@ -137,36 +109,8 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
 
           {!isBug && (
             <FeatureSpecificFields
-              hypothesis={hypothesis}
-              setHypothesis={setHypothesis}
-              expectedOutcome={expectedOutcome}
-              setExpectedOutcome={setExpectedOutcome}
-              type={type}
-              setType={setType}
-              selectedMetrics={selectedMetrics}
-              setSelectedMetrics={setSelectedMetrics}
-              userResearch={userResearch}
-              setUserResearch={setUserResearch}
-              mvpStates={mvpStates}
-              setMvpStates={setMvpStates}
-              experimentOwner={experimentOwner}
-              setExperimentOwner={setExperimentOwner}
-              metrics={metrics}
-              setMetrics={setMetrics}
-              newMetric={newMetric}
-              setNewMetric={setNewMetric}
-              reach={reach}
-              impact={impact}
-              confidence={confidence}
-              effort={effort}
-              setReach={setReach}
-              setImpact={setImpact}
-              setConfidence={setConfidence}
-              setEffort={setEffort}
               reviewers={reviewers}
               setReviewers={setReviewers}
-              timeframe={timeframe}
-              setTimeframe={setTimeframe}
             />
           )}
 

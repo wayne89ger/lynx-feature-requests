@@ -17,8 +17,7 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
           description: updatedFeature.description,
           product: updatedFeature.product,
           location: updatedFeature.location,
-          status: updatedFeature.status,
-          experiment_owner: updatedFeature.experimentOwner
+          status: updatedFeature.status
         })
         .eq('id', id)
         .select()
