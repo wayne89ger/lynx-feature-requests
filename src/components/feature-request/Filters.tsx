@@ -2,7 +2,8 @@
 import { useState, useEffect } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { 
   productLabels, 
   squadLabels,
@@ -21,6 +22,8 @@ interface FiltersProps {
   setSelectedStatus: (value: string) => void;
   selectedRequester: string;
   setSelectedRequester: (value: string) => void;
+  searchTerm?: string;
+  setSearchTerm?: (value: string) => void;
 }
 
 export const Filters = ({
@@ -31,6 +34,8 @@ export const Filters = ({
   setSelectedStatus,
   selectedRequester,
   setSelectedRequester,
+  searchTerm = "",
+  setSearchTerm = () => {},
 }: FiltersProps) => {
   const isMobile = useIsMobile();
   const [showAllFilters, setShowAllFilters] = useState(false);
@@ -76,6 +81,18 @@ export const Filters = ({
   if (isMobile) {
     return (
       <div className="flex flex-col gap-4 w-full">
+        {/* Search input - always visible on mobile */}
+        <div className="relative w-full">
+          <Input
+            type="text"
+            placeholder="Search products or squads..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 bg-white border-lynx-border shadow-sm"
+          />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+        </div>
+
         {/* Squad filter - always visible on mobile */}
         <div className="w-full">
           <Select value={selectedSquad} onValueChange={setSelectedSquad}>
@@ -157,69 +174,82 @@ export const Filters = ({
 
   // Desktop filters UI - horizontal layout with all filters visible
   return (
-    <div className="flex flex-row gap-3 w-full">
-      {/* Squad filter */}
-      <div className="w-full max-w-[200px]">
-        <Select value={selectedSquad} onValueChange={setSelectedSquad}>
-          <SelectTrigger className="bg-white border-lynx-border shadow-sm">
-            <SelectValue placeholder="All Squads" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Squads</SelectItem>
-            {Object.entries(squadLabels).map(([value, label]) => (
-              <SelectItem key={value} value={value}>{label.full}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+    <div className="flex flex-col gap-3 w-full">
+      {/* Search input on desktop */}
+      <div className="relative w-full">
+        <Input
+          type="text"
+          placeholder="Search products or squads..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="pl-10 bg-white border-lynx-border shadow-sm"
+        />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
       </div>
+      
+      <div className="flex flex-row gap-3 w-full">
+        {/* Squad filter */}
+        <div className="w-full max-w-[200px]">
+          <Select value={selectedSquad} onValueChange={setSelectedSquad}>
+            <SelectTrigger className="bg-white border-lynx-border shadow-sm">
+              <SelectValue placeholder="All Squads" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Squads</SelectItem>
+              {Object.entries(squadLabels).map(([value, label]) => (
+                <SelectItem key={value} value={value}>{label.full}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
-      {/* Product filter */}
-      <div className="w-full max-w-[200px]">
-        <Select value={selectedProduct} onValueChange={setSelectedProduct}>
-          <SelectTrigger className="bg-white border-lynx-border shadow-sm">
-            <SelectValue placeholder="All Products" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Products</SelectItem>
-            {productsToDisplay.map((productKey) => (
-              <SelectItem key={productKey} value={productKey}>
-                {productLabels[productKey]?.full || productKey}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+        {/* Product filter */}
+        <div className="w-full max-w-[200px]">
+          <Select value={selectedProduct} onValueChange={setSelectedProduct}>
+            <SelectTrigger className="bg-white border-lynx-border shadow-sm">
+              <SelectValue placeholder="All Products" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Products</SelectItem>
+              {productsToDisplay.map((productKey) => (
+                <SelectItem key={productKey} value={productKey}>
+                  {productLabels[productKey]?.full || productKey}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
-      {/* Status filter */}
-      <div className="w-full max-w-[200px]">
-        <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-          <SelectTrigger className="bg-white border-lynx-border shadow-sm">
-            <SelectValue placeholder="All Statuses" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Statuses</SelectItem>
-            <SelectItem value="new">New</SelectItem>
-            <SelectItem value="review">Under Review</SelectItem>
-            <SelectItem value="progress">In Progress</SelectItem>
-            <SelectItem value="completed">Completed</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+        {/* Status filter */}
+        <div className="w-full max-w-[200px]">
+          <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+            <SelectTrigger className="bg-white border-lynx-border shadow-sm">
+              <SelectValue placeholder="All Statuses" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Statuses</SelectItem>
+              <SelectItem value="new">New</SelectItem>
+              <SelectItem value="review">Under Review</SelectItem>
+              <SelectItem value="progress">In Progress</SelectItem>
+              <SelectItem value="completed">Completed</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-      {/* Requester filter */}
-      <div className="w-full max-w-[200px]">
-        <Select value={selectedRequester} onValueChange={setSelectedRequester}>
-          <SelectTrigger className="bg-white border-lynx-border shadow-sm">
-            <SelectValue placeholder="All Requesters" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Requesters</SelectItem>
-            <SelectItem value="wanja-aram">Wanja Aram</SelectItem>
-            <SelectItem value="raquell-serrano">Raquell Serrano</SelectItem>
-          </SelectContent>
-        </Select>
+        {/* Requester filter */}
+        <div className="w-full max-w-[200px]">
+          <Select value={selectedRequester} onValueChange={setSelectedRequester}>
+            <SelectTrigger className="bg-white border-lynx-border shadow-sm">
+              <SelectValue placeholder="All Requesters" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Requesters</SelectItem>
+              <SelectItem value="wanja-aram">Wanja Aram</SelectItem>
+              <SelectItem value="raquell-serrano">Raquell Serrano</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
     </div>
   );
 };
-

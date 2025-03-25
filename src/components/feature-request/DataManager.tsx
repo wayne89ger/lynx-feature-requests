@@ -19,6 +19,7 @@ export const DataManager = () => {
   const { handleFeatureSubmit } = useFeatureSubmission(features, setFeatures);
   const { handleFeatureUpdate, handleStatusUpdate } = useFeatureUpdate(features, setFeatures);
 
+  // Filter features based on selected filters (product, status, requester)
   const filteredAndSortedFeatures = features
     .filter(feature => 
       (selectedProduct === "all" || feature.product === selectedProduct) &&

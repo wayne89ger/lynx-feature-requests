@@ -3,6 +3,7 @@ import { useState } from "react";
 import { FeatureList } from "./FeatureList";
 import { Filters } from "./Filters";
 import { Feature } from "@/types/feature";
+import { productLabels, squadLabels } from "./constants";
 
 interface TabsSectionProps {
   filteredFeatures: Feature[];
@@ -30,6 +31,26 @@ export const TabsSection = ({
   setSelectedRequester,
 }: TabsSectionProps) => {
   const [activeTab] = useState("features");
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Apply search filter in addition to the existing filters
+  const searchFilteredFeatures = filteredFeatures.filter(feature => {
+    if (!searchTerm) return true;
+    
+    const searchLower = searchTerm.toLowerCase();
+    
+    // Search in product name
+    const productMatch = productLabels[feature.product]?.full.toLowerCase().includes(searchLower) ||
+                         feature.product.toLowerCase().includes(searchLower);
+    
+    // Search in squad name (if available)
+    const squadMatch = feature.squad ? 
+      (squadLabels[feature.squad]?.full.toLowerCase().includes(searchLower) ||
+       feature.squad.toLowerCase().includes(searchLower)) : 
+      false;
+    
+    return productMatch || squadMatch;
+  });
 
   return (
     <div className="mt-8">
@@ -37,9 +58,9 @@ export const TabsSection = ({
         <div className="mb-4 w-full">
           <div className="relative flex-1 bg-[#F2FCE2] p-2 rounded-md">
             Feature Requests
-            {filteredFeatures.length > 0 && (
+            {searchFilteredFeatures.length > 0 && (
               <span className="ml-2 px-2 py-0.5 bg-[#F2FCE2] text-primary text-xs rounded-full">
-                {filteredFeatures.length}
+                {searchFilteredFeatures.length}
               </span>
             )}
           </div>
@@ -54,6 +75,8 @@ export const TabsSection = ({
             setSelectedStatus={setSelectedStatus}
             selectedRequester={selectedRequester}
             setSelectedRequester={setSelectedRequester}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
           />
         </div>
       </div>
@@ -62,13 +85,13 @@ export const TabsSection = ({
         <h2 className="text-xl sm:text-2xl font-semibold text-center text-primary mb-2">Feature Requests</h2>
         <p className="text-center text-muted-foreground mb-6">Browse and vote on proposed features</p>
         
-        {filteredFeatures.length === 0 ? (
+        {searchFilteredFeatures.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground">
             No feature requests found. Try adjusting your filters or submit a new feature request.
           </div>
         ) : (
           <FeatureList 
-            features={filteredFeatures} 
+            features={searchFilteredFeatures} 
             onEdit={onEdit}
             onDelete={onDeleteFeature}
             onStatusChange={onStatusChange}
