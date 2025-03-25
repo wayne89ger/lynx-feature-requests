@@ -22,6 +22,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Bug } from "lucide-react";
 import { ScreenshotUpload } from "./form-sections/ScreenshotUpload";
 import { BugFormActions } from "./form-sections/BugFormActions";
+import { productLabels } from "../feature-request/constants";
 
 interface BugReportFormProps {
   onSubmit: (bug: {
@@ -41,7 +42,7 @@ export const BugReportForm = ({ onSubmit }: BugReportFormProps) => {
   const [expectedBehavior, setExpectedBehavior] = useState("");
   const [url, setUrl] = useState(window.location.href);
   const [screenshot, setScreenshot] = useState<File | null>(null);
-  const [product, setProduct] = useState("website-demand-capture");
+  const [product, setProduct] = useState(Object.keys(productLabels)[0] || "");
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -68,7 +69,7 @@ export const BugReportForm = ({ onSubmit }: BugReportFormProps) => {
     setExpectedBehavior("");
     setUrl(window.location.href);
     setScreenshot(null);
-    setProduct("website-demand-capture");
+    setProduct(Object.keys(productLabels)[0] || "");
     setOpen(false);
 
     toast({
@@ -97,11 +98,9 @@ export const BugReportForm = ({ onSubmit }: BugReportFormProps) => {
                 <SelectValue placeholder="Select a product" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="website-demand-capture">Website / Demand Capture</SelectItem>
-                <SelectItem value="dof-onboarding">DOF / Onboarding</SelectItem>
-                <SelectItem value="lynx-plus">LYNX+ / Product Discovery</SelectItem>
-                <SelectItem value="proactive-service">Proactive Service</SelectItem>
-                <SelectItem value="operational-efficiency">Operational Efficiency</SelectItem>
+                {Object.entries(productLabels).map(([value, label]) => (
+                  <SelectItem key={value} value={value}>{label.full}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

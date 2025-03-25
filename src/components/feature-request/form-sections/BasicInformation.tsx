@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { productLabels } from "../constants";
 
 interface BasicInformationProps {
   title: string;
@@ -90,29 +91,12 @@ export const BasicInformation = ({
             <SelectValue placeholder="Select a product" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="website-demand-capture">Website / Demand Capture</SelectItem>
-            <SelectItem value="dof-onboarding">DOF / Onboarding</SelectItem>
-            <SelectItem value="lynx-plus">LYNX+ / Product Discovery</SelectItem>
-            <SelectItem value="proactive-service">Proactive Service/CE</SelectItem>
-            <SelectItem value="operational-efficiency-ce">Operational Efficiency/CE</SelectItem>
+            {Object.entries(productLabels).map(([value, label]) => (
+              <SelectItem key={value} value={value}>{label.full}</SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
-      {!isBug && product === "website-demand-capture" && (
-        <div className="space-y-2">
-          <Label htmlFor="location">Location</Label>
-          <Select value={location} onValueChange={setLocation}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select a location" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="knowledge-portal">Knowledge Portal</SelectItem>
-              <SelectItem value="marketing-section">Marketing Section</SelectItem>
-              <SelectItem value="service-portal">Service Portal</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      )}
     </>
   );
 };

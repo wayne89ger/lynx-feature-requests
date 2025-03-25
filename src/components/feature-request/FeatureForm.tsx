@@ -21,14 +21,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Upload } from "lucide-react";
-import { productLabels, locationLabels } from "./constants";
+import { productLabels } from "./constants";
 
 interface FeatureFormProps {
   onSubmit: (feature: {
     title: string;
     description: string;
     product: string;
-    location?: string;
     canContact: boolean;
     attachment?: File;
   }) => void;
@@ -39,7 +38,6 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [product, setProduct] = useState("");
-  const [location, setLocation] = useState("");
   const [canContact, setCanContact] = useState(false);
   const [attachment, setAttachment] = useState<File | null>(null);
   const { toast } = useToast();
@@ -54,19 +52,10 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
       return;
     }
 
-    if (product === "website-demand-capture" && !location) {
-      toast({
-        title: "Please select a location",
-        variant: "destructive",
-      });
-      return;
-    }
-
     onSubmit({ 
       title, 
       description, 
       product, 
-      location: product === "website-demand-capture" ? location : undefined,
       canContact,
       attachment: attachment || undefined
     });
@@ -74,7 +63,6 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
     setTitle("");
     setDescription("");
     setProduct("");
-    setLocation("");
     setCanContact(false);
     setAttachment(null);
     setOpen(false);
@@ -137,12 +125,7 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
           </div>
           <div className="space-y-2">
             <Label htmlFor="product">Product</Label>
-            <Select value={product} onValueChange={(value) => {
-              setProduct(value);
-              if (value !== "website-demand-capture") {
-                setLocation("");
-              }
-            }}>
+            <Select value={product} onValueChange={setProduct}>
               <SelectTrigger>
                 <SelectValue placeholder="Select a product" />
               </SelectTrigger>
@@ -153,21 +136,6 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
               </SelectContent>
             </Select>
           </div>
-          {product === "website-demand-capture" && (
-            <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
-              <Select value={location} onValueChange={setLocation}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a location" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.entries(locationLabels).map(([value, label]) => (
-                    <SelectItem key={value} value={value}>{label.full}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
           <div className="space-y-2">
             <Label htmlFor="attachment">Attachment</Label>
             <div className="flex items-center gap-2">

@@ -27,10 +27,6 @@ export const statusConfig = {
 };
 
 export const productLabels = {
-  "website-demand-capture": {
-    full: "Website / Demand Capture",
-    mobile: "Website"
-  },
   "dof-onboarding": {
     full: "DOF / Onboarding",
     mobile: "DOF"
@@ -39,7 +35,7 @@ export const productLabels = {
     full: "LYNX+ / Product Discovery",
     mobile: "LYNX+"
   },
-  "proactive-service": {
+  "proactive-service-ce": {
     full: "Proactive Service/CE",
     mobile: "Proactive"
   },

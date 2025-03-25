@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { productLabels, locationLabels } from "./constants";
+import { productLabels } from "./constants";
 
 interface FiltersProps {
   activeTab: string;
@@ -11,8 +11,6 @@ interface FiltersProps {
   setSelectedProduct: (value: string) => void;
   selectedStatus: string;
   setSelectedStatus: (value: string) => void;
-  selectedLocation: string;
-  setSelectedLocation: (value: string) => void;
   selectedRequester: string;
   setSelectedRequester: (value: string) => void;
 }
@@ -23,8 +21,6 @@ export const Filters = ({
   setSelectedProduct,
   selectedStatus,
   setSelectedStatus,
-  selectedLocation,
-  setSelectedLocation,
   selectedRequester,
   setSelectedRequester,
 }: FiltersProps) => {
@@ -78,21 +74,6 @@ export const Filters = ({
               </Select>
             </div>
 
-            {/* Location filter */}
-            <div className="w-full">
-              <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                <SelectTrigger className="bg-white border-lynx-border shadow-sm">
-                  <SelectValue placeholder="All Locations" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Locations</SelectItem>
-                  {Object.entries(locationLabels).map(([value, label]) => (
-                    <SelectItem key={value} value={value}>{label.full}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
             {/* Requester filter */}
             <div className="w-full">
               <Select value={selectedRequester} onValueChange={setSelectedRequester}>
@@ -142,21 +123,6 @@ export const Filters = ({
             <SelectItem value="review">Under Review</SelectItem>
             <SelectItem value="progress">In Progress</SelectItem>
             <SelectItem value="completed">Completed</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Location filter */}
-      <div className="w-full max-w-[200px]">
-        <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-          <SelectTrigger className="bg-white border-lynx-border shadow-sm">
-            <SelectValue placeholder="All Locations" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Locations</SelectItem>
-            {Object.entries(locationLabels).map(([value, label]) => (
-                <SelectItem key={value} value={value}>{label.full}</SelectItem>
-            ))}
           </SelectContent>
         </Select>
       </div>

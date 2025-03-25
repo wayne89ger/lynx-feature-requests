@@ -13,8 +13,6 @@ interface TabsSectionProps {
   setSelectedProduct: (product: string) => void;
   selectedStatus: string;
   setSelectedStatus: (status: string) => void;
-  selectedLocation: string;
-  setSelectedLocation: (location: string) => void;
   selectedRequester: string;
   setSelectedRequester: (requester: string) => void;
 }
@@ -28,8 +26,6 @@ export const TabsSection = ({
   setSelectedProduct,
   selectedStatus,
   setSelectedStatus,
-  selectedLocation,
-  setSelectedLocation,
   selectedRequester,
   setSelectedRequester,
 }: TabsSectionProps) => {
@@ -56,8 +52,6 @@ export const TabsSection = ({
             setSelectedProduct={setSelectedProduct}
             selectedStatus={selectedStatus}
             setSelectedStatus={setSelectedStatus}
-            selectedLocation={selectedLocation}
-            setSelectedLocation={setSelectedLocation}
             selectedRequester={selectedRequester}
             setSelectedRequester={setSelectedRequester}
           />
