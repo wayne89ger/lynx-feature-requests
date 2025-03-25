@@ -6,8 +6,10 @@ interface FormActionsProps {
     title: string;
     description: string;
     product: string;
+    squad: string;
     location?: string;
     canContact: boolean;
+    urgency?: string;
     attachment?: File;
   }) => void;
 }
