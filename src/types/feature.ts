@@ -1,3 +1,4 @@
+
 export interface Comment {
   id: number;
   text: string;
@@ -11,6 +12,7 @@ export interface Feature {
   description: string;
   status: "new" | "review" | "progress" | "completed";
   product: string;
+  squad?: string;
   location?: string;
   votes: number;
   comments: Comment[];

@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { productLabels } from "../constants";
+import { productLabels, squadLabels } from "../constants";
 
 interface BasicInformationProps {
   title: string;
@@ -18,6 +18,7 @@ interface BasicInformationProps {
   url?: string;
   product: string;
   location: string;
+  squad: string;
   isBug: boolean;
   setTitle: (value: string) => void;
   setDescription: (value: string) => void;
@@ -25,6 +26,7 @@ interface BasicInformationProps {
   setUrl?: (value: string) => void;
   setProduct: (value: string) => void;
   setLocation: (value: string) => void;
+  setSquad: (value: string) => void;
 }
 
 export const BasicInformation = ({
@@ -34,6 +36,7 @@ export const BasicInformation = ({
   url,
   product,
   location,
+  squad,
   isBug,
   setTitle,
   setDescription,
@@ -41,6 +44,7 @@ export const BasicInformation = ({
   setUrl,
   setProduct,
   setLocation,
+  setSquad,
 }: BasicInformationProps) => {
   return (
     <>
@@ -83,6 +87,21 @@ export const BasicInformation = ({
             />
           </div>
         </>
+      )}
+      {!isBug && (
+        <div className="space-y-2">
+          <Label htmlFor="squad">Squad</Label>
+          <Select value={squad} onValueChange={setSquad}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select a squad" />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(squadLabels).map(([value, label]) => (
+                <SelectItem key={value} value={value}>{label.full}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       )}
       <div className="space-y-2">
         <Label htmlFor="product">Product</Label>

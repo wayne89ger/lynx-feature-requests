@@ -14,7 +14,6 @@ export const DataManager = () => {
   const [showEditForm, setShowEditForm] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<string>("all");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
-  const [selectedLocation, setSelectedLocation] = useState<string>("all");
   const [selectedRequester, setSelectedRequester] = useState<string>("all");
 
   const { handleFeatureSubmit } = useFeatureSubmission(features, setFeatures);
@@ -24,7 +23,6 @@ export const DataManager = () => {
     .filter(feature => 
       (selectedProduct === "all" || feature.product === selectedProduct) &&
       (selectedStatus === "all" || feature.status === selectedStatus) &&
-      (selectedLocation === "all" || feature.location === selectedLocation) &&
       (selectedRequester === "all" || feature.reporter === selectedRequester)
     )
     .sort((a, b) => (b.votes || 0) - (a.votes || 0));
@@ -79,8 +77,6 @@ export const DataManager = () => {
         setSelectedProduct={setSelectedProduct}
         selectedStatus={selectedStatus}
         setSelectedStatus={setSelectedStatus}
-        selectedLocation={selectedLocation}
-        setSelectedLocation={setSelectedLocation}
         selectedRequester={selectedRequester}
         setSelectedRequester={setSelectedRequester}
       />

@@ -21,13 +21,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Upload } from "lucide-react";
-import { productLabels } from "./constants";
+import { productLabels, squadLabels } from "./constants";
 
 interface FeatureFormProps {
   onSubmit: (feature: {
     title: string;
     description: string;
     product: string;
+    squad: string;
     canContact: boolean;
     attachment?: File;
   }) => void;
@@ -38,13 +39,14 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [product, setProduct] = useState("");
+  const [squad, setSquad] = useState("");
   const [canContact, setCanContact] = useState(false);
   const [attachment, setAttachment] = useState<File | null>(null);
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !description || !product) {
+    if (!title || !description || !product || !squad) {
       toast({
         title: "Please fill in all required fields",
         variant: "destructive",
@@ -56,6 +58,7 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
       title, 
       description, 
       product, 
+      squad,
       canContact,
       attachment: attachment || undefined
     });
@@ -63,6 +66,7 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
     setTitle("");
     setDescription("");
     setProduct("");
+    setSquad("");
     setCanContact(false);
     setAttachment(null);
     setOpen(false);
@@ -122,6 +126,19 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
               placeholder="Describe your feature request in detail"
               className="min-h-[100px]"
             />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="squad">Squad</Label>
+            <Select value={squad} onValueChange={setSquad}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a squad" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(squadLabels).map(([value, label]) => (
+                  <SelectItem key={value} value={value}>{label.full}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
             <Label htmlFor="product">Product</Label>

@@ -1,3 +1,4 @@
+
 import { Feature } from "@/types/feature";
 import { supabase } from "@/integrations/supabase/client";
 import { EXPERIMENT_OWNERS } from "@/constants/experimentOwners";
@@ -10,6 +11,7 @@ export const useFeatureSubmission = (features: Feature[], setFeatures: (features
     title: string;
     description: string;
     product: string;
+    squad: string;
     location?: string;
     canContact: boolean;
     attachment?: File;
@@ -21,6 +23,7 @@ export const useFeatureSubmission = (features: Feature[], setFeatures: (features
           title: formData.title,
           description: formData.description,
           product: formData.product,
+          squad: formData.squad,
           location: formData.location,
           reporter: EXPERIMENT_OWNERS[0],
           votes: 0

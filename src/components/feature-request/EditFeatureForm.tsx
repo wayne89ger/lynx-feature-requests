@@ -20,6 +20,7 @@ interface EditFeatureFormProps {
     current_situation?: string;
     expected_behavior?: string;
     product: string;
+    squad?: string;
     location?: string;
     url?: string;
     experimentOwner?: string;
@@ -36,6 +37,7 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
   const [expectedBehavior, setExpectedBehavior] = useState(feature.expected_behavior || "");
   const [url, setUrl] = useState(feature.url || "");
   const [product, setProduct] = useState(feature.product);
+  const [squad, setSquad] = useState(feature.squad || "");
   const [location, setLocation] = useState(feature.location || "");
   const [hasShortcutStory, setHasShortcutStory] = useState(false);
   const [hasConfluenceDoc, setHasConfluenceDoc] = useState(false);
@@ -80,7 +82,8 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
       title,
       description,
       product,
-      location: product === "website-demand-capture" ? location : undefined,
+      squad,
+      location,
       experimentOwner,
       hypothesis,
       expectedOutcome,
@@ -120,6 +123,7 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
             expectedBehavior={expectedBehavior}
             url={url}
             product={product}
+            squad={squad}
             location={location}
             isBug={isBug}
             setTitle={setTitle}
@@ -127,6 +131,7 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
             setExpectedBehavior={setExpectedBehavior}
             setUrl={setUrl}
             setProduct={setProduct}
+            setSquad={setSquad}
             setLocation={setLocation}
           />
 

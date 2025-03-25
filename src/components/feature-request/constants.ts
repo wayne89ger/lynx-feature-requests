@@ -45,6 +45,25 @@ export const productLabels = {
   }
 };
 
+export const squadLabels = {
+  "demand-capture": {
+    full: "Demand Capture",
+    mobile: "Demand Capture"
+  },
+  "onboarding": {
+    full: "Onboarding",
+    mobile: "Onboarding"
+  },
+  "client-experience": {
+    full: "Client Experience",
+    mobile: "CE"
+  },
+  "cpi": {
+    full: "CPI",
+    mobile: "CPI"
+  }
+};
+
 export const locationLabels = {
   "knowledge-portal": {
     full: "Knowledge Portal",
