@@ -1,13 +1,16 @@
-import { useState, useEffect } from "react";
+
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Paperclip } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { Feature } from "@/types/feature";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 import { useVoteStatus } from "@/hooks/useVoteStatus";
+import { useFeatureVoting } from "@/hooks/useFeatureVoting";
+import { useFeatureStatus } from "@/hooks/useFeatureStatus";
+import { useFeatureComments } from "@/hooks/useFeatureComments";
 import { FeatureHeader } from "./components/FeatureHeader";
 import { VotingSection } from "./components/VotingSection";
 import { CommentsSection } from "./components/CommentsSection";
+import { AttachmentDisplay } from "./components/AttachmentDisplay";
 
 interface FeatureCardProps extends Feature {
   onStatusChange?: (id: number, newStatus: "new" | "review" | "progress" | "completed") => void;
@@ -29,245 +32,40 @@ export const FeatureCard = ({
   attachment,
   reporter,
   experimentOwner,
+  urgency,
   onStatusChange,
   onAddComment,
   onEdit,
   onDelete,
   className = "",
 }: FeatureCardProps) => {
-  const [currentVotes, setCurrentVotes] = useState(votes);
-  const [upvotes, setUpvotes] = useState(0);
-  const [downvotes, setDownvotes] = useState(0);
-  const [currentStatus, setCurrentStatus] = useState(status);
-  const [showComments, setShowComments] = useState(false);
-  const [newComment, setNewComment] = useState("");
-  const { toast } = useToast();
-  const { voteStatus, setVoteStatus } = useVoteStatus(id, reporter);
-
-  const fetchVoteCounts = async () => {
-    try {
-      const { data: upvotesData, error: upvotesError } = await supabase
-        .from('feature_votes')
-        .select('*')
-        .eq('feature_id', id)
-        .eq('vote_type', 'up');
-
-      const { data: downvotesData, error: downvotesError } = await supabase
-        .from('feature_votes')
-        .select('*')
-        .eq('feature_id', id)
-        .eq('vote_type', 'down');
-
-      if (upvotesError || downvotesError) {
-        console.error('Error fetching vote counts:', upvotesError || downvotesError);
-        return;
-      }
-
-      setUpvotes(upvotesData?.length || 0);
-      setDownvotes(downvotesData?.length || 0);
-    } catch (error) {
-      console.error('Error in fetchVoteCounts:', error);
-    }
-  };
-
-  const handleStatusChange = async (newStatus: "new" | "review" | "progress" | "completed") => {
-    try {
-      const { error } = await supabase
-        .from('features')
-        .update({ status: newStatus })
-        .eq('id', id);
-
-      if (error) throw error;
-      
-      setCurrentStatus(newStatus);
-      
-      if (onStatusChange) {
-        onStatusChange(id, newStatus);
-      }
-      
-      toast({
-        title: "Status updated",
-        description: `Status changed to ${newStatus}`,
-      });
-    } catch (error) {
-      console.error('Error updating status:', error);
-      toast({
-        title: "Error updating status",
-        description: "Please try again later",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleAddComment = async (attachment?: File) => {
-    if (!newComment.trim() && !attachment) {
-      toast({
-        title: "Error",
-        description: "Please enter a comment or attach a file",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      let attachmentUrl = "";
-      
-      if (attachment) {
-        const fileName = `${id}_${Date.now()}_${attachment.name}`;
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('attachments')
-          .upload(fileName, attachment);
-
-        if (uploadError) {
-          console.error('Error uploading attachment:', uploadError);
-          throw uploadError;
-        }
-
-        const { data: urlData } = supabase.storage
-          .from('attachments')
-          .getPublicUrl(fileName);
-          
-        attachmentUrl = urlData.publicUrl;
-      }
-
-      const { data, error } = await supabase
-        .from('comments')
-        .insert([{
-          feature_id: id,
-          text: newComment.trim() || (attachment ? `Attached: ${attachment.name}` : ""),
-          reporter: reporter,
-          attachment: attachmentUrl || null
-        }])
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      onAddComment?.(id, newComment, attachmentUrl);
-      setNewComment("");
-      
-      toast({
-        title: "Comment added",
-        description: "Your comment has been added successfully.",
-      });
-    } catch (error) {
-      console.error('Error adding comment:', error);
-      toast({
-        title: "Error adding comment",
-        description: "Please try again later",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleVote = async (direction: 'up' | 'down') => {
-    try {
-      if (voteStatus === direction) {
-        const { error: deleteError } = await supabase
-          .from('feature_votes')
-          .delete()
-          .eq('feature_id', id)
-          .eq('reporter', reporter);
-
-        if (deleteError) throw deleteError;
-
-        const { data, error: updateError } = await supabase
-          .from('features')
-          .update({ votes: currentVotes - (direction === 'up' ? 1 : -1) })
-          .eq('id', id)
-          .select()
-          .single();
-
-        if (updateError) throw updateError;
-
-        setCurrentVotes(data.votes);
-        setVoteStatus('none');
-        
-        if (direction === 'up') {
-          setUpvotes(prev => Math.max(0, prev - 1));
-        } else {
-          setDownvotes(prev => Math.max(0, prev - 1));
-        }
-        
-        toast({
-          title: "Vote removed",
-          description: "Your vote has been removed.",
-        });
-        return;
-      }
-
-      if (voteStatus !== 'none') {
-        const { error: deleteError } = await supabase
-          .from('feature_votes')
-          .delete()
-          .eq('feature_id', id)
-          .eq('reporter', reporter);
-
-        if (deleteError) throw deleteError;
-
-        const voteAdjustment = voteStatus === 'up' ? -1 : 1;
-        await supabase
-          .from('features')
-          .update({ votes: currentVotes + voteAdjustment })
-          .eq('id', id);
-          
-        if (voteStatus === 'up') {
-          setUpvotes(prev => Math.max(0, prev - 1));
-        } else {
-          setDownvotes(prev => Math.max(0, prev - 1));
-        }
-      }
-
-      const { error: insertError } = await supabase
-        .from('feature_votes')
-        .insert([{
-          feature_id: id,
-          reporter: reporter,
-          vote_type: direction
-        }]);
-
-      if (insertError) throw insertError;
-
-      const voteChange = direction === 'up' ? 1 : -1;
-      const { data, error: updateError } = await supabase
-        .from('features')
-        .update({ 
-          votes: currentVotes + voteChange + (voteStatus !== 'none' ? (voteStatus === 'up' ? -1 : 1) : 0)
-        })
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (updateError) throw updateError;
-
-      setCurrentVotes(data.votes);
-      setVoteStatus(direction);
-      
-      if (direction === 'up') {
-        setUpvotes(prev => prev + 1);
-      } else {
-        setDownvotes(prev => prev + 1);
-      }
-      
-      toast({
-        title: "Vote recorded",
-        description: `You ${direction === 'up' ? 'upvoted' : 'downvoted'} this feature request.`,
-      });
-    } catch (error) {
-      console.error('Error updating votes:', error);
-      toast({
-        title: "Error recording vote",
-        description: "Please try again later",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleDelete = () => {
-    if (onDelete) {
-      onDelete(id);
-    }
-  };
+  const { voteStatus } = useVoteStatus(id, reporter);
+  
+  const { 
+    currentVotes, 
+    upvotes, 
+    downvotes, 
+    fetchVoteCounts, 
+    handleVote 
+  } = useFeatureVoting({
+    featureId: id,
+    initialVotes: votes,
+    reporter,
+    initialVoteStatus: voteStatus
+  });
+  
+  const { 
+    currentStatus, 
+    handleStatusChange 
+  } = useFeatureStatus(id, status, onStatusChange);
+  
+  const { 
+    showComments, 
+    setShowComments, 
+    newComment, 
+    setNewComment, 
+    handleAddComment 
+  } = useFeatureComments(id, comments, reporter, onAddComment);
 
   const handleEdit = () => {
     if (onEdit) {
@@ -283,8 +81,8 @@ export const FeatureCard = ({
         attachment,
         reporter,
         experimentOwner,
-        urgency: 'medium',
-      } as Feature);
+        urgency,
+      });
     }
   };
 
@@ -321,17 +119,7 @@ export const FeatureCard = ({
           downvotes={downvotes}
         />
 
-        {attachment && (
-          <a 
-            href={attachment} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-flex items-center text-[10px] sm:text-sm text-primary hover:underline"
-          >
-            <Paperclip className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-            <span className="whitespace-nowrap">View attachment</span>
-          </a>
-        )}
+        <AttachmentDisplay attachment={attachment} />
 
         <Button 
           variant="ghost" 
