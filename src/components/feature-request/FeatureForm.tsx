@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,7 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Upload } from "lucide-react";
-import { productLabels, squadLabels } from "./constants";
+import { productLabels, squadLabels, defaultProducts, clientExperienceProducts } from "./constants";
 
 interface FeatureFormProps {
   onSubmit: (feature: {
@@ -38,11 +38,20 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [product, setProduct] = useState("");
-  const [squad, setSquad] = useState("");
+  const [product, setProduct] = useState(defaultProducts[0] || "");
+  const [squad, setSquad] = useState("demand-capture");
   const [canContact, setCanContact] = useState(false);
   const [attachment, setAttachment] = useState<File | null>(null);
   const { toast } = useToast();
+
+  // Update product options when squad changes
+  useEffect(() => {
+    if (squad === "client-experience" && !clientExperienceProducts.includes(product)) {
+      setProduct(clientExperienceProducts[0]);
+    } else if (squad !== "client-experience" && !defaultProducts.includes(product)) {
+      setProduct(defaultProducts[0]);
+    }
+  }, [squad, product]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,8 +74,8 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
     
     setTitle("");
     setDescription("");
-    setProduct("");
-    setSquad("");
+    setProduct(defaultProducts[0] || "");
+    setSquad("demand-capture");
     setCanContact(false);
     setAttachment(null);
     setOpen(false);
@@ -95,6 +104,11 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
       });
     }
   };
+
+  // Get the products to display based on squad selection
+  const productsToDisplay = squad === "client-experience" 
+    ? clientExperienceProducts 
+    : defaultProducts;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -147,8 +161,10 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
                 <SelectValue placeholder="Select a product" />
               </SelectTrigger>
               <SelectContent>
-                {Object.entries(productLabels).map(([value, label]) => (
-                  <SelectItem key={value} value={value}>{label.full}</SelectItem>
+                {productsToDisplay.map((productKey) => (
+                  <SelectItem key={productKey} value={productKey}>
+                    {productLabels[productKey]?.full || productKey}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>

@@ -9,7 +9,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { productLabels, squadLabels } from "../constants";
+import { 
+  productLabels, 
+  squadLabels, 
+  clientExperienceProducts, 
+  defaultProducts 
+} from "../constants";
+import { useEffect } from "react";
 
 interface BasicInformationProps {
   title: string;
@@ -46,6 +52,22 @@ export const BasicInformation = ({
   setLocation,
   setSquad,
 }: BasicInformationProps) => {
+  // When squad changes to or from "client-experience", reset the product
+  useEffect(() => {
+    if (squad === "client-experience" && !clientExperienceProducts.includes(product)) {
+      // Reset to first CE product when switching to CE squad
+      setProduct(clientExperienceProducts[0]);
+    } else if (squad !== "client-experience" && !defaultProducts.includes(product)) {
+      // Reset to first default product when switching from CE squad
+      setProduct(defaultProducts[0]);
+    }
+  }, [squad, product, setProduct]);
+
+  // Get the products to display based on squad selection
+  const productsToDisplay = squad === "client-experience" 
+    ? clientExperienceProducts 
+    : defaultProducts;
+
   return (
     <>
       <div className="space-y-2">
@@ -110,8 +132,10 @@ export const BasicInformation = ({
             <SelectValue placeholder="Select a product" />
           </SelectTrigger>
           <SelectContent>
-            {Object.entries(productLabels).map(([value, label]) => (
-              <SelectItem key={value} value={value}>{label.full}</SelectItem>
+            {productsToDisplay.map((productKey) => (
+              <SelectItem key={productKey} value={productKey}>
+                {productLabels[productKey]?.full || productKey}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>

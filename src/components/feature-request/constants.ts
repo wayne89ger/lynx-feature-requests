@@ -1,4 +1,3 @@
-
 export const statusConfig = {
   new: { 
     label: "New", 
@@ -42,6 +41,62 @@ export const productLabels = {
   "operational-efficiency-ce": {
     full: "Operational Efficiency/CE",
     mobile: "Operations"
+  },
+  "client-experience-emails": {
+    full: "Client experience emails",
+    mobile: "CE emails"
+  },
+  "client-portal": {
+    full: "Client portal",
+    mobile: "Portal"
+  },
+  "client-zone": {
+    full: "Client Zone",
+    mobile: "Zone"
+  },
+  "lama": {
+    full: "LAMA",
+    mobile: "LAMA"
+  },
+  "link-trading": {
+    full: "Link-Trading",
+    mobile: "Trading"
+  },
+  "livechat": {
+    full: "LiveChat",
+    mobile: "LiveChat"
+  },
+  "lynx-plus-ce": {
+    full: "LYNX+",
+    mobile: "LYNX+"
+  },
+  "lynx-plus-api": {
+    full: "LYNX+ API",
+    mobile: "API"
+  },
+  "lynx-key": {
+    full: "LYNX Key",
+    mobile: "Key"
+  },
+  "mobile-tws": {
+    full: "Mobile TWS",
+    mobile: "Mobile"
+  },
+  "refunds-tool": {
+    full: "Refunds Tool",
+    mobile: "Refunds"
+  },
+  "service-center": {
+    full: "Service Center",
+    mobile: "Service"
+  },
+  "tws": {
+    full: "TWS",
+    mobile: "TWS"
+  },
+  "other": {
+    full: "other",
+    mobile: "other"
   }
 };
 
@@ -78,3 +133,27 @@ export const locationLabels = {
     mobile: "Service"
   }
 };
+
+export const clientExperienceProducts = [
+  "client-experience-emails",
+  "client-portal",
+  "client-zone",
+  "lama",
+  "link-trading",
+  "livechat",
+  "lynx-plus-ce",
+  "lynx-plus-api",
+  "lynx-key",
+  "mobile-tws",
+  "refunds-tool",
+  "service-center",
+  "tws",
+  "other"
+];
+
+export const defaultProducts = [
+  "dof-onboarding",
+  "lynx-plus",
+  "proactive-service-ce",
+  "operational-efficiency-ce"
+];
