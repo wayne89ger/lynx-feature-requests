@@ -38,6 +38,7 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
       
       const updatedFeatureWithComments: Feature = {
         ...data,
+        urgency: (data.urgency || 'medium') as "low" | "medium" | "high",
         comments: existingFeature?.comments || []
       };
 
@@ -93,6 +94,7 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
       
       const updatedFeatureWithComments: Feature = {
         ...data,
+        urgency: (data.urgency || 'medium') as "low" | "medium" | "high",
         comments: existingFeature?.comments || []
       };
 

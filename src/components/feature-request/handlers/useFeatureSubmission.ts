@@ -37,7 +37,8 @@ export const useFeatureSubmission = (features: Feature[], setFeatures: (features
 
       const newFeature: Feature = {
         ...data,
-        comments: []
+        comments: [],
+        urgency: (data.urgency || 'medium') as "low" | "medium" | "high"
       };
 
       setFeatures([...features, newFeature]);
