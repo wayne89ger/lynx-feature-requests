@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Feature } from "@/types/feature";
 import { supabase } from "@/integrations/supabase/client";
@@ -42,6 +41,7 @@ export const useFeatures = () => {
         description: feature.description,
         status: feature.status || 'new',
         product: feature.product,
+        squad: feature.squad,
         location: feature.location,
         votes: feature.votes || 0,
         reporter: feature.reporter,
@@ -54,7 +54,7 @@ export const useFeatures = () => {
             text: comment.text,
             timestamp: comment.created_at,
             reporter: comment.reporter,
-            attachment: comment.attachment || undefined
+            attachment: comment.attachment
           })) || [],
         created_at: feature.created_at,
         updated_at: feature.updated_at

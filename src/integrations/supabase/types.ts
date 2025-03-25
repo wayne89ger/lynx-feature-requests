@@ -53,6 +53,7 @@ export type Database = {
       }
       comments: {
         Row: {
+          attachment: string | null
           bug_id: number | null
           created_at: string | null
           feature_id: number | null
@@ -61,6 +62,7 @@ export type Database = {
           text: string
         }
         Insert: {
+          attachment?: string | null
           bug_id?: number | null
           created_at?: string | null
           feature_id?: number | null
@@ -69,6 +71,7 @@ export type Database = {
           text: string
         }
         Update: {
+          attachment?: string | null
           bug_id?: number | null
           created_at?: string | null
           feature_id?: number | null
@@ -130,6 +133,7 @@ export type Database = {
           status: Database["public"]["Enums"]["feature_status"] | null
           title: string
           updated_at: string | null
+          urgency: string | null
           votes: number | null
         }
         Insert: {
@@ -143,6 +147,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["feature_status"] | null
           title: string
           updated_at?: string | null
+          urgency?: string | null
           votes?: number | null
         }
         Update: {
@@ -156,6 +161,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["feature_status"] | null
           title?: string
           updated_at?: string | null
+          urgency?: string | null
           votes?: number | null
         }
         Relationships: []
