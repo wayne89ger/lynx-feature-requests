@@ -1,9 +1,17 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { productLabels } from "./constants";
+import { 
+  productLabels, 
+  squadLabels,
+  defaultProducts,
+  clientExperienceProducts,
+  onboardingProducts,
+  demandCaptureProducts,
+  cpiProducts
+} from "./constants";
 
 interface FiltersProps {
   activeTab: string;
@@ -26,11 +34,63 @@ export const Filters = ({
 }: FiltersProps) => {
   const isMobile = useIsMobile();
   const [showAllFilters, setShowAllFilters] = useState(false);
+  const [selectedSquad, setSelectedSquad] = useState("all");
+
+  // Get the products to display based on squad selection
+  const getProductsToDisplay = () => {
+    if (selectedSquad === "client-experience") {
+      return clientExperienceProducts;
+    } else if (selectedSquad === "onboarding") {
+      return onboardingProducts;
+    } else if (selectedSquad === "demand-capture") {
+      return demandCaptureProducts;
+    } else if (selectedSquad === "cpi") {
+      return cpiProducts;
+    } else if (selectedSquad === "all") {
+      // When 'All Squads' is selected, combine all product arrays
+      return [
+        ...defaultProducts,
+        ...clientExperienceProducts,
+        ...onboardingProducts,
+        ...demandCaptureProducts,
+        ...cpiProducts
+      ];
+    } else {
+      return defaultProducts;
+    }
+  };
+
+  // When squad changes, validate if the currently selected product is still valid
+  useEffect(() => {
+    const productsToDisplay = getProductsToDisplay();
+    // If current product is not in the list for this squad, reset to "all"
+    if (selectedProduct !== "all" && !productsToDisplay.includes(selectedProduct)) {
+      setSelectedProduct("all");
+    }
+  }, [selectedSquad, selectedProduct, setSelectedProduct]);
+
+  // Products to show in the dropdown
+  const productsToDisplay = getProductsToDisplay();
 
   // Mobile filters UI
   if (isMobile) {
     return (
       <div className="flex flex-col gap-4 w-full">
+        {/* Squad filter - always visible on mobile */}
+        <div className="w-full">
+          <Select value={selectedSquad} onValueChange={setSelectedSquad}>
+            <SelectTrigger className="bg-white border-lynx-border shadow-sm">
+              <SelectValue placeholder="All Squads" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Squads</SelectItem>
+              {Object.entries(squadLabels).map(([value, label]) => (
+                <SelectItem key={value} value={value}>{label.full}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
         {/* Product filter - always visible on mobile */}
         <div className="w-full">
           <Select value={selectedProduct} onValueChange={setSelectedProduct}>
@@ -39,8 +99,10 @@ export const Filters = ({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Products</SelectItem>
-              {Object.entries(productLabels).map(([value, label]) => (
-                <SelectItem key={value} value={value}>{label.full}</SelectItem>
+              {productsToDisplay.map((productKey) => (
+                <SelectItem key={productKey} value={productKey}>
+                  {productLabels[productKey]?.full || productKey}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -96,6 +158,21 @@ export const Filters = ({
   // Desktop filters UI - horizontal layout with all filters visible
   return (
     <div className="flex flex-row gap-3 w-full">
+      {/* Squad filter */}
+      <div className="w-full max-w-[200px]">
+        <Select value={selectedSquad} onValueChange={setSelectedSquad}>
+          <SelectTrigger className="bg-white border-lynx-border shadow-sm">
+            <SelectValue placeholder="All Squads" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Squads</SelectItem>
+            {Object.entries(squadLabels).map(([value, label]) => (
+              <SelectItem key={value} value={value}>{label.full}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
       {/* Product filter */}
       <div className="w-full max-w-[200px]">
         <Select value={selectedProduct} onValueChange={setSelectedProduct}>
@@ -104,8 +181,10 @@ export const Filters = ({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Products</SelectItem>
-            {Object.entries(productLabels).map(([value, label]) => (
-                <SelectItem key={value} value={value}>{label.full}</SelectItem>
+            {productsToDisplay.map((productKey) => (
+              <SelectItem key={productKey} value={productKey}>
+                {productLabels[productKey]?.full || productKey}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -143,3 +222,4 @@ export const Filters = ({
     </div>
   );
 };
+
