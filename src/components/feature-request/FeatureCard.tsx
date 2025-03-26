@@ -35,6 +35,7 @@ export const FeatureCard = ({
   experimentOwner,
   urgency,
   created_at,
+  tags,
   onStatusChange,
   onAddComment,
   onEdit,
@@ -86,6 +87,7 @@ export const FeatureCard = ({
         urgency,
         created_at,
         updated_at: new Date().toISOString(),
+        tags
       });
     }
   };
@@ -103,6 +105,7 @@ export const FeatureCard = ({
         status={currentStatus}
         product={product}
         location={location}
+        tags={tags}
         onStatusChange={handleStatusChange}
         onEdit={onEdit ? handleEdit : undefined}
         onDelete={onDelete ? () => onDelete(id) : undefined}

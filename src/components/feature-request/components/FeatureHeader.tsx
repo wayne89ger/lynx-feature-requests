@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, Trash2, Tag } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -12,11 +12,13 @@ import { cn } from "@/lib/utils";
 import { Feature } from "@/types/feature";
 import { productLabels, locationLabels, statusConfig } from "../constants";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Badge } from "@/components/ui/badge";
 
 interface FeatureHeaderProps {
   status: Feature['status'];
   product: string;
   location?: string;
+  tags?: string[];
   onStatusChange: (newStatus: Feature['status']) => void;
   onEdit?: () => void;
   onDelete?: () => void;
@@ -26,6 +28,7 @@ export const FeatureHeader = ({
   status,
   product,
   location,
+  tags,
   onStatusChange,
   onEdit,
   onDelete
@@ -85,6 +88,24 @@ export const FeatureHeader = ({
           <span className="text-[10px] leading-tight font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 max-w-[120px] truncate">
             {getCombinedLabel()}
           </span>
+        )}
+
+        {/* Display tags if they exist */}
+        {tags && tags.length > 0 && (
+          <div className="flex items-center gap-1 ml-1">
+            <Tag className="h-3 w-3 text-muted-foreground" />
+            <div className="flex flex-wrap gap-1">
+              {tags.map(tag => (
+                <Badge 
+                  key={tag} 
+                  variant="secondary" 
+                  className="text-[10px] px-1.5 py-0 h-5"
+                >
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          </div>
         )}
       </div>
       <div className="flex items-center gap-1">

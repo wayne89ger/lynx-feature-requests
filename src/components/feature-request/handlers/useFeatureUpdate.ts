@@ -17,7 +17,8 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
           description: updatedFeature.description,
           product: updatedFeature.product,
           location: updatedFeature.location,
-          status: updatedFeature.status
+          status: updatedFeature.status,
+          tags: updatedFeature.tags
         })
         .eq('id', id)
         .select()
@@ -39,7 +40,8 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
       const updatedFeatureWithComments: Feature = {
         ...data,
         urgency: (data.urgency || 'medium') as "low" | "medium" | "high",
-        comments: existingFeature?.comments || []
+        comments: existingFeature?.comments || [],
+        tags: data.tags || []
       };
 
       // Update the features state
@@ -95,7 +97,8 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
       const updatedFeatureWithComments: Feature = {
         ...data,
         urgency: (data.urgency || 'medium') as "low" | "medium" | "high",
-        comments: existingFeature?.comments || []
+        comments: existingFeature?.comments || [],
+        tags: data.tags || []
       };
 
       // Update the features state

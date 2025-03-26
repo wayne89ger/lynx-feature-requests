@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ActionButtons } from "./form-sections/ActionButtons";
 import { BasicInformation } from "./form-sections/BasicInformation";
 import { FeatureSpecificFields } from "./form-sections/FeatureSpecificFields";
+import { TagsSelection } from "./form-sections/TagsSelection";
 
 interface EditFeatureFormProps {
   feature: {
@@ -22,6 +23,7 @@ interface EditFeatureFormProps {
     squad?: string;
     location?: string;
     url?: string;
+    tags?: string[];
   };
   open: boolean;
   onClose: () => void;
@@ -39,6 +41,7 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
   const [location, setLocation] = useState(feature.location || "");
   const [hasShortcutStory, setHasShortcutStory] = useState(false);
   const [hasConfluenceDoc, setHasConfluenceDoc] = useState(false);
+  const [tags, setTags] = useState<string[]>(feature.tags || []);
   
   // Feature-specific states - simplified
   const [reviewers, setReviewers] = useState<string[]>([]);
@@ -68,7 +71,8 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
       product,
       squad,
       location,
-      reviewers
+      reviewers,
+      tags
     };
 
     onSave(feature.id, updatedData);
@@ -108,10 +112,17 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
           />
 
           {!isBug && (
-            <FeatureSpecificFields
-              reviewers={reviewers}
-              setReviewers={setReviewers}
-            />
+            <>
+              <FeatureSpecificFields
+                reviewers={reviewers}
+                setReviewers={setReviewers}
+              />
+              
+              <TagsSelection 
+                selectedTags={tags} 
+                onChange={setTags} 
+              />
+            </>
           )}
 
           <ActionButtons

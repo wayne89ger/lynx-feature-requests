@@ -23,6 +23,7 @@ export interface Feature {
   experimentOwner?: string;
   created_at?: string;
   updated_at?: string;
+  tags?: string[];
 }
 
 export interface Bug {
