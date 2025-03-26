@@ -11,6 +11,7 @@ import { FeatureHeader } from "./components/FeatureHeader";
 import { VotingSection } from "./components/VotingSection";
 import { CommentsSection } from "./components/CommentsSection";
 import { AttachmentDisplay } from "./components/AttachmentDisplay";
+import { format } from "date-fns";
 
 interface FeatureCardProps extends Feature {
   onStatusChange?: (id: number, newStatus: "new" | "review" | "progress" | "completed") => void;
@@ -33,6 +34,7 @@ export const FeatureCard = ({
   reporter,
   experimentOwner,
   urgency,
+  created_at,
   onStatusChange,
   onAddComment,
   onEdit,
@@ -82,9 +84,14 @@ export const FeatureCard = ({
         reporter,
         experimentOwner,
         urgency,
+        created_at,
+        updated_at: new Date().toISOString(),
       });
     }
   };
+
+  // Format the date if available
+  const formattedDate = created_at ? format(new Date(created_at), 'MMM d, yyyy') : '';
 
   useEffect(() => {
     fetchVoteCounts();
@@ -107,6 +114,7 @@ export const FeatureCard = ({
         <p className="text-[10px] sm:text-xs text-gray-500 break-words">
           Reported by: {reporter}
           {experimentOwner && ` • Experiment Owner: ${experimentOwner}`}
+          {formattedDate && ` • Submitted: ${formattedDate}`}
         </p>
       </div>
 
