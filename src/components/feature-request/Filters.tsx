@@ -2,14 +2,12 @@
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { ChevronDown, ChevronUp, Search, Tag } from "lucide-react";
+import { ChevronDown, ChevronUp, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { 
   productLabels,
   allProducts
 } from "./constants";
-import { Badge } from "@/components/ui/badge";
-import { TagSelector } from "./components/TagSelector";
 
 interface FiltersProps {
   activeTab: string;
@@ -19,9 +17,6 @@ interface FiltersProps {
   setSelectedStatus: (value: string) => void;
   selectedRequester: string;
   setSelectedRequester: (value: string) => void;
-  selectedTags: string[];
-  setSelectedTags: (value: string[]) => void;
-  availableTags: string[];
   searchTerm?: string;
   setSearchTerm?: (value: string) => void;
 }
@@ -34,9 +29,6 @@ export const Filters = ({
   setSelectedStatus,
   selectedRequester,
   setSelectedRequester,
-  selectedTags,
-  setSelectedTags,
-  availableTags,
   searchTerm = "",
   setSearchTerm = () => {},
 }: FiltersProps) => {
@@ -75,17 +67,6 @@ export const Filters = ({
             </SelectContent>
           </Select>
         </div>
-
-        {/* Tag filter using the new TagSelector */}
-        {availableTags.length > 0 && (
-          <div className="w-full">
-            <TagSelector
-              selectedTags={selectedTags}
-              availableTags={availableTags}
-              onChange={setSelectedTags}
-            />
-          </div>
-        )}
 
         {/* Show more filters toggle button */}
         <button 
@@ -196,17 +177,6 @@ export const Filters = ({
             </SelectContent>
           </Select>
         </div>
-
-        {/* Tag filter - now using the TagSelector with dropdown */}
-        {availableTags.length > 0 && (
-          <div className="w-full max-w-[200px]">
-            <TagSelector
-              selectedTags={selectedTags}
-              availableTags={availableTags}
-              onChange={setSelectedTags}
-            />
-          </div>
-        )}
       </div>
     </div>
   );

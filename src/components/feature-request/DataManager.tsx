@@ -16,31 +16,17 @@ export const DataManager = () => {
   const [selectedProduct, setSelectedProduct] = useState<string>("all");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
   const [selectedRequester, setSelectedRequester] = useState<string>("all");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [sortOption, setSortOption] = useState<SortOption>("votes-desc");
 
   const { handleFeatureSubmit } = useFeatureSubmission(features, setFeatures);
   const { handleFeatureUpdate, handleStatusUpdate } = useFeatureUpdate(features, setFeatures);
 
-  // Get all unique tags from features
-  const allTags = useMemo(() => {
-    const tagsSet = new Set<string>();
-    features.forEach(feature => {
-      if (feature.squads && Array.isArray(feature.squads)) {
-        feature.squads.forEach(squad => tagsSet.add(squad));
-      }
-    });
-    return Array.from(tagsSet);
-  }, [features]);
-
-  // Filter features based on selected filters (product, status, requester, tags)
+  // Filter features based on selected filters (product, status, requester)
   const filteredAndSortedFeatures = features
     .filter(feature => 
       (selectedProduct === "all" || feature.product === selectedProduct) &&
       (selectedStatus === "all" || feature.status === selectedStatus) &&
-      (selectedRequester === "all" || feature.reporter === selectedRequester) &&
-      (selectedTags.length === 0 || 
-        (feature.squads && selectedTags.every(tag => feature.squads?.includes(tag))))
+      (selectedRequester === "all" || feature.reporter === selectedRequester)
     )
     .sort((a, b) => {
       // Sort based on the selected sort option
@@ -110,9 +96,6 @@ export const DataManager = () => {
         setSelectedStatus={setSelectedStatus}
         selectedRequester={selectedRequester}
         setSelectedRequester={setSelectedRequester}
-        selectedTags={selectedTags}
-        setSelectedTags={setSelectedTags}
-        allTags={allTags}
         sortOption={sortOption}
         setSortOption={setSortOption}
       />
