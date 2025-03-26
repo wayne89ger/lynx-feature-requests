@@ -4,6 +4,9 @@ import { FeatureList } from "./FeatureList";
 import { Filters } from "./Filters";
 import { Feature } from "@/types/feature";
 import { productLabels } from "./constants";
+import { Button } from "@/components/ui/button";
+import { Download } from "lucide-react";
+import { exportFeaturesAsCSV } from "@/utils/exportUtils";
 
 interface TabsSectionProps {
   filteredFeatures: Feature[];
@@ -52,6 +55,10 @@ export const TabsSection = ({
     return titleMatch || productMatch || requesterMatch;
   });
 
+  const handleExportCSV = () => {
+    exportFeaturesAsCSV(searchFilteredFeatures);
+  };
+
   return (
     <div className="mt-8">
       <div className="mb-6">
@@ -82,8 +89,21 @@ export const TabsSection = ({
       </div>
 
       <div className="mt-0 border border-[rgba(22,162,73,0.2)] rounded-lg p-4 sm:p-6">
-        <h2 className="text-xl sm:text-2xl font-semibold text-center text-primary mb-2">Feature Requests</h2>
-        <p className="text-center text-muted-foreground mb-6">Browse and vote on proposed features</p>
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h2 className="text-xl sm:text-2xl font-semibold text-center text-primary">Feature Requests</h2>
+            <p className="text-center text-muted-foreground">Browse and vote on proposed features</p>
+          </div>
+          <Button 
+            onClick={handleExportCSV} 
+            variant="outline" 
+            size="sm" 
+            className="flex items-center gap-1 text-xs"
+          >
+            <Download className="h-3 w-3" />
+            Export CSV
+          </Button>
+        </div>
         
         {searchFilteredFeatures.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground">
