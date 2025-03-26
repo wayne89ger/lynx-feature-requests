@@ -32,7 +32,7 @@ export const FeatureCard = ({
   comments,
   attachment,
   reporter,
-  experimentOwner,
+  experiment_owner,
   urgency,
   created_at,
   tags,
@@ -83,7 +83,7 @@ export const FeatureCard = ({
         comments,
         attachment,
         reporter,
-        experimentOwner,
+        experiment_owner,
         urgency,
         created_at,
         updated_at: new Date().toISOString(),
@@ -116,7 +116,7 @@ export const FeatureCard = ({
         <p className="text-xs sm:text-sm text-gray-600 break-words">{description}</p>
         <p className="text-[10px] sm:text-xs text-gray-500 break-words">
           Reported by: {reporter}
-          {experimentOwner && ` • Experiment Owner: ${experimentOwner}`}
+          {experiment_owner && ` • Experiment Owner: ${experiment_owner}`}
           {formattedDate && ` • Submitted: ${formattedDate}`}
         </p>
       </div>

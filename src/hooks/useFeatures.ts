@@ -63,15 +63,32 @@ export const useFeatures = () => {
         };
         
         // Add optional properties only if they exist in the API response
-        if ('hypothesis' in feature && feature.hypothesis !== undefined) featureObj.hypothesis = feature.hypothesis;
-        if ('expected_outcome' in feature && feature.expected_outcome !== undefined) featureObj.expected_outcome = feature.expected_outcome;
-        if ('type' in feature && feature.type !== undefined) featureObj.type = feature.type;
-        if ('experiment_owner' in feature && feature.experiment_owner !== undefined) featureObj.experiment_owner = feature.experiment_owner;
-        if ('timeframe' in feature && feature.timeframe !== undefined) featureObj.timeframe = feature.timeframe;
-        if ('metrics' in feature && feature.metrics !== undefined) featureObj.metrics = feature.metrics;
-        if ('user_research' in feature && feature.user_research !== undefined) featureObj.user_research = feature.user_research;
-        if ('mvp' in feature && feature.mvp !== undefined) featureObj.mvp = feature.mvp;
-        if ('rice_score' in feature && feature.rice_score !== undefined) featureObj.rice_score = feature.rice_score;
+        if (feature.hypothesis !== undefined && feature.hypothesis !== null) 
+          featureObj.hypothesis = feature.hypothesis as string;
+          
+        if (feature.expected_outcome !== undefined && feature.expected_outcome !== null) 
+          featureObj.expected_outcome = feature.expected_outcome as string;
+          
+        if (feature.type !== undefined && feature.type !== null) 
+          featureObj.type = feature.type as string;
+          
+        if (feature.experiment_owner !== undefined && feature.experiment_owner !== null) 
+          featureObj.experiment_owner = feature.experiment_owner as string;
+          
+        if (feature.timeframe !== undefined && feature.timeframe !== null) 
+          featureObj.timeframe = feature.timeframe as string;
+          
+        if (feature.metrics !== undefined && feature.metrics !== null) 
+          featureObj.metrics = feature.metrics as string[];
+          
+        if (feature.user_research !== undefined && feature.user_research !== null) 
+          featureObj.user_research = feature.user_research as string;
+          
+        if (feature.mvp !== undefined && feature.mvp !== null) 
+          featureObj.mvp = feature.mvp as string;
+          
+        if (feature.rice_score !== undefined && feature.rice_score !== null) 
+          featureObj.rice_score = feature.rice_score as Feature['rice_score'];
         
         return featureObj as Feature;
       });

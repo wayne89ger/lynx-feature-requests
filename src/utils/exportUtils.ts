@@ -32,7 +32,7 @@ export const exportFeaturesAsCSV = (features: Feature[]) => {
     feature.votes,
     feature.reporter,
     feature.urgency,
-    feature.experimentOwner || "",
+    feature.experiment_owner || "",
     feature.created_at || "",
     feature.updated_at || ""
   ]);
