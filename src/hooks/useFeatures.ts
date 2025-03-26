@@ -36,40 +36,46 @@ export const useFeatures = () => {
       console.log('Comments data:', commentsData);
 
       // Map comments to features
-      const featuresWithComments = (featuresData || []).map(feature => ({
-        id: feature.id,
-        title: feature.title,
-        description: feature.description,
-        status: feature.status || 'new',
-        product: feature.product,
-        location: feature.location,
-        votes: feature.votes || 0,
-        reporter: feature.reporter,
-        urgency: (feature.urgency || 'medium') as "low" | "medium" | "high",
-        experimentOwner: feature.experiment_owner,
-        comments: commentsData
-          ?.filter(comment => comment.feature_id === feature.id)
-          ?.map(comment => ({
-            id: comment.id,
-            text: comment.text,
-            timestamp: comment.created_at,
-            reporter: comment.reporter,
-            attachment: comment.attachment
-          })) || [],
-        created_at: feature.created_at || new Date().toISOString(),
-        updated_at: feature.updated_at || new Date().toISOString(),
-        tags: feature.tags || [],
-        // Only conditionally add these fields if they exist in the feature data
-        ...(feature.hypothesis ? { hypothesis: feature.hypothesis } : {}),
-        ...(feature.expected_outcome ? { expected_outcome: feature.expected_outcome } : {}),
-        ...(feature.type ? { type: feature.type } : {}),
-        ...(feature.experiment_owner ? { experiment_owner: feature.experiment_owner } : {}),
-        ...(feature.timeframe ? { timeframe: feature.timeframe } : {}),
-        ...(feature.metrics ? { metrics: feature.metrics } : {}),
-        ...(feature.user_research ? { user_research: feature.user_research } : {}),
-        ...(feature.mvp ? { mvp: feature.mvp } : {}),
-        ...(feature.rice_score ? { rice_score: feature.rice_score } : {})
-      })) as Feature[];
+      const featuresWithComments = (featuresData || []).map(feature => {
+        // Create the base feature object with required properties
+        const featureObj: any = {
+          id: feature.id,
+          title: feature.title,
+          description: feature.description,
+          status: feature.status || 'new',
+          product: feature.product,
+          location: feature.location,
+          votes: feature.votes || 0,
+          reporter: feature.reporter,
+          urgency: (feature.urgency || 'medium') as "low" | "medium" | "high",
+          experimentOwner: feature.experiment_owner,
+          comments: commentsData
+            ?.filter(comment => comment.feature_id === feature.id)
+            ?.map(comment => ({
+              id: comment.id,
+              text: comment.text,
+              timestamp: comment.created_at,
+              reporter: comment.reporter,
+              attachment: comment.attachment
+            })) || [],
+          created_at: feature.created_at || new Date().toISOString(),
+          updated_at: feature.updated_at || new Date().toISOString(),
+          tags: feature.tags || [],
+        };
+        
+        // Add optional properties only if they exist in the API response
+        if (feature.hypothesis) featureObj.hypothesis = feature.hypothesis;
+        if (feature.expected_outcome) featureObj.expected_outcome = feature.expected_outcome;
+        if (feature.type) featureObj.type = feature.type;
+        if (feature.experiment_owner) featureObj.experiment_owner = feature.experiment_owner;
+        if (feature.timeframe) featureObj.timeframe = feature.timeframe;
+        if (feature.metrics) featureObj.metrics = feature.metrics;
+        if (feature.user_research) featureObj.user_research = feature.user_research;
+        if (feature.mvp) featureObj.mvp = feature.mvp;
+        if (feature.rice_score) featureObj.rice_score = feature.rice_score;
+        
+        return featureObj as Feature;
+      });
 
       console.log('Features with comments:', featuresWithComments);
       setFeatures(featuresWithComments);

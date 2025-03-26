@@ -9,6 +9,7 @@ import {
   allProducts
 } from "./constants";
 import { Badge } from "@/components/ui/badge";
+import { TagSelector } from "./components/TagSelector";
 
 interface FiltersProps {
   activeTab: string;
@@ -41,15 +42,6 @@ export const Filters = ({
 }: FiltersProps) => {
   const isMobile = useIsMobile();
   const [showAllFilters, setShowAllFilters] = useState(false);
-
-  // Toggle a tag in the selected tags array
-  const toggleTag = (tag: string) => {
-    if (selectedTags.includes(tag)) {
-      setSelectedTags(selectedTags.filter(t => t !== tag));
-    } else {
-      setSelectedTags([...selectedTags, tag]);
-    }
-  };
 
   // Mobile filters UI
   if (isMobile) {
@@ -84,29 +76,14 @@ export const Filters = ({
           </Select>
         </div>
 
-        {/* Tag filter - always visible on mobile */}
+        {/* Tag filter using the new TagSelector */}
         {availableTags.length > 0 && (
           <div className="w-full">
-            <div className="flex items-center gap-2 mb-2">
-              <Tag className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium">Filter by tags</span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {availableTags.map(tag => (
-                <Badge
-                  key={tag}
-                  variant={selectedTags.includes(tag) ? "default" : "outline"}
-                  className={`cursor-pointer ${
-                    selectedTags.includes(tag) 
-                      ? "bg-primary hover:bg-primary/90" 
-                      : "hover:bg-primary/10"
-                  }`}
-                  onClick={() => toggleTag(tag)}
-                >
-                  {tag}
-                </Badge>
-              ))}
-            </div>
+            <TagSelector
+              selectedTags={selectedTags}
+              availableTags={availableTags}
+              onChange={setSelectedTags}
+            />
           </div>
         )}
 
@@ -219,33 +196,18 @@ export const Filters = ({
             </SelectContent>
           </Select>
         </div>
-      </div>
 
-      {/* Tag filter on desktop */}
-      {availableTags.length > 0 && (
-        <div className="w-full mt-2">
-          <div className="flex items-center gap-2 mb-2">
-            <Tag className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium">Filter by tags</span>
+        {/* Tag filter - now using the TagSelector with dropdown */}
+        {availableTags.length > 0 && (
+          <div className="w-full max-w-[200px]">
+            <TagSelector
+              selectedTags={selectedTags}
+              availableTags={availableTags}
+              onChange={setSelectedTags}
+            />
           </div>
-          <div className="flex flex-wrap gap-2">
-            {availableTags.map(tag => (
-              <Badge
-                key={tag}
-                variant={selectedTags.includes(tag) ? "default" : "outline"}
-                className={`cursor-pointer ${
-                  selectedTags.includes(tag) 
-                    ? "bg-primary hover:bg-primary/90" 
-                    : "hover:bg-primary/10"
-                }`}
-                onClick={() => toggleTag(tag)}
-              >
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
