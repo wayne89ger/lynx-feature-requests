@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Feature } from "@/types/feature";
 import { supabase } from "@/integrations/supabase/client";
@@ -56,7 +57,8 @@ export const useFeatures = () => {
             attachment: comment.attachment
           })) || [],
         created_at: feature.created_at,
-        updated_at: feature.updated_at
+        updated_at: feature.updated_at,
+        tags: feature.tags || []
       })) as Feature[];
 
       console.log('Features with comments:', featuresWithComments);

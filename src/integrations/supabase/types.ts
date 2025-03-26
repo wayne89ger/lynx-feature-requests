@@ -131,6 +131,7 @@ export type Database = {
           product: string
           reporter: string
           status: Database["public"]["Enums"]["feature_status"] | null
+          tags: string[] | null
           title: string
           updated_at: string | null
           urgency: string | null
@@ -145,6 +146,7 @@ export type Database = {
           product: string
           reporter: string
           status?: Database["public"]["Enums"]["feature_status"] | null
+          tags?: string[] | null
           title: string
           updated_at?: string | null
           urgency?: string | null
@@ -159,6 +161,7 @@ export type Database = {
           product?: string
           reporter?: string
           status?: Database["public"]["Enums"]["feature_status"] | null
+          tags?: string[] | null
           title?: string
           updated_at?: string | null
           urgency?: string | null
