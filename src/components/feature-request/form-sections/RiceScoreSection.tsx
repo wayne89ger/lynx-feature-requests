@@ -1,3 +1,4 @@
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -6,10 +7,12 @@ interface RiceScoreSectionProps {
   impact: number;
   confidence: number;
   effort: number;
+  riceScore?: number; // Added this prop to match the props passed in EditFeatureForm
   setReach: (value: number) => void;
   setImpact: (value: number) => void;
   setConfidence: (value: number) => void;
   setEffort: (value: number) => void;
+  setRiceScore?: (value: number) => void; // Added this prop to match the props passed in EditFeatureForm
 }
 
 export const RiceScoreSection = ({
@@ -17,13 +20,20 @@ export const RiceScoreSection = ({
   impact,
   confidence,
   effort,
+  riceScore,
   setReach,
   setImpact,
   setConfidence,
   setEffort,
+  setRiceScore,
 }: RiceScoreSectionProps) => {
   const calculateRiceScore = () => {
-    return ((reach * impact * confidence) / effort).toFixed(2);
+    const total = ((reach * impact * confidence) / 100) / effort;
+    // Update riceScore state if the prop is provided
+    if (setRiceScore) {
+      setRiceScore(total);
+    }
+    return total.toFixed(2);
   };
 
   return (
@@ -53,12 +63,12 @@ export const RiceScoreSection = ({
           />
         </div>
         <div>
-          <Label htmlFor="confidence">Confidence (1-10)</Label>
+          <Label htmlFor="confidence">Confidence (1-100)</Label>
           <Input
             id="confidence"
             type="number"
             min="1"
-            max="10"
+            max="100"
             value={confidence}
             onChange={(e) => setConfidence(Number(e.target.value))}
           />
