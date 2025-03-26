@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,10 +20,9 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Upload, Clock } from "lucide-react";
+import { Upload } from "lucide-react";
 import { 
-  productLabels, 
-  squadLabels, 
+  productLabels,
   defaultProducts, 
   clientExperienceProducts,
   onboardingProducts,
@@ -40,7 +39,7 @@ interface FeatureFormProps {
     title: string;
     description: string;
     product: string;
-    squad: string;
+    squad: string; // Keep this for now as the interface still requires it
     canContact: boolean;
     urgency?: string;
     attachment?: File;
@@ -52,31 +51,23 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [product, setProduct] = useState("");
-  const [squad, setSquad] = useState("");
   const [canContact, setCanContact] = useState(false);
   const [attachment, setAttachment] = useState<File | null>(null);
   const [urgency, setUrgency] = useState("medium");
   const { toast } = useToast();
 
-  // Update product options when squad changes
-  useEffect(() => {
-    if (squad === "client-experience" && product === "") {
-      setProduct(clientExperienceProducts[0]);
-    } else if (squad === "onboarding" && product === "") {
-      setProduct(onboardingProducts[0]);
-    } else if (squad === "demand-capture" && product === "") {
-      setProduct(demandCaptureProducts[0]);
-    } else if (squad === "cpi" && product === "") {
-      setProduct(cpiProducts[0]);
-    } else if (squad !== "client-experience" && squad !== "onboarding" && 
-              squad !== "demand-capture" && squad !== "cpi" && product === "") {
-      setProduct(defaultProducts[0]);
-    }
-  }, [squad, product]);
+  // Combine all products for the dropdown
+  const allProducts = [
+    ...defaultProducts,
+    ...clientExperienceProducts,
+    ...onboardingProducts,
+    ...demandCaptureProducts,
+    ...cpiProducts
+  ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !description || !product || !squad) {
+    if (!title || !description || !product) {
       toast({
         title: "Please fill in all required fields",
         variant: "destructive",
@@ -84,11 +75,12 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
       return;
     }
 
+    // Note: We're still passing an empty string for squad to maintain compatibility
     onSubmit({ 
       title, 
       description, 
       product, 
-      squad,
+      squad: "", // Passing empty string for squad
       canContact,
       urgency,
       attachment: attachment || undefined
@@ -97,7 +89,6 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
     setTitle("");
     setDescription("");
     setProduct("");
-    setSquad("");
     setCanContact(false);
     setUrgency("medium");
     setAttachment(null);
@@ -127,23 +118,6 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
       });
     }
   };
-
-  // Get the products to display based on squad selection
-  const getProductsToDisplay = () => {
-    if (squad === "client-experience") {
-      return clientExperienceProducts;
-    } else if (squad === "onboarding") {
-      return onboardingProducts;
-    } else if (squad === "demand-capture") {
-      return demandCaptureProducts;
-    } else if (squad === "cpi") {
-      return cpiProducts;
-    } else {
-      return defaultProducts;
-    }
-  };
-
-  const productsToDisplay = getProductsToDisplay();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -177,26 +151,13 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="squad">Squad</Label>
-            <Select value={squad} onValueChange={setSquad}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a squad" />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.entries(squadLabels).map(([value, label]) => (
-                  <SelectItem key={value} value={value}>{label.full}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
             <Label htmlFor="product">Product</Label>
-            <Select value={product} onValueChange={setProduct} disabled={!squad}>
+            <Select value={product} onValueChange={setProduct}>
               <SelectTrigger>
-                <SelectValue placeholder={!squad ? "Select a squad first" : "Select a product"} />
+                <SelectValue placeholder="Select a product" />
               </SelectTrigger>
               <SelectContent>
-                {productsToDisplay.map((productKey) => (
+                {allProducts.map((productKey) => (
                   <SelectItem key={productKey} value={productKey}>
                     {productLabels[productKey]?.full || productKey}
                   </SelectItem>

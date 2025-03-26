@@ -11,14 +11,12 @@ import {
 } from "@/components/ui/select";
 import { 
   productLabels, 
-  squadLabels, 
+  defaultProducts, 
   clientExperienceProducts,
   onboardingProducts,
   demandCaptureProducts,
-  cpiProducts,
-  defaultProducts 
+  cpiProducts 
 } from "../constants";
-import { useEffect } from "react";
 
 interface BasicInformationProps {
   title: string;
@@ -45,7 +43,6 @@ export const BasicInformation = ({
   url,
   product,
   location,
-  squad,
   isBug,
   setTitle,
   setDescription,
@@ -53,48 +50,15 @@ export const BasicInformation = ({
   setUrl,
   setProduct,
   setLocation,
-  setSquad,
 }: BasicInformationProps) => {
-  // When squad changes, reset the product based on squad
-  useEffect(() => {
-    if (squad === "client-experience" && !clientExperienceProducts.includes(product)) {
-      // Reset to first CE product when switching to CE squad
-      setProduct(clientExperienceProducts[0]);
-    } else if (squad === "onboarding" && !onboardingProducts.includes(product)) {
-      // Reset to first onboarding product when switching to onboarding squad
-      setProduct(onboardingProducts[0]);
-    } else if (squad === "demand-capture" && !demandCaptureProducts.includes(product)) {
-      // Reset to first demand capture product when switching to that squad
-      setProduct(demandCaptureProducts[0]);
-    } else if (squad === "cpi" && !cpiProducts.includes(product)) {
-      // Reset to first CPI product when switching to CPI squad
-      setProduct(cpiProducts[0]);
-    } else if (squad !== "client-experience" && squad !== "onboarding" && 
-              squad !== "demand-capture" && squad !== "cpi" && !defaultProducts.includes(product)) {
-      // Reset to first default product when switching from specialized squads
-      setProduct(defaultProducts[0]);
-    }
-  }, [squad, product, setProduct]);
-
-  // Get the products to display based on squad selection
-  const getProductsToDisplay = () => {
-    if (squad === "") {
-      // Return empty array if no squad selected
-      return [];
-    } else if (squad === "client-experience") {
-      return clientExperienceProducts;
-    } else if (squad === "onboarding") {
-      return onboardingProducts;
-    } else if (squad === "demand-capture") {
-      return demandCaptureProducts;
-    } else if (squad === "cpi") {
-      return cpiProducts;
-    } else {
-      return defaultProducts;
-    }
-  };
-
-  const productsToDisplay = getProductsToDisplay();
+  // Combine all products for the dropdown
+  const allProducts = [
+    ...defaultProducts,
+    ...clientExperienceProducts,
+    ...onboardingProducts,
+    ...demandCaptureProducts,
+    ...cpiProducts
+  ];
 
   return (
     <>
@@ -138,29 +102,14 @@ export const BasicInformation = ({
           </div>
         </>
       )}
-      {!isBug && (
-        <div className="space-y-2">
-          <Label htmlFor="squad">Squad</Label>
-          <Select value={squad} onValueChange={setSquad}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select a squad" />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(squadLabels).map(([value, label]) => (
-                <SelectItem key={value} value={value}>{label.full}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      )}
       <div className="space-y-2">
         <Label htmlFor="product">Product</Label>
-        <Select value={product} onValueChange={setProduct} disabled={!isBug && squad === ""}>
+        <Select value={product} onValueChange={setProduct}>
           <SelectTrigger>
-            <SelectValue placeholder={!isBug && squad === "" ? "Select a squad first" : "Select a product"} />
+            <SelectValue placeholder="Select a product" />
           </SelectTrigger>
           <SelectContent>
-            {productsToDisplay.map((productKey) => (
+            {allProducts.map((productKey) => (
               <SelectItem key={productKey} value={productKey}>
                 {productLabels[productKey]?.full || productKey}
               </SelectItem>
