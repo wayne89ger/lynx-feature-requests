@@ -1,3 +1,4 @@
+
 import { Feature } from "@/types/feature";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -9,8 +10,15 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
     try {
       console.log('Updating feature with id:', id, 'Updated data:', updatedFeature);
       
-      // Remove squads from the data sent to the database
+      // Remove squads from the data sent to the database and convert it to tags
       const dataToUpdate = { ...updatedFeature };
+      
+      // If squad is provided, set it as a tag
+      if (dataToUpdate.squad) {
+        dataToUpdate.tags = [dataToUpdate.squad];
+        // Remove squad from the data to update as it's not a column in the database
+        delete dataToUpdate.squad;
+      }
       
       const { data, error } = await supabase
         .from('features')
@@ -49,6 +57,11 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
         updated_at: anyData.updated_at || new Date().toISOString(),
         squads: anyData.tags || [], // Convert tags from database to squads in UI
       };
+
+      // Extract the first tag as the squad if available
+      if (anyData.tags && anyData.tags.length > 0) {
+        updatedFeatureWithComments.squad = anyData.tags[0];
+      }
 
       // Add optional fields if they exist in the response
       if (anyData.hypothesis !== undefined) {
