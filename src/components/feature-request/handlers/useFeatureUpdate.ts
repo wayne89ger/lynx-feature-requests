@@ -1,4 +1,3 @@
-
 import { Feature } from "@/types/feature";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -10,14 +9,8 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
     try {
       console.log('Updating feature with id:', id, 'Updated data:', updatedFeature);
       
-      // Convert squads to tags for the database update (since database still uses tags)
-      const dataToUpdate = {
-        ...updatedFeature,
-        tags: updatedFeature.squads,  // Convert squads to tags for database
-      };
-      
       // Remove squads from the data sent to the database
-      delete dataToUpdate.squads;
+      const dataToUpdate = { ...updatedFeature };
       
       const { data, error } = await supabase
         .from('features')
@@ -125,7 +118,6 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
     }
   };
 
-  // Add a new function to handle status updates
   const handleStatusUpdate = async (id: number, newStatus: Feature['status']) => {
     try {
       console.log('Updating status of feature with id:', id, 'New status:', newStatus);
