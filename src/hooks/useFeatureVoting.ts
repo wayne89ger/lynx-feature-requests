@@ -50,7 +50,9 @@ export const useFeatureVoting = ({
 
   const handleVote = async (direction: 'up' | 'down') => {
     try {
+      // Check if user already voted this way
       if (voteStatus === direction) {
+        // Remove the vote
         const { error: deleteError } = await supabase
           .from('feature_votes')
           .delete()
@@ -59,9 +61,11 @@ export const useFeatureVoting = ({
 
         if (deleteError) throw deleteError;
 
+        // Update feature record
+        const voteChange = direction === 'up' ? -1 : 1;
         const { data, error: updateError } = await supabase
           .from('features')
-          .update({ votes: currentVotes - (direction === 'up' ? 1 : -1) })
+          .update({ votes: currentVotes + voteChange })
           .eq('id', featureId)
           .select()
           .single();
@@ -84,7 +88,9 @@ export const useFeatureVoting = ({
         return;
       }
 
+      // If user already voted but in the other direction
       if (voteStatus !== 'none') {
+        // Remove the existing vote
         const { error: deleteError } = await supabase
           .from('feature_votes')
           .delete()
@@ -93,12 +99,7 @@ export const useFeatureVoting = ({
 
         if (deleteError) throw deleteError;
 
-        const voteAdjustment = voteStatus === 'up' ? -1 : 1;
-        await supabase
-          .from('features')
-          .update({ votes: currentVotes + voteAdjustment })
-          .eq('id', featureId);
-          
+        // Adjust vote count for removing previous vote
         if (voteStatus === 'up') {
           setUpvotes(prev => Math.max(0, prev - 1));
         } else {
@@ -106,6 +107,7 @@ export const useFeatureVoting = ({
         }
       }
 
+      // Add the new vote
       const { error: insertError } = await supabase
         .from('feature_votes')
         .insert([{
@@ -116,12 +118,20 @@ export const useFeatureVoting = ({
 
       if (insertError) throw insertError;
 
-      const voteChange = direction === 'up' ? 1 : -1;
+      // Calculate new vote total
+      let newVoteTotal;
+      if (voteStatus === 'none') {
+        // No previous vote, simply add or subtract 1
+        newVoteTotal = currentVotes + (direction === 'up' ? 1 : -1);
+      } else {
+        // Had previous vote in opposite direction, need to add or subtract 2
+        newVoteTotal = currentVotes + (direction === 'up' ? 2 : -2);
+      }
+
+      // Update feature record
       const { data, error: updateError } = await supabase
         .from('features')
-        .update({ 
-          votes: currentVotes + voteChange + (voteStatus !== 'none' ? (voteStatus === 'up' ? -1 : 1) : 0)
-        })
+        .update({ votes: newVoteTotal })
         .eq('id', featureId)
         .select()
         .single();
