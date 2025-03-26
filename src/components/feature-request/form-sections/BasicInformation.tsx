@@ -11,11 +11,7 @@ import {
 } from "@/components/ui/select";
 import { 
   productLabels, 
-  defaultProducts, 
-  clientExperienceProducts,
-  onboardingProducts,
-  demandCaptureProducts,
-  cpiProducts 
+  allProducts
 } from "../constants";
 
 interface BasicInformationProps {
@@ -51,15 +47,6 @@ export const BasicInformation = ({
   setProduct,
   setLocation,
 }: BasicInformationProps) => {
-  // Combine all products for the dropdown
-  const allProducts = [
-    ...defaultProducts,
-    ...clientExperienceProducts,
-    ...onboardingProducts,
-    ...demandCaptureProducts,
-    ...cpiProducts
-  ];
-
   return (
     <>
       <div className="space-y-2">

@@ -6,11 +6,7 @@ import { ChevronDown, ChevronUp, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { 
   productLabels,
-  defaultProducts,
-  clientExperienceProducts,
-  onboardingProducts,
-  demandCaptureProducts,
-  cpiProducts
+  allProducts
 } from "./constants";
 
 interface FiltersProps {
@@ -38,15 +34,6 @@ export const Filters = ({
 }: FiltersProps) => {
   const isMobile = useIsMobile();
   const [showAllFilters, setShowAllFilters] = useState(false);
-
-  // Combine all products for the dropdown
-  const allProducts = [
-    ...defaultProducts,
-    ...clientExperienceProducts,
-    ...onboardingProducts,
-    ...demandCaptureProducts,
-    ...cpiProducts
-  ];
 
   // Mobile filters UI
   if (isMobile) {

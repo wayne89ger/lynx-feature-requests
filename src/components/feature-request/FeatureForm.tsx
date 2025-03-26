@@ -23,11 +23,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Upload } from "lucide-react";
 import { 
   productLabels,
-  defaultProducts, 
-  clientExperienceProducts,
-  onboardingProducts,
-  demandCaptureProducts,
-  cpiProducts
+  allProducts
 } from "./constants";
 import {
   RadioGroup,
@@ -55,15 +51,6 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
   const [attachment, setAttachment] = useState<File | null>(null);
   const [urgency, setUrgency] = useState("medium");
   const { toast } = useToast();
-
-  // Combine all products for the dropdown
-  const allProducts = [
-    ...defaultProducts,
-    ...clientExperienceProducts,
-    ...onboardingProducts,
-    ...demandCaptureProducts,
-    ...cpiProducts
-  ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

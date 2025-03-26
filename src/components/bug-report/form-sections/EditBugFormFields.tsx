@@ -10,12 +10,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { 
-  productLabels, 
-  defaultProducts, 
-  clientExperienceProducts,
-  onboardingProducts,
-  demandCaptureProducts,
-  cpiProducts
+  productLabels,
+  allProducts
 } from "@/components/feature-request/constants";
 
 interface EditBugFormFieldsProps {
@@ -43,17 +39,6 @@ export const EditBugFormFields = ({
   setUrl,
   setProduct,
 }: EditBugFormFieldsProps) => {
-  // Combine all product options for bugs - they don't have squad selection
-  const allProducts = [
-    ...defaultProducts, 
-    ...clientExperienceProducts, 
-    ...onboardingProducts,
-    ...demandCaptureProducts,
-    ...cpiProducts
-  ];
-  // Remove duplicates if any
-  const uniqueProducts = [...new Set(allProducts)];
-
   return (
     <>
       <div className="space-y-2">
@@ -63,7 +48,7 @@ export const EditBugFormFields = ({
             <SelectValue placeholder="Select a product" />
           </SelectTrigger>
           <SelectContent className="max-h-[300px]">
-            {uniqueProducts.map((productKey) => (
+            {allProducts.map((productKey) => (
               <SelectItem key={productKey} value={productKey}>
                 {productLabels[productKey]?.full || productKey}
               </SelectItem>
