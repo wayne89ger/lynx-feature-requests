@@ -118,7 +118,7 @@ export const BasicInformation = ({
                 <SelectValue placeholder="Select a squad" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">None</SelectItem>
+                <SelectItem value="none">None</SelectItem>
                 {AVAILABLE_SQUADS.map((squadName) => (
                   <SelectItem key={squadName} value={squadName}>
                     {squadName}
