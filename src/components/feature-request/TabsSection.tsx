@@ -7,6 +7,7 @@ import { productLabels } from "./constants";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { exportFeaturesAsCSV } from "@/utils/exportUtils";
+import { SortDropdown, SortOption } from "./components/SortDropdown";
 
 interface TabsSectionProps {
   filteredFeatures: Feature[];
@@ -19,6 +20,8 @@ interface TabsSectionProps {
   setSelectedStatus: (status: string) => void;
   selectedRequester: string;
   setSelectedRequester: (requester: string) => void;
+  sortOption: SortOption;
+  setSortOption: (option: SortOption) => void;
 }
 
 export const TabsSection = ({
@@ -32,6 +35,8 @@ export const TabsSection = ({
   setSelectedStatus,
   selectedRequester,
   setSelectedRequester,
+  sortOption,
+  setSortOption,
 }: TabsSectionProps) => {
   const [activeTab] = useState("features");
   const [searchTerm, setSearchTerm] = useState("");
@@ -92,7 +97,7 @@ export const TabsSection = ({
         <div className="flex flex-col items-center mb-6">
           <h2 className="text-xl sm:text-2xl font-semibold text-center text-primary">Feature Requests</h2>
           <p className="text-center text-muted-foreground">Browse and vote on proposed features</p>
-          <div className="mt-4">
+          <div className="mt-4 flex gap-2">
             <Button 
               onClick={handleExportCSV} 
               variant="outline" 
@@ -102,6 +107,7 @@ export const TabsSection = ({
               <Download className="h-3 w-3" />
               Export CSV
             </Button>
+            <SortDropdown currentSort={sortOption} onSortChange={setSortOption} />
           </div>
         </div>
         

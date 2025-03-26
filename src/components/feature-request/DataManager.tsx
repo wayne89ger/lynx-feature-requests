@@ -7,6 +7,7 @@ import { FormActions } from "./FormActions";
 import { TabsSection } from "./TabsSection";
 import { useFeatureSubmission } from "./handlers/useFeatureSubmission";
 import { useFeatureUpdate } from "./handlers/useFeatureUpdate";
+import { SortOption } from "./components/SortDropdown";
 
 export const DataManager = () => {
   const { features, setFeatures, deleteFeature } = useFeatures();
@@ -15,6 +16,7 @@ export const DataManager = () => {
   const [selectedProduct, setSelectedProduct] = useState<string>("all");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
   const [selectedRequester, setSelectedRequester] = useState<string>("all");
+  const [sortOption, setSortOption] = useState<SortOption>("votes-desc");
 
   const { handleFeatureSubmit } = useFeatureSubmission(features, setFeatures);
   const { handleFeatureUpdate, handleStatusUpdate } = useFeatureUpdate(features, setFeatures);
@@ -26,7 +28,21 @@ export const DataManager = () => {
       (selectedStatus === "all" || feature.status === selectedStatus) &&
       (selectedRequester === "all" || feature.reporter === selectedRequester)
     )
-    .sort((a, b) => (b.votes || 0) - (a.votes || 0));
+    .sort((a, b) => {
+      // Sort based on the selected sort option
+      switch (sortOption) {
+        case "votes-desc":
+          return (b.votes || 0) - (a.votes || 0);
+        case "votes-asc":
+          return (a.votes || 0) - (b.votes || 0);
+        case "date-desc":
+          return new Date(b.created_at || "").getTime() - new Date(a.created_at || "").getTime();
+        case "date-asc":
+          return new Date(a.created_at || "").getTime() - new Date(b.created_at || "").getTime();
+        default:
+          return (b.votes || 0) - (a.votes || 0);
+      }
+    });
 
   const handleEdit = (feature: Feature) => {
     setSelectedFeature(feature);
@@ -80,6 +96,8 @@ export const DataManager = () => {
         setSelectedStatus={setSelectedStatus}
         selectedRequester={selectedRequester}
         setSelectedRequester={setSelectedRequester}
+        sortOption={sortOption}
+        setSortOption={setSortOption}
       />
     </>
   );

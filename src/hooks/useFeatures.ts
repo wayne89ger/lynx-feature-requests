@@ -56,9 +56,18 @@ export const useFeatures = () => {
             reporter: comment.reporter,
             attachment: comment.attachment
           })) || [],
-        created_at: feature.created_at,
-        updated_at: feature.updated_at,
-        tags: feature.tags || []
+        created_at: feature.created_at || new Date().toISOString(),
+        updated_at: feature.updated_at || new Date().toISOString(),
+        tags: feature.tags || [],
+        hypothesis: feature.hypothesis,
+        expected_outcome: feature.expected_outcome,
+        type: feature.type,
+        experiment_owner: feature.experiment_owner,
+        timeframe: feature.timeframe,
+        metrics: feature.metrics || [],
+        user_research: feature.user_research,
+        mvp: feature.mvp,
+        rice_score: feature.rice_score
       })) as Feature[];
 
       console.log('Features with comments:', featuresWithComments);
