@@ -10,14 +10,39 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
     try {
       console.log('Updating feature with id:', id, 'Updated data:', updatedFeature);
       
-      // Remove squads from the data sent to the database and convert it to tags
-      const dataToUpdate = { ...updatedFeature };
+      // Filter out fields that don't exist in the database
+      const {
+        title,
+        description,
+        status,
+        product,
+        location,
+        squad,
+        urgency,
+        votes,
+        tags,
+      } = updatedFeature;
       
-      // If squad is provided, set it as a tag
-      if (dataToUpdate.squad) {
-        dataToUpdate.tags = [dataToUpdate.squad];
-        // Remove squad from the data to update as it's not a column in the database
-        delete dataToUpdate.squad;
+      // Create an object with only the fields that exist in the database
+      const dataToUpdate: any = {
+        title,
+        description,
+        status,
+        product,
+        location,
+        urgency,
+      };
+      
+      // If votes are provided, include them
+      if (typeof votes !== 'undefined') {
+        dataToUpdate.votes = votes;
+      }
+      
+      // Handle squads as tags
+      if (squad) {
+        dataToUpdate.tags = [squad];
+      } else if (updatedFeature.squads && updatedFeature.squads.length > 0) {
+        dataToUpdate.tags = updatedFeature.squads;
       }
       
       const { data, error } = await supabase
@@ -40,70 +65,24 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
         throw new Error('Feature not found');
       }
       
-      // Use the 'as any' approach to safely handle unknown fields from the API
-      const anyData = data as any;
+      // Create updated feature object with appropriate type handling
       const updatedFeatureWithComments: Feature = {
-        id: anyData.id,
-        title: anyData.title,
-        description: anyData.description,
-        status: (anyData.status || 'new') as Feature['status'],
-        product: anyData.product,
-        location: anyData.location || '',
-        votes: anyData.votes || 0,
-        reporter: anyData.reporter,
-        urgency: (anyData.urgency || 'medium') as "low" | "medium" | "high",
-        comments: existingFeature?.comments || [],
-        created_at: anyData.created_at || new Date().toISOString(),
-        updated_at: anyData.updated_at || new Date().toISOString(),
-        squads: anyData.tags || [], // Convert tags from database to squads in UI
+        ...existingFeature,
+        title: data.title,
+        description: data.description,
+        status: data.status,
+        product: data.product,
+        location: data.location || '',
+        votes: data.votes || 0,
+        reporter: data.reporter,
+        urgency: (data.urgency || 'medium') as "low" | "medium" | "high",
+        updated_at: data.updated_at,
+        squads: data.tags || [], // Convert tags from database to squads in UI
       };
 
       // Extract the first tag as the squad if available
-      if (anyData.tags && anyData.tags.length > 0) {
-        updatedFeatureWithComments.squad = anyData.tags[0];
-      }
-
-      // Add optional fields if they exist in the response
-      if (anyData.hypothesis !== undefined) {
-        updatedFeatureWithComments.hypothesis = String(anyData.hypothesis);
-      }
-      
-      if (anyData.expected_outcome !== undefined) {
-        updatedFeatureWithComments.expected_outcome = String(anyData.expected_outcome);
-      }
-      
-      if (anyData.type !== undefined) {
-        updatedFeatureWithComments.type = String(anyData.type);
-      }
-      
-      if (anyData.experiment_owner !== undefined) {
-        updatedFeatureWithComments.experiment_owner = String(anyData.experiment_owner);
-      }
-      
-      if (anyData.timeframe !== undefined) {
-        updatedFeatureWithComments.timeframe = String(anyData.timeframe);
-      }
-      
-      if (anyData.metrics !== undefined && Array.isArray(anyData.metrics)) {
-        updatedFeatureWithComments.metrics = anyData.metrics.map(String);
-      }
-      
-      if (anyData.user_research !== undefined) {
-        updatedFeatureWithComments.user_research = String(anyData.user_research);
-      }
-      
-      if (anyData.mvp !== undefined) {
-        updatedFeatureWithComments.mvp = String(anyData.mvp);
-      }
-      
-      if (anyData.rice_score !== undefined && typeof anyData.rice_score === 'object') {
-        updatedFeatureWithComments.rice_score = {
-          reach: typeof anyData.rice_score.reach === 'number' ? anyData.rice_score.reach : 1,
-          impact: typeof anyData.rice_score.impact === 'number' ? anyData.rice_score.impact : 1,
-          confidence: typeof anyData.rice_score.confidence === 'number' ? anyData.rice_score.confidence : 100,
-          effort: typeof anyData.rice_score.effort === 'number' ? anyData.rice_score.effort : 1,
-          total: typeof anyData.rice_score.total === 'number' ? anyData.rice_score.total : 0
-        };
+      if (data.tags && data.tags.length > 0) {
+        updatedFeatureWithComments.squad = data.tags[0];
       }
 
       // Update the features state

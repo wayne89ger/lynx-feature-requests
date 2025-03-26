@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 // The available squads
-const AVAILABLE_SQUADS = ["DC", "ON", "CE", "CPI"];
+const AVAILABLE_SQUADS = ["Demand Capture", "Onboarding", "Client Experience", "CPI"];
 
 interface SquadsSelectionProps {
   selectedSquads: string[];
