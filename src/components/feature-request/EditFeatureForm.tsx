@@ -10,6 +10,9 @@ import { ActionButtons } from "./form-sections/ActionButtons";
 import { BasicInformation } from "./form-sections/BasicInformation";
 import { FeatureSpecificFields } from "./form-sections/FeatureSpecificFields";
 import { TagsSelection } from "./form-sections/TagsSelection";
+import { MetricsSection } from "./form-sections/MetricsSection";
+import { RiceScoreSection } from "./form-sections/RiceScoreSection";
+import { EXPERIMENT_OWNERS } from "@/constants/experimentOwners";
 
 interface EditFeatureFormProps {
   feature: {
@@ -23,6 +26,21 @@ interface EditFeatureFormProps {
     location?: string;
     url?: string;
     tags?: string[];
+    hypothesis?: string;
+    expected_outcome?: string;
+    type?: string;
+    experiment_owner?: string;
+    timeframe?: string;
+    metrics?: string[];
+    user_research?: string;
+    mvp?: string;
+    rice_score?: {
+      reach: number;
+      impact: number;
+      confidence: number;
+      effort: number;
+      total: number;
+    };
   };
   open: boolean;
   onClose: () => void;
@@ -42,7 +60,23 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
   const [hasConfluenceDoc, setHasConfluenceDoc] = useState(false);
   const [tags, setTags] = useState<string[]>(feature.tags || []);
   
-  // Feature-specific states - simplified
+  const [hypothesis, setHypothesis] = useState(feature.hypothesis || "");
+  const [expectedOutcome, setExpectedOutcome] = useState(feature.expected_outcome || "");
+  const [type, setType] = useState(feature.type || "");
+  const [experimentOwner, setExperimentOwner] = useState(feature.experiment_owner || "");
+  const [timeframe, setTimeframe] = useState(feature.timeframe || "");
+  const [metrics, setMetrics] = useState<string[]>(["Engagement", "Retention", "Conversion", "Revenue"]);
+  const [selectedMetrics, setSelectedMetrics] = useState<string[]>(feature.metrics || []);
+  const [newMetric, setNewMetric] = useState("");
+  const [userResearch, setUserResearch] = useState(feature.user_research || "");
+  const [mvp, setMvp] = useState(feature.mvp || "");
+  
+  const [reach, setReach] = useState(feature.rice_score?.reach || 1);
+  const [impact, setImpact] = useState(feature.rice_score?.impact || 1);
+  const [confidence, setConfidence] = useState(feature.rice_score?.confidence || 100);
+  const [effort, setEffort] = useState(feature.rice_score?.effort || 1);
+  const [riceScore, setRiceScore] = useState(feature.rice_score?.total || 0);
+  
   const [reviewers, setReviewers] = useState<string[]>([]);
   
   const { toast } = useToast();
@@ -50,8 +84,6 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
   const isBug = product === "bug";
 
   const handleSubmit = () => {
-    // Only validate required fields if they're being actively edited
-    // For tags-only updates, we don't need to enforce all fields
     if (!title) {
       toast({
         title: "Title is required",
@@ -60,7 +92,8 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
       return;
     }
 
-    // Keep existing data for any empty fields to prevent overwriting existing data
+    const totalRiceScore = ((reach * impact * confidence) / 100) / effort;
+
     const updatedData = isBug ? {
       title,
       current_situation: currentSituation,
@@ -74,7 +107,22 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
       squad,
       location,
       reviewers,
-      tags
+      tags,
+      hypothesis,
+      expected_outcome: expectedOutcome,
+      type,
+      experiment_owner: experimentOwner,
+      timeframe,
+      metrics: selectedMetrics,
+      user_research: userResearch,
+      mvp,
+      rice_score: {
+        reach,
+        impact,
+        confidence,
+        effort,
+        total: totalRiceScore,
+      }
     };
 
     onSave(feature.id, updatedData);
@@ -118,6 +166,42 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
               <FeatureSpecificFields
                 reviewers={reviewers}
                 setReviewers={setReviewers}
+                hypothesis={hypothesis}
+                setHypothesis={setHypothesis}
+                expectedOutcome={expectedOutcome}
+                setExpectedOutcome={setExpectedOutcome}
+                type={type}
+                setType={setType}
+                experimentOwner={experimentOwner}
+                setExperimentOwner={setExperimentOwner}
+                timeframe={timeframe}
+                setTimeframe={setTimeframe}
+                userResearch={userResearch}
+                setUserResearch={setUserResearch}
+                mvp={mvp}
+                setMvp={setMvp}
+              />
+              
+              <MetricsSection
+                metrics={metrics}
+                selectedMetrics={selectedMetrics}
+                newMetric={newMetric}
+                setNewMetric={setNewMetric}
+                setMetrics={setMetrics}
+                setSelectedMetrics={setSelectedMetrics}
+              />
+              
+              <RiceScoreSection
+                reach={reach}
+                impact={impact}
+                confidence={confidence}
+                effort={effort}
+                riceScore={riceScore}
+                setReach={setReach}
+                setImpact={setImpact}
+                setConfidence={setConfidence}
+                setEffort={setEffort}
+                setRiceScore={setRiceScore}
               />
               
               <TagsSelection 

@@ -18,7 +18,16 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
           product: updatedFeature.product,
           location: updatedFeature.location,
           status: updatedFeature.status,
-          tags: updatedFeature.tags || []
+          tags: updatedFeature.tags || [],
+          hypothesis: updatedFeature.hypothesis,
+          expected_outcome: updatedFeature.expected_outcome,
+          type: updatedFeature.type,
+          experiment_owner: updatedFeature.experiment_owner,
+          timeframe: updatedFeature.timeframe,
+          metrics: updatedFeature.metrics,
+          user_research: updatedFeature.user_research,
+          mvp: updatedFeature.mvp,
+          rice_score: updatedFeature.rice_score
         })
         .eq('id', id)
         .select()

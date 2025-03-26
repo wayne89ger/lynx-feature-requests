@@ -24,6 +24,21 @@ export interface Feature {
   created_at?: string;
   updated_at?: string;
   tags?: string[];
+  hypothesis?: string;
+  expected_outcome?: string;
+  type?: string;
+  experiment_owner?: string;
+  timeframe?: string;
+  metrics?: string[];
+  user_research?: string;
+  mvp?: string;
+  rice_score?: {
+    reach: number;
+    impact: number;
+    confidence: number;
+    effort: number;
+    total: number;
+  };
 }
 
 export interface Bug {
