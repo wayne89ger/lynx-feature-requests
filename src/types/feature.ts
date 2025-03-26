@@ -21,9 +21,9 @@ export interface Feature {
   urgency: "low" | "medium" | "high";
   reporter: string;
   experimentOwner?: string;
-  created_at?: string;
-  updated_at?: string;
-  tags?: string[];
+  created_at: string;
+  updated_at: string;
+  tags: string[];
   hypothesis?: string;
   expected_outcome?: string;
   type?: string;

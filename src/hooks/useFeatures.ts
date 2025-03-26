@@ -38,7 +38,7 @@ export const useFeatures = () => {
       // Map comments to features
       const featuresWithComments = (featuresData || []).map(feature => {
         // Create the base feature object with required properties
-        const featureObj: any = {
+        const featureObj: Partial<Feature> = {
           id: feature.id,
           title: feature.title,
           description: feature.description,
@@ -48,7 +48,6 @@ export const useFeatures = () => {
           votes: feature.votes || 0,
           reporter: feature.reporter,
           urgency: (feature.urgency || 'medium') as "low" | "medium" | "high",
-          experimentOwner: feature.experiment_owner,
           comments: commentsData
             ?.filter(comment => comment.feature_id === feature.id)
             ?.map(comment => ({
@@ -64,15 +63,15 @@ export const useFeatures = () => {
         };
         
         // Add optional properties only if they exist in the API response
-        if (feature.hypothesis) featureObj.hypothesis = feature.hypothesis;
-        if (feature.expected_outcome) featureObj.expected_outcome = feature.expected_outcome;
-        if (feature.type) featureObj.type = feature.type;
-        if (feature.experiment_owner) featureObj.experiment_owner = feature.experiment_owner;
-        if (feature.timeframe) featureObj.timeframe = feature.timeframe;
-        if (feature.metrics) featureObj.metrics = feature.metrics;
-        if (feature.user_research) featureObj.user_research = feature.user_research;
-        if (feature.mvp) featureObj.mvp = feature.mvp;
-        if (feature.rice_score) featureObj.rice_score = feature.rice_score;
+        if (feature.hypothesis !== undefined) featureObj.hypothesis = feature.hypothesis;
+        if (feature.expected_outcome !== undefined) featureObj.expected_outcome = feature.expected_outcome;
+        if (feature.type !== undefined) featureObj.type = feature.type;
+        if (feature.experiment_owner !== undefined) featureObj.experiment_owner = feature.experiment_owner;
+        if (feature.timeframe !== undefined) featureObj.timeframe = feature.timeframe;
+        if (feature.metrics !== undefined) featureObj.metrics = feature.metrics;
+        if (feature.user_research !== undefined) featureObj.user_research = feature.user_research;
+        if (feature.mvp !== undefined) featureObj.mvp = feature.mvp;
+        if (feature.rice_score !== undefined) featureObj.rice_score = feature.rice_score;
         
         return featureObj as Feature;
       });
