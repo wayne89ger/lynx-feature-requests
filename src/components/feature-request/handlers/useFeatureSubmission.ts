@@ -50,8 +50,9 @@ export const useFeatureSubmission = (features: Feature[], setFeatures: (features
         description: data.description,
         status: data.status || 'new',
         product: data.product,
-        squad: data.squad || undefined,
-        location: data.location || undefined,
+        // Use optional chaining and type checking to safely access squad
+        squad: typeof data.squad === 'string' ? data.squad : undefined,
+        location: typeof data.location === 'string' ? data.location : undefined,
         votes: data.votes || 0,
         comments: [],
         reporter: data.reporter,
