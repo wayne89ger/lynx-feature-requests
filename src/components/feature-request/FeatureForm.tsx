@@ -37,6 +37,7 @@ interface FeatureFormProps {
     product: string;
     squad: string; // Keep this for now as the interface still requires it
     canContact: boolean;
+    isAnonymous: boolean;
     urgency?: string;
     attachment?: File;
   }) => void;
@@ -48,6 +49,7 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
   const [description, setDescription] = useState("");
   const [product, setProduct] = useState("");
   const [canContact, setCanContact] = useState(false);
+  const [isAnonymous, setIsAnonymous] = useState(false);
   const [attachment, setAttachment] = useState<File | null>(null);
   const [urgency, setUrgency] = useState("medium");
   const { toast } = useToast();
@@ -69,6 +71,7 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
       product, 
       squad: "", // Passing empty string for squad
       canContact,
+      isAnonymous,
       urgency,
       attachment: attachment || undefined
     });
@@ -77,6 +80,7 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
     setDescription("");
     setProduct("");
     setCanContact(false);
+    setIsAnonymous(false);
     setUrgency("medium");
     setAttachment(null);
     setOpen(false);
@@ -194,15 +198,27 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
               </Button>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="canContact"
-              checked={canContact}
-              onCheckedChange={(checked) => setCanContact(checked as boolean)}
-            />
-            <Label htmlFor="canContact" className="text-sm font-normal">
-              Can we contact you about this feature request?
-            </Label>
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="canContact"
+                checked={canContact}
+                onCheckedChange={(checked) => setCanContact(checked as boolean)}
+              />
+              <Label htmlFor="canContact" className="text-sm font-normal">
+                Can we contact you about this feature request?
+              </Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="isAnonymous"
+                checked={isAnonymous}
+                onCheckedChange={(checked) => setIsAnonymous(checked as boolean)}
+              />
+              <Label htmlFor="isAnonymous" className="text-sm font-normal">
+                Submit anonymously
+              </Label>
+            </div>
           </div>
           <Button type="submit" className="w-full">
             Submit

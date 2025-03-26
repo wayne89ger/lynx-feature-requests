@@ -9,6 +9,7 @@ interface FormActionsProps {
     squad: string; // Keep this for now as FeatureForm still requires it
     location?: string;
     canContact: boolean;
+    isAnonymous: boolean;
     urgency?: string;
     attachment?: File;
   }) => void;

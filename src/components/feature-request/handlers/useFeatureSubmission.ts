@@ -14,10 +14,14 @@ export const useFeatureSubmission = (features: Feature[], setFeatures: (features
     squad: string;
     location?: string;
     canContact: boolean;
+    isAnonymous: boolean;
     urgency?: string;
     attachment?: File;
   }) => {
     try {
+      // Use "Anonymous" as the reporter name if isAnonymous is true
+      const reporter = formData.isAnonymous ? "Anonymous" : EXPERIMENT_OWNERS[0];
+      
       // Insert the feature into the database
       const { data, error } = await supabase
         .from('features')
@@ -27,7 +31,7 @@ export const useFeatureSubmission = (features: Feature[], setFeatures: (features
           product: formData.product,
           // Remove squad from insertion
           location: formData.location || null,
-          reporter: EXPERIMENT_OWNERS[0],
+          reporter: reporter,
           votes: 0,
           urgency: formData.urgency || 'medium'
         }])
