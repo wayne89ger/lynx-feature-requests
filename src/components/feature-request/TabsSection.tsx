@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FeatureList } from "./FeatureList";
 import { Filters } from "./Filters";
 import { Feature } from "@/types/feature";
-import { productLabels, squadLabels } from "./constants";
+import { productLabels } from "./constants";
 
 interface TabsSectionProps {
   filteredFeatures: Feature[];
@@ -46,13 +46,10 @@ export const TabsSection = ({
     const productMatch = productLabels[feature.product]?.full.toLowerCase().includes(searchLower) ||
                          feature.product.toLowerCase().includes(searchLower);
     
-    // Search in squad name (if available)
-    const squadMatch = feature.squad ? 
-      (squadLabels[feature.squad]?.full.toLowerCase().includes(searchLower) ||
-       feature.squad.toLowerCase().includes(searchLower)) : 
-      false;
+    // Search in requester name
+    const requesterMatch = feature.reporter.toLowerCase().includes(searchLower);
     
-    return titleMatch || productMatch || squadMatch;
+    return titleMatch || productMatch || requesterMatch;
   });
 
   return (
