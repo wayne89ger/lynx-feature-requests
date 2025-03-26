@@ -6,7 +6,7 @@ interface FormActionsProps {
     title: string;
     description: string;
     product: string;
-    squad: string;
+    squad: string; // Keep this for now as FeatureForm still requires it
     location?: string;
     canContact: boolean;
     urgency?: string;

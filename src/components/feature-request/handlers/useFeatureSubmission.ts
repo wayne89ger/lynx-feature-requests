@@ -25,7 +25,7 @@ export const useFeatureSubmission = (features: Feature[], setFeatures: (features
           title: formData.title,
           description: formData.description,
           product: formData.product,
-          squad: formData.squad || null, // Ensure squad is never undefined
+          // Remove squad from insertion
           location: formData.location || null,
           reporter: EXPERIMENT_OWNERS[0],
           votes: 0,
@@ -50,8 +50,7 @@ export const useFeatureSubmission = (features: Feature[], setFeatures: (features
         description: data.description,
         status: data.status || 'new',
         product: data.product,
-        // Use optional chaining and type checking to safely access squad
-        squad: typeof data.squad === 'string' ? data.squad : undefined,
+        // Remove squad from new feature object
         location: typeof data.location === 'string' ? data.location : undefined,
         votes: data.votes || 0,
         comments: [],
