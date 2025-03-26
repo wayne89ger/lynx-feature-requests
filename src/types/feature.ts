@@ -20,10 +20,10 @@ export interface Feature {
   attachment?: string;
   urgency: "low" | "medium" | "high";
   reporter: string;
-  experimentOwner?: string;
   created_at: string;
   updated_at: string;
   tags: string[];
+  // Optional fields for feature details
   hypothesis?: string;
   expected_outcome?: string;
   type?: string;

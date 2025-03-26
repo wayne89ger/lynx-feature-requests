@@ -1,21 +1,13 @@
 
 import { useState } from "react";
-import { Tag } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
+import { Tag, Check } from "lucide-react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
 
 interface TagSelectorProps {
   selectedTags: string[];
@@ -28,6 +20,8 @@ export const TagSelector = ({
   availableTags,
   onChange,
 }: TagSelectorProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   // Toggle a tag in the selected tags array
   const toggleTag = (tag: string) => {
     if (selectedTags.includes(tag)) {
@@ -39,14 +33,15 @@ export const TagSelector = ({
 
   const displayValue = selectedTags.length
     ? `${selectedTags.length} Tag${selectedTags.length > 1 ? "s" : ""} Selected`
-    : "All Tags";
+    : "Select Tags";
 
   return (
-    <Popover>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
           className="w-full justify-between bg-white border-lynx-border shadow-sm"
+          onClick={() => setIsOpen(!isOpen)}
         >
           <div className="flex items-center gap-2">
             <Tag className="h-4 w-4 text-muted-foreground" />

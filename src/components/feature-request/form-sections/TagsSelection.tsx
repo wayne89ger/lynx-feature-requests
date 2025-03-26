@@ -19,6 +19,8 @@ interface TagsSelectionProps {
 }
 
 export const TagsSelection = ({ selectedTags, onChange }: TagsSelectionProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  
   // Function to toggle a tag
   const toggleTag = (tag: string) => {
     if (selectedTags.includes(tag)) {
@@ -35,12 +37,13 @@ export const TagsSelection = ({ selectedTags, onChange }: TagsSelectionProps) =>
   return (
     <div className="space-y-2">
       <Label htmlFor="tags">Tags</Label>
-      <Popover>
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             id="tags"
             className="w-full justify-between"
+            onClick={() => setIsOpen(!isOpen)}
           >
             <div className="flex items-center gap-2">
               <Tag className="h-4 w-4 text-muted-foreground" />

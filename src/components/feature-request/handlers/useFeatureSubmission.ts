@@ -17,6 +17,7 @@ export const useFeatureSubmission = (features: Feature[], setFeatures: (features
     isAnonymous: boolean;
     urgency?: string;
     attachment?: File;
+    tags?: string[];
   }) => {
     try {
       // Use "Anonymous" as the reporter name if isAnonymous is true
@@ -33,7 +34,8 @@ export const useFeatureSubmission = (features: Feature[], setFeatures: (features
           location: formData.location || null,
           reporter: reporter,
           votes: 0,
-          urgency: formData.urgency || 'medium'
+          urgency: formData.urgency || 'medium',
+          tags: formData.tags || []
         }])
         .select()
         .single();
@@ -61,7 +63,8 @@ export const useFeatureSubmission = (features: Feature[], setFeatures: (features
         reporter: data.reporter,
         urgency: (data.urgency || 'medium') as "low" | "medium" | "high",
         created_at: data.created_at,
-        updated_at: data.updated_at
+        updated_at: data.updated_at,
+        tags: data.tags || []
       };
 
       // Update the features state with the new feature

@@ -63,15 +63,15 @@ export const useFeatures = () => {
         };
         
         // Add optional properties only if they exist in the API response
-        if (feature.hypothesis !== undefined) featureObj.hypothesis = feature.hypothesis;
-        if (feature.expected_outcome !== undefined) featureObj.expected_outcome = feature.expected_outcome;
-        if (feature.type !== undefined) featureObj.type = feature.type;
-        if (feature.experiment_owner !== undefined) featureObj.experiment_owner = feature.experiment_owner;
-        if (feature.timeframe !== undefined) featureObj.timeframe = feature.timeframe;
-        if (feature.metrics !== undefined) featureObj.metrics = feature.metrics;
-        if (feature.user_research !== undefined) featureObj.user_research = feature.user_research;
-        if (feature.mvp !== undefined) featureObj.mvp = feature.mvp;
-        if (feature.rice_score !== undefined) featureObj.rice_score = feature.rice_score;
+        if ('hypothesis' in feature && feature.hypothesis !== undefined) featureObj.hypothesis = feature.hypothesis;
+        if ('expected_outcome' in feature && feature.expected_outcome !== undefined) featureObj.expected_outcome = feature.expected_outcome;
+        if ('type' in feature && feature.type !== undefined) featureObj.type = feature.type;
+        if ('experiment_owner' in feature && feature.experiment_owner !== undefined) featureObj.experiment_owner = feature.experiment_owner;
+        if ('timeframe' in feature && feature.timeframe !== undefined) featureObj.timeframe = feature.timeframe;
+        if ('metrics' in feature && feature.metrics !== undefined) featureObj.metrics = feature.metrics;
+        if ('user_research' in feature && feature.user_research !== undefined) featureObj.user_research = feature.user_research;
+        if ('mvp' in feature && feature.mvp !== undefined) featureObj.mvp = feature.mvp;
+        if ('rice_score' in feature && feature.rice_score !== undefined) featureObj.rice_score = feature.rice_score;
         
         return featureObj as Feature;
       });
