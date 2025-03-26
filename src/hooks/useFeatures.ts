@@ -59,7 +59,7 @@ export const useFeatures = () => {
             })) || [],
           created_at: feature.created_at || new Date().toISOString(),
           updated_at: feature.updated_at || new Date().toISOString(),
-          tags: feature.tags || [],
+          squads: feature.tags || [], // Convert tags to squads
         };
         
         // Use type assertion with any to safely access properties

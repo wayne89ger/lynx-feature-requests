@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ActionButtons } from "./form-sections/ActionButtons";
 import { BasicInformation } from "./form-sections/BasicInformation";
 import { FeatureSpecificFields } from "./form-sections/FeatureSpecificFields";
-import { TagsSelection } from "./form-sections/TagsSelection";
+import { SquadsSelection } from "./form-sections/SquadsSelection";
 import { MetricsSection } from "./form-sections/MetricsSection";
 import { RiceScoreSection } from "./form-sections/RiceScoreSection";
 import { EXPERIMENT_OWNERS } from "@/constants/experimentOwners";
@@ -26,7 +26,7 @@ interface EditFeatureFormProps {
     squad?: string;
     location?: string;
     url?: string;
-    tags?: string[];
+    squads?: string[];
     hypothesis?: string;
     expected_outcome?: string;
     type?: string;
@@ -59,7 +59,7 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
   const [location, setLocation] = useState(feature.location || "");
   const [hasShortcutStory, setHasShortcutStory] = useState(false);
   const [hasConfluenceDoc, setHasConfluenceDoc] = useState(false);
-  const [tags, setTags] = useState<string[]>(feature.tags || []);
+  const [squads, setSquads] = useState<string[]>(feature.squads || []);
   
   const [hypothesis, setHypothesis] = useState(feature.hypothesis || "");
   const [expectedOutcome, setExpectedOutcome] = useState(feature.expected_outcome || "");
@@ -108,7 +108,7 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
       squad,
       location,
       reviewers,
-      tags,
+      squads,
       hypothesis,
       expected_outcome: expectedOutcome,
       type,
@@ -164,10 +164,10 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
 
           {!isBug && (
             <>
-              {/* Moved tags section here, right after basic information */}
-              <TagsSelection 
-                selectedTags={tags} 
-                onChange={setTags} 
+              {/* Renamed tags to squads */}
+              <SquadsSelection 
+                selectedSquads={squads} 
+                onChange={setSquads} 
               />
               
               <FeatureSpecificFields

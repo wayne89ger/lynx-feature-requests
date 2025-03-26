@@ -10,25 +10,18 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
     try {
       console.log('Updating feature with id:', id, 'Updated data:', updatedFeature);
       
+      // Convert squads to tags for the database update (since database still uses tags)
+      const dataToUpdate = {
+        ...updatedFeature,
+        tags: updatedFeature.squads,  // Convert squads to tags for database
+      };
+      
+      // Remove squads from the data sent to the database
+      delete dataToUpdate.squads;
+      
       const { data, error } = await supabase
         .from('features')
-        .update({
-          title: updatedFeature.title,
-          description: updatedFeature.description,
-          product: updatedFeature.product,
-          location: updatedFeature.location,
-          status: updatedFeature.status,
-          tags: updatedFeature.tags || [],
-          hypothesis: updatedFeature.hypothesis,
-          expected_outcome: updatedFeature.expected_outcome,
-          type: updatedFeature.type,
-          experiment_owner: updatedFeature.experiment_owner,
-          timeframe: updatedFeature.timeframe,
-          metrics: updatedFeature.metrics,
-          user_research: updatedFeature.user_research,
-          mvp: updatedFeature.mvp,
-          rice_score: updatedFeature.rice_score
-        })
+        .update(dataToUpdate)
         .eq('id', id)
         .select()
         .single();
@@ -61,7 +54,7 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
         comments: existingFeature?.comments || [],
         created_at: anyData.created_at || new Date().toISOString(),
         updated_at: anyData.updated_at || new Date().toISOString(),
-        tags: anyData.tags || [],
+        squads: anyData.tags || [], // Convert tags from database to squads in UI
       };
 
       // Add optional fields if they exist in the response

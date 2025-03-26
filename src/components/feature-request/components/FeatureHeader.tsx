@@ -18,7 +18,7 @@ interface FeatureHeaderProps {
   status: Feature['status'];
   product: string;
   location?: string;
-  tags?: string[];
+  squads?: string[];
   onStatusChange: (newStatus: Feature['status']) => void;
   onEdit?: () => void;
   onDelete?: () => void;
@@ -28,7 +28,7 @@ export const FeatureHeader = ({
   status,
   product,
   location,
-  tags,
+  squads,
   onStatusChange,
   onEdit,
   onDelete
@@ -90,17 +90,17 @@ export const FeatureHeader = ({
           </span>
         )}
 
-        {/* Display tags if they exist */}
-        {tags && tags.length > 0 && (
+        {/* Display squads if they exist (renamed from tags) */}
+        {squads && squads.length > 0 && (
           <div className="flex items-center gap-1 ml-1">
             <div className="flex flex-wrap gap-1">
-              {tags.map(tag => (
+              {squads.map(squad => (
                 <Badge 
-                  key={tag} 
+                  key={squad} 
                   variant="secondary" 
                   className="text-[10px] px-1.5 py-0 h-5 bg-primary/10 text-primary"
                 >
-                  {tag}
+                  {squad}
                 </Badge>
               ))}
             </div>
