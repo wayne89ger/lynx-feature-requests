@@ -85,7 +85,7 @@ export const Filters = ({
         <div className="relative w-full">
           <Input
             type="text"
-            placeholder="Search products or squads..."
+            placeholder="Search titles, products or squads..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10 bg-white border-lynx-border shadow-sm"
@@ -179,7 +179,7 @@ export const Filters = ({
       <div className="relative w-full">
         <Input
           type="text"
-          placeholder="Search products or squads..."
+          placeholder="Search titles, products or squads..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="pl-10 bg-white border-lynx-border shadow-sm"

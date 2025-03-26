@@ -39,6 +39,9 @@ export const TabsSection = ({
     
     const searchLower = searchTerm.toLowerCase();
     
+    // Search in title
+    const titleMatch = feature.title.toLowerCase().includes(searchLower);
+    
     // Search in product name
     const productMatch = productLabels[feature.product]?.full.toLowerCase().includes(searchLower) ||
                          feature.product.toLowerCase().includes(searchLower);
@@ -49,7 +52,7 @@ export const TabsSection = ({
        feature.squad.toLowerCase().includes(searchLower)) : 
       false;
     
-    return productMatch || squadMatch;
+    return titleMatch || productMatch || squadMatch;
   });
 
   return (
