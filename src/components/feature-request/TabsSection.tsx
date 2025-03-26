@@ -20,6 +20,9 @@ interface TabsSectionProps {
   setSelectedStatus: (status: string) => void;
   selectedRequester: string;
   setSelectedRequester: (requester: string) => void;
+  selectedTags: string[];
+  setSelectedTags: (tags: string[]) => void;
+  allTags: string[];
   sortOption: SortOption;
   setSortOption: (option: SortOption) => void;
 }
@@ -35,6 +38,9 @@ export const TabsSection = ({
   setSelectedStatus,
   selectedRequester,
   setSelectedRequester,
+  selectedTags,
+  setSelectedTags,
+  allTags,
   sortOption,
   setSortOption,
 }: TabsSectionProps) => {
@@ -87,6 +93,9 @@ export const TabsSection = ({
             setSelectedStatus={setSelectedStatus}
             selectedRequester={selectedRequester}
             setSelectedRequester={setSelectedRequester}
+            selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags}
+            availableTags={allTags}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
           />
