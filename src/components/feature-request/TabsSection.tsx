@@ -20,6 +20,8 @@ interface TabsSectionProps {
   setSelectedStatus: (status: string) => void;
   selectedRequester: string;
   setSelectedRequester: (requester: string) => void;
+  selectedSquads: string[];
+  setSelectedSquads: (squads: string[]) => void;
   sortOption: SortOption;
   setSortOption: (option: SortOption) => void;
 }
@@ -35,6 +37,8 @@ export const TabsSection = ({
   setSelectedStatus,
   selectedRequester,
   setSelectedRequester,
+  selectedSquads,
+  setSelectedSquads,
   sortOption,
   setSortOption,
 }: TabsSectionProps) => {
@@ -57,7 +61,12 @@ export const TabsSection = ({
     // Search in requester name
     const requesterMatch = feature.reporter.toLowerCase().includes(searchLower);
     
-    return titleMatch || productMatch || requesterMatch;
+    // Search in squads
+    const squadMatch = feature.squads?.some(squad => 
+      squad.toLowerCase().includes(searchLower)
+    );
+    
+    return titleMatch || productMatch || requesterMatch || !!squadMatch;
   });
 
   const handleExportCSV = () => {
@@ -87,6 +96,8 @@ export const TabsSection = ({
             setSelectedStatus={setSelectedStatus}
             selectedRequester={selectedRequester}
             setSelectedRequester={setSelectedRequester}
+            selectedSquads={selectedSquads}
+            setSelectedSquads={setSelectedSquads}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
           />

@@ -8,6 +8,10 @@ import {
   productLabels,
   allProducts
 } from "./constants";
+import { SquadSelector } from "./components/SquadSelector";
+
+// Available squads
+const AVAILABLE_SQUADS = ["Demand Capture", "Onboarding", "Client Experience", "CPI"];
 
 interface FiltersProps {
   activeTab: string;
@@ -17,6 +21,8 @@ interface FiltersProps {
   setSelectedStatus: (value: string) => void;
   selectedRequester: string;
   setSelectedRequester: (value: string) => void;
+  selectedSquads: string[];
+  setSelectedSquads: (value: string[]) => void;
   searchTerm?: string;
   setSearchTerm?: (value: string) => void;
 }
@@ -29,6 +35,8 @@ export const Filters = ({
   setSelectedStatus,
   selectedRequester,
   setSelectedRequester,
+  selectedSquads,
+  setSelectedSquads,
   searchTerm = "",
   setSearchTerm = () => {},
 }: FiltersProps) => {
@@ -109,6 +117,15 @@ export const Filters = ({
                 </SelectContent>
               </Select>
             </div>
+
+            {/* Squad filter */}
+            <div className="w-full">
+              <SquadSelector 
+                selectedSquads={selectedSquads}
+                availableSquads={AVAILABLE_SQUADS}
+                onChange={setSelectedSquads}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -176,6 +193,15 @@ export const Filters = ({
               <SelectItem value="raquell-serrano">Raquell Serrano</SelectItem>
             </SelectContent>
           </Select>
+        </div>
+
+        {/* Squad filter */}
+        <div className="w-full max-w-[200px]">
+          <SquadSelector 
+            selectedSquads={selectedSquads}
+            availableSquads={AVAILABLE_SQUADS}
+            onChange={setSelectedSquads}
+          />
         </div>
       </div>
     </div>

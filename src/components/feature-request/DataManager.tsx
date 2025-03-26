@@ -1,4 +1,3 @@
-
 import { useState, useMemo } from "react";
 import { Feature } from "@/types/feature";
 import { useFeatures } from "@/hooks/useFeatures";
@@ -13,36 +12,46 @@ export const DataManager = () => {
   const { features, setFeatures, deleteFeature } = useFeatures();
   const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
   const [showEditForm, setShowEditForm] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<string>("all");
-  const [selectedStatus, setSelectedStatus] = useState<string>("all");
-  const [selectedRequester, setSelectedRequester] = useState<string>("all");
+  const [selectedProduct, setSelectedProduct] = useState("all");
+  const [selectedStatus, setSelectedStatus] = useState("all");
+  const [selectedRequester, setSelectedRequester] = useState("all");
+  const [selectedSquads, setSelectedSquads] = useState<string[]>([]);
   const [sortOption, setSortOption] = useState<SortOption>("votes-desc");
 
   const { handleFeatureSubmit } = useFeatureSubmission(features, setFeatures);
   const { handleFeatureUpdate, handleStatusUpdate } = useFeatureUpdate(features, setFeatures);
 
-  // Filter features based on selected filters (product, status, requester)
-  const filteredAndSortedFeatures = features
-    .filter(feature => 
-      (selectedProduct === "all" || feature.product === selectedProduct) &&
-      (selectedStatus === "all" || feature.status === selectedStatus) &&
-      (selectedRequester === "all" || feature.reporter === selectedRequester)
-    )
-    .sort((a, b) => {
-      // Sort based on the selected sort option
-      switch (sortOption) {
-        case "votes-desc":
-          return (b.votes || 0) - (a.votes || 0);
-        case "votes-asc":
-          return (a.votes || 0) - (b.votes || 0);
-        case "date-desc":
-          return new Date(b.created_at || "").getTime() - new Date(a.created_at || "").getTime();
-        case "date-asc":
-          return new Date(a.created_at || "").getTime() - new Date(b.created_at || "").getTime();
-        default:
-          return (b.votes || 0) - (a.votes || 0);
-      }
-    });
+  const filteredFeatures = features.filter((feature) => {
+    const productMatch =
+      selectedProduct === "all" || feature.product === selectedProduct;
+
+    const statusMatch =
+      selectedStatus === "all" || feature.status === selectedStatus;
+
+    const requesterMatch =
+      selectedRequester === "all" || feature.reporter === selectedRequester;
+
+    const squadMatch =
+      selectedSquads.length === 0 || 
+      feature.squads?.some(squad => selectedSquads.includes(squad));
+
+    return productMatch && statusMatch && requesterMatch && squadMatch;
+  });
+
+  const sortedFeatures = filteredFeatures.sort((a, b) => {
+    switch (sortOption) {
+      case "votes-desc":
+        return (b.votes || 0) - (a.votes || 0);
+      case "votes-asc":
+        return (a.votes || 0) - (b.votes || 0);
+      case "date-desc":
+        return new Date(b.created_at || "").getTime() - new Date(a.created_at || "").getTime();
+      case "date-asc":
+        return new Date(a.created_at || "").getTime() - new Date(b.created_at || "").getTime();
+      default:
+        return (b.votes || 0) - (a.votes || 0);
+    }
+  });
 
   const handleEdit = (feature: Feature) => {
     setSelectedFeature(feature);
@@ -71,7 +80,7 @@ export const DataManager = () => {
   };
 
   return (
-    <>
+    <div className="space-y-8">
       <FormActions 
         onFeatureSubmit={handleFeatureSubmit}
       />
@@ -86,7 +95,7 @@ export const DataManager = () => {
       )}
 
       <TabsSection
-        filteredFeatures={filteredAndSortedFeatures}
+        filteredFeatures={sortedFeatures}
         onEdit={handleEdit}
         onDeleteFeature={handleFeatureDelete}
         onStatusChange={handleStatusChange}
@@ -96,9 +105,11 @@ export const DataManager = () => {
         setSelectedStatus={setSelectedStatus}
         selectedRequester={selectedRequester}
         setSelectedRequester={setSelectedRequester}
+        selectedSquads={selectedSquads}
+        setSelectedSquads={setSelectedSquads}
         sortOption={sortOption}
         setSortOption={setSortOption}
       />
-    </>
+    </div>
   );
 };
