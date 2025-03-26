@@ -22,7 +22,7 @@ export interface Feature {
   reporter: string;
   created_at: string;
   updated_at: string;
-  squads: string[]; // Renamed from tags to squads
+  squads: string[]; // This was previously named tags
   // Optional fields for feature details
   hypothesis?: string;
   expected_outcome?: string;

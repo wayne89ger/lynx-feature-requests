@@ -90,7 +90,7 @@ export const FeatureHeader = ({
           </span>
         )}
 
-        {/* Display squads if they exist (renamed from tags) */}
+        {/* Display squads if they exist */}
         {squads && squads.length > 0 && (
           <div className="flex items-center gap-1 ml-1">
             <div className="flex flex-wrap gap-1">

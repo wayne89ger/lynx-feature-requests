@@ -26,8 +26,8 @@ export const DataManager = () => {
   const allTags = useMemo(() => {
     const tagsSet = new Set<string>();
     features.forEach(feature => {
-      if (feature.tags && Array.isArray(feature.tags)) {
-        feature.tags.forEach(tag => tagsSet.add(tag));
+      if (feature.squads && Array.isArray(feature.squads)) {
+        feature.squads.forEach(squad => tagsSet.add(squad));
       }
     });
     return Array.from(tagsSet);
@@ -40,7 +40,7 @@ export const DataManager = () => {
       (selectedStatus === "all" || feature.status === selectedStatus) &&
       (selectedRequester === "all" || feature.reporter === selectedRequester) &&
       (selectedTags.length === 0 || 
-        (feature.tags && selectedTags.every(tag => feature.tags?.includes(tag))))
+        (feature.squads && selectedTags.every(tag => feature.squads?.includes(tag))))
     )
     .sort((a, b) => {
       // Sort based on the selected sort option
