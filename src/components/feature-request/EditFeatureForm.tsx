@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import {
   Dialog,
@@ -163,6 +164,12 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
 
           {!isBug && (
             <>
+              {/* Moved tags section here, right after basic information */}
+              <TagsSelection 
+                selectedTags={tags} 
+                onChange={setTags} 
+              />
+              
               <FeatureSpecificFields
                 reviewers={reviewers}
                 setReviewers={setReviewers}
@@ -202,11 +209,6 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
                 setConfidence={setConfidence}
                 setEffort={setEffort}
                 setRiceScore={setRiceScore}
-              />
-              
-              <TagsSelection 
-                selectedTags={tags} 
-                onChange={setTags} 
               />
             </>
           )}
