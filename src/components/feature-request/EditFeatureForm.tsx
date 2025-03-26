@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import {
   Dialog,
@@ -51,14 +50,17 @@ export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureF
   const isBug = product === "bug";
 
   const handleSubmit = () => {
-    if (!title || (!isBug && !description) || (isBug && !currentSituation) || !product || (!isBug && !squad)) {
+    // Only validate required fields if they're being actively edited
+    // For tags-only updates, we don't need to enforce all fields
+    if (!title) {
       toast({
-        title: "Please fill in all required fields",
+        title: "Title is required",
         variant: "destructive",
       });
       return;
     }
 
+    // Keep existing data for any empty fields to prevent overwriting existing data
     const updatedData = isBug ? {
       title,
       current_situation: currentSituation,
