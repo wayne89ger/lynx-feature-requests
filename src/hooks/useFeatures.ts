@@ -62,33 +62,60 @@ export const useFeatures = () => {
           tags: feature.tags || [],
         };
         
-        // Add optional properties only if they exist in the API response
-        if (feature.hypothesis !== undefined && feature.hypothesis !== null) 
-          featureObj.hypothesis = feature.hypothesis as string;
-          
-        if (feature.expected_outcome !== undefined && feature.expected_outcome !== null) 
-          featureObj.expected_outcome = feature.expected_outcome as string;
-          
-        if (feature.type !== undefined && feature.type !== null) 
-          featureObj.type = feature.type as string;
-          
-        if (feature.experiment_owner !== undefined && feature.experiment_owner !== null) 
-          featureObj.experiment_owner = feature.experiment_owner as string;
-          
-        if (feature.timeframe !== undefined && feature.timeframe !== null) 
-          featureObj.timeframe = feature.timeframe as string;
-          
-        if (feature.metrics !== undefined && feature.metrics !== null) 
-          featureObj.metrics = feature.metrics as string[];
-          
-        if (feature.user_research !== undefined && feature.user_research !== null) 
-          featureObj.user_research = feature.user_research as string;
-          
-        if (feature.mvp !== undefined && feature.mvp !== null) 
-          featureObj.mvp = feature.mvp as string;
-          
-        if (feature.rice_score !== undefined && feature.rice_score !== null) 
-          featureObj.rice_score = feature.rice_score as Feature['rice_score'];
+        // Use type assertion with any to safely access properties
+        const anyFeature = feature as any;
+        
+        // Add optional properties using a safer approach
+        if (anyFeature.hypothesis !== undefined && anyFeature.hypothesis !== null) {
+          featureObj.hypothesis = String(anyFeature.hypothesis);
+        }
+        
+        if (anyFeature.expected_outcome !== undefined && anyFeature.expected_outcome !== null) {
+          featureObj.expected_outcome = String(anyFeature.expected_outcome);
+        }
+        
+        if (anyFeature.type !== undefined && anyFeature.type !== null) {
+          featureObj.type = String(anyFeature.type);
+        }
+        
+        if (anyFeature.experiment_owner !== undefined && anyFeature.experiment_owner !== null) {
+          featureObj.experiment_owner = String(anyFeature.experiment_owner);
+        }
+        
+        if (anyFeature.timeframe !== undefined && anyFeature.timeframe !== null) {
+          featureObj.timeframe = String(anyFeature.timeframe);
+        }
+        
+        if (anyFeature.metrics !== undefined && anyFeature.metrics !== null) {
+          // Ensure metrics is an array of strings
+          if (Array.isArray(anyFeature.metrics)) {
+            featureObj.metrics = anyFeature.metrics.map(String);
+          } else {
+            featureObj.metrics = [];
+          }
+        }
+        
+        if (anyFeature.user_research !== undefined && anyFeature.user_research !== null) {
+          featureObj.user_research = String(anyFeature.user_research);
+        }
+        
+        if (anyFeature.mvp !== undefined && anyFeature.mvp !== null) {
+          featureObj.mvp = String(anyFeature.mvp);
+        }
+        
+        if (anyFeature.rice_score !== undefined && anyFeature.rice_score !== null) {
+          // Only assign rice_score if it has the expected structure
+          const riceScore = anyFeature.rice_score;
+          if (typeof riceScore === 'object' && riceScore !== null) {
+            featureObj.rice_score = {
+              reach: typeof riceScore.reach === 'number' ? riceScore.reach : 1,
+              impact: typeof riceScore.impact === 'number' ? riceScore.impact : 1,
+              confidence: typeof riceScore.confidence === 'number' ? riceScore.confidence : 100,
+              effort: typeof riceScore.effort === 'number' ? riceScore.effort : 1,
+              total: typeof riceScore.total === 'number' ? riceScore.total : 0
+            };
+          }
+        }
         
         return featureObj as Feature;
       });

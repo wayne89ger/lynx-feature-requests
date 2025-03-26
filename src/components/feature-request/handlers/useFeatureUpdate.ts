@@ -46,12 +46,66 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
         throw new Error('Feature not found');
       }
       
+      // Use the 'as any' approach to safely handle unknown fields from the API
+      const anyData = data as any;
       const updatedFeatureWithComments: Feature = {
-        ...data,
-        urgency: (data.urgency || 'medium') as "low" | "medium" | "high",
+        id: anyData.id,
+        title: anyData.title,
+        description: anyData.description,
+        status: (anyData.status || 'new') as Feature['status'],
+        product: anyData.product,
+        location: anyData.location || '',
+        votes: anyData.votes || 0,
+        reporter: anyData.reporter,
+        urgency: (anyData.urgency || 'medium') as "low" | "medium" | "high",
         comments: existingFeature?.comments || [],
-        tags: data.tags || []
+        created_at: anyData.created_at || new Date().toISOString(),
+        updated_at: anyData.updated_at || new Date().toISOString(),
+        tags: anyData.tags || [],
       };
+
+      // Add optional fields if they exist in the response
+      if (anyData.hypothesis !== undefined) {
+        updatedFeatureWithComments.hypothesis = String(anyData.hypothesis);
+      }
+      
+      if (anyData.expected_outcome !== undefined) {
+        updatedFeatureWithComments.expected_outcome = String(anyData.expected_outcome);
+      }
+      
+      if (anyData.type !== undefined) {
+        updatedFeatureWithComments.type = String(anyData.type);
+      }
+      
+      if (anyData.experiment_owner !== undefined) {
+        updatedFeatureWithComments.experiment_owner = String(anyData.experiment_owner);
+      }
+      
+      if (anyData.timeframe !== undefined) {
+        updatedFeatureWithComments.timeframe = String(anyData.timeframe);
+      }
+      
+      if (anyData.metrics !== undefined && Array.isArray(anyData.metrics)) {
+        updatedFeatureWithComments.metrics = anyData.metrics.map(String);
+      }
+      
+      if (anyData.user_research !== undefined) {
+        updatedFeatureWithComments.user_research = String(anyData.user_research);
+      }
+      
+      if (anyData.mvp !== undefined) {
+        updatedFeatureWithComments.mvp = String(anyData.mvp);
+      }
+      
+      if (anyData.rice_score !== undefined && typeof anyData.rice_score === 'object') {
+        updatedFeatureWithComments.rice_score = {
+          reach: typeof anyData.rice_score.reach === 'number' ? anyData.rice_score.reach : 1,
+          impact: typeof anyData.rice_score.impact === 'number' ? anyData.rice_score.impact : 1,
+          confidence: typeof anyData.rice_score.confidence === 'number' ? anyData.rice_score.confidence : 100,
+          effort: typeof anyData.rice_score.effort === 'number' ? anyData.rice_score.effort : 1,
+          total: typeof anyData.rice_score.total === 'number' ? anyData.rice_score.total : 0
+        };
+      }
 
       // Update the features state
       const updatedFeatures = features.map(f => 
@@ -103,11 +157,10 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
         throw new Error('Feature not found');
       }
       
+      // Update only the status field for this feature
       const updatedFeatureWithComments: Feature = {
-        ...data,
-        urgency: (data.urgency || 'medium') as "low" | "medium" | "high",
-        comments: existingFeature?.comments || [],
-        tags: data.tags || []
+        ...existingFeature,
+        status: newStatus
       };
 
       // Update the features state
