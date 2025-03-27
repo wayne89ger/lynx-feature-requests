@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -202,16 +201,14 @@ export const BugCommentsDialog = ({
                     <>
                       <div className="flex items-start justify-between group">
                         <p className="text-sm text-gray-600">{comment.text}</p>
-                        {comment.reporter === localStorage.getItem('reporter') && (
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            onClick={() => startEditing(comment)}
-                            className="opacity-0 group-hover:opacity-100 transition-opacity p-1 h-6 w-6"
-                          >
-                            <Edit className="h-3 w-3" />
-                          </Button>
-                        )}
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => startEditing(comment)}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity p-1 h-6 w-6"
+                        >
+                          <Edit className="h-3 w-3" />
+                        </Button>
                       </div>
                       {comment.attachment && (
                         <a 
