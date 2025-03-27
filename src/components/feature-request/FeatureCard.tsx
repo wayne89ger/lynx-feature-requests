@@ -14,7 +14,7 @@ import { CommentsDialog } from "./components/CommentsDialog";
 import { format } from "date-fns";
 
 interface FeatureCardProps extends Feature {
-  onStatusChange?: (id: number, newStatus: "new" | "review" | "progress" | "completed") => void;
+  onStatusChange?: (id: number, newStatus: Feature['status']) => void;
   onAddComment?: (id: number, text: string, attachment?: string) => void;
   onEdit?: (feature: Feature) => void;
   onDelete?: (id: number) => void;
