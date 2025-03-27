@@ -11,22 +11,15 @@ export const useFeatureSubmission = (features: Feature[], setFeatures: (features
     title: string;
     description: string;
     product: string;
-    squad: string;
     location?: string;
     canContact: boolean;
     isAnonymous: boolean;
     urgency?: string;
     attachment?: File;
-    squads?: string[];
   }) => {
     try {
       // Use "Anonymous" as the reporter name if isAnonymous is true
       const reporter = formData.isAnonymous ? "Anonymous" : EXPERIMENT_OWNERS[0];
-      
-      // Prepare data for insertion, handling squad vs squads
-      const tags = formData.squads && formData.squads.length > 0 
-        ? formData.squads 
-        : (formData.squad && formData.squad !== "none" ? [formData.squad] : []);
       
       // Insert the feature into the database
       const { data, error } = await supabase
@@ -39,7 +32,7 @@ export const useFeatureSubmission = (features: Feature[], setFeatures: (features
           reporter: reporter,
           votes: 0,
           urgency: formData.urgency || 'medium',
-          tags: tags
+          tags: [] // Empty array as we removed squad selection
         }])
         .select()
         .single();
@@ -69,11 +62,6 @@ export const useFeatureSubmission = (features: Feature[], setFeatures: (features
         updated_at: data.updated_at,
         squads: data.tags || [] // Convert tags from database to squads in UI
       };
-
-      // If there's at least one tag, set it as the squad
-      if (data.tags && data.tags.length > 0) {
-        newFeature.squad = data.tags[0];
-      }
 
       // Update the features state with the new feature
       setFeatures([...features, newFeature]);

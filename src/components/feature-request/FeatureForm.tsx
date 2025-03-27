@@ -19,7 +19,7 @@ interface FeatureFormProps {
     title: string;
     description: string;
     product: string;
-    squad: string; // Keep this for now as the interface still requires it
+    location?: string;
     canContact: boolean;
     isAnonymous: boolean;
     urgency?: string;
@@ -32,6 +32,7 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [product, setProduct] = useState("");
+  const [location, setLocation] = useState("");
   const [canContact, setCanContact] = useState(false);
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [attachment, setAttachment] = useState<File | null>(null);
@@ -48,12 +49,11 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
       return;
     }
 
-    // Note: We're still passing an empty string for squad to maintain compatibility
     onSubmit({ 
       title, 
       description, 
-      product, 
-      squad: "", // Passing empty string for squad
+      product,
+      location,
       canContact,
       isAnonymous,
       urgency,
@@ -63,6 +63,7 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
     setTitle("");
     setDescription("");
     setProduct("");
+    setLocation("");
     setCanContact(false);
     setIsAnonymous(false);
     setUrgency("medium");
@@ -91,14 +92,12 @@ export const FeatureForm = ({ onSubmit }: FeatureFormProps) => {
             title={title}
             description={description}
             product={product}
-            location=""
-            squad=""
+            location={location}
             isBug={false}
             setTitle={setTitle}
             setDescription={setDescription}
             setProduct={setProduct}
-            setLocation={() => {}}
-            setSquad={() => {}}
+            setLocation={setLocation}
           />
           
           <UrgencySelection 

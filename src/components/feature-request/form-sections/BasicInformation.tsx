@@ -14,9 +14,6 @@ import {
   allProducts
 } from "../constants";
 
-// Available squads
-const AVAILABLE_SQUADS = ["Demand Capture", "Onboarding", "Client Experience", "CPI"];
-
 interface BasicInformationProps {
   title: string;
   description: string;
@@ -24,7 +21,6 @@ interface BasicInformationProps {
   url?: string;
   product: string;
   location: string;
-  squad: string;
   isBug: boolean;
   setTitle: (value: string) => void;
   setDescription: (value: string) => void;
@@ -32,7 +28,6 @@ interface BasicInformationProps {
   setUrl?: (value: string) => void;
   setProduct: (value: string) => void;
   setLocation: (value: string) => void;
-  setSquad: (value: string) => void;
 }
 
 export const BasicInformation = ({
@@ -42,7 +37,6 @@ export const BasicInformation = ({
   url,
   product,
   location,
-  squad,
   isBug,
   setTitle,
   setDescription,
@@ -50,7 +44,6 @@ export const BasicInformation = ({
   setUrl,
   setProduct,
   setLocation,
-  setSquad,
 }: BasicInformationProps) => {
   return (
     <>
@@ -110,33 +103,15 @@ export const BasicInformation = ({
         </Select>
       </div>
       {!isBug && (
-        <>
-          <div className="space-y-2">
-            <Label htmlFor="squad">Squad</Label>
-            <Select value={squad} onValueChange={setSquad}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a squad" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">None</SelectItem>
-                {AVAILABLE_SQUADS.map((squadName) => (
-                  <SelectItem key={squadName} value={squadName}>
-                    {squadName}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="location">Location</Label>
-            <Input
-              id="location"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              placeholder="e.g., Homepage, Cart, etc."
-            />
-          </div>
-        </>
+        <div className="space-y-2">
+          <Label htmlFor="location">Location</Label>
+          <Input
+            id="location"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            placeholder="e.g., Homepage, Cart, etc."
+          />
+        </div>
       )}
     </>
   );
