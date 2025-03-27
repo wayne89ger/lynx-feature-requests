@@ -15,8 +15,6 @@ import {
 } from "@/components/feature-request/constants";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { Paperclip, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 interface EditBugFormFieldsProps {
   title: string;
@@ -49,10 +47,6 @@ export const EditBugFormFields = ({
 
   const handleImagePaste = (setImage: (file: File | null) => void) => (file: File) => {
     setImage(file);
-  };
-
-  const removeImage = (setImage: (file: File | null) => void) => () => {
-    setImage(null);
   };
 
   return (
@@ -91,21 +85,6 @@ export const EditBugFormFields = ({
           className="min-h-[100px]"
           onImagePaste={handleImagePaste(setCurrentSituationImage)}
         />
-        {currentSituationImage && (
-          <div className="mt-2 flex items-center gap-2 p-2 bg-gray-50 rounded-md">
-            <Paperclip className="h-4 w-4" />
-            <span className="text-sm truncate flex-1">{currentSituationImage.name}</span>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="h-6 w-6 p-0"
-              onClick={removeImage(setCurrentSituationImage)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-        )}
       </div>
       <div className="space-y-2">
         <Label htmlFor="expectedBehavior">Expected Behavior</Label>
@@ -117,21 +96,6 @@ export const EditBugFormFields = ({
           className="min-h-[100px]"
           onImagePaste={handleImagePaste(setExpectedBehaviorImage)}
         />
-        {expectedBehaviorImage && (
-          <div className="mt-2 flex items-center gap-2 p-2 bg-gray-50 rounded-md">
-            <Paperclip className="h-4 w-4" />
-            <span className="text-sm truncate flex-1">{expectedBehaviorImage.name}</span>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="h-6 w-6 p-0"
-              onClick={removeImage(setExpectedBehaviorImage)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-        )}
       </div>
       <div className="space-y-2">
         <Label htmlFor="url">URL</Label>

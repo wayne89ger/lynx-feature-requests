@@ -1,7 +1,6 @@
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { ImagePasteTextarea } from "@/components/ui/image-paste-textarea";
 import {
   Select,
@@ -58,10 +57,6 @@ export const BasicInformation = ({
     setImage(file);
   };
 
-  const removeImage = (setImage: (file: File | null) => void) => () => {
-    setImage(null);
-  };
-
   return (
     <>
       <div className="space-y-2">
@@ -83,21 +78,6 @@ export const BasicInformation = ({
           className="min-h-[100px]"
           onImagePaste={handleImagePaste(setDescriptionImage)}
         />
-        {descriptionImage && (
-          <div className="mt-2 flex items-center gap-2 p-2 bg-gray-50 rounded-md">
-            <Paperclip className="h-4 w-4" />
-            <span className="text-sm truncate flex-1">{descriptionImage.name}</span>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="h-6 w-6 p-0"
-              onClick={removeImage(setDescriptionImage)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-        )}
       </div>
       {isBug && (
         <>
@@ -110,21 +90,6 @@ export const BasicInformation = ({
               className="min-h-[100px]"
               onImagePaste={handleImagePaste(setExpectedBehaviorImage)}
             />
-            {expectedBehaviorImage && (
-              <div className="mt-2 flex items-center gap-2 p-2 bg-gray-50 rounded-md">
-                <Paperclip className="h-4 w-4" />
-                <span className="text-sm truncate flex-1">{expectedBehaviorImage.name}</span>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 w-6 p-0"
-                  onClick={removeImage(setExpectedBehaviorImage)}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="url">URL</Label>
