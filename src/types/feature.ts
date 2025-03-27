@@ -25,12 +25,15 @@ export interface Feature {
   squads: string[]; // This was previously named tags
   // Optional fields for feature details
   hypothesis?: string;
-  expected_outcome?: string;
+  expectedOutcome?: string;
+  expected_outcome?: string; // Keep for backward compatibility
   type?: string;
-  experiment_owner?: string;
+  experimentOwner?: string;
+  experiment_owner?: string; // Keep for backward compatibility
   timeframe?: string;
   metrics?: string[];
-  user_research?: string;
+  userResearch?: string;
+  user_research?: string; // Keep for backward compatibility
   mvp?: string;
   rice_score?: {
     reach: number;
@@ -39,6 +42,10 @@ export interface Feature {
     effort: number;
     total: number;
   };
+  // Bug-related fields
+  current_situation?: string;
+  expected_behavior?: string;
+  url?: string;
 }
 
 export interface Bug {

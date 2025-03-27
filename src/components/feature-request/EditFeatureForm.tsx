@@ -1,3 +1,4 @@
+
 import {
   Dialog,
   DialogContent,
@@ -407,22 +408,24 @@ export const EditFeatureForm = ({
 }: EditFeatureFormProps) => {
   const [title, setTitle] = useState(feature.title);
   const [description, setDescription] = useState(feature.description);
-  const [currentSituation, setCurrentSituation] = useState("");
-  const [url, setUrl] = useState("");
+  const [currentSituation, setCurrentSituation] = useState(feature.current_situation || "");
+  const [url, setUrl] = useState(feature.url || "");
   const [product, setProduct] = useState(feature.product);
   const [location, setLocation] = useState(feature.location || "");
-  const [urgency, setUrgency] = useState(feature.urgency || "medium");
+  const [urgency, setUrgency] = useState<"low" | "medium" | "high">(feature.urgency || "medium");
   const [hypothesis, setHypothesis] = useState(feature.hypothesis || "");
   const [expectedOutcome, setExpectedOutcome] = useState(
-    feature.expected_outcome || ""
+    feature.expectedOutcome || feature.expected_outcome || ""
   );
   const [type, setType] = useState(feature.type || "");
   const [experimentOwner, setExperimentOwner] = useState(
-    feature.experiment_owner || ""
+    feature.experimentOwner || feature.experiment_owner || ""
   );
   const [timeframe, setTimeframe] = useState(feature.timeframe || "");
   const [metrics, setMetrics] = useState(feature.metrics || []);
-  const [userResearch, setUserResearch] = useState(feature.user_research || "");
+  const [userResearch, setUserResearch] = useState(
+    feature.userResearch || feature.user_research || ""
+  );
   const [mvp, setMvp] = useState(feature.mvp || "");
   const [riceScore, setRiceScore] = useState(feature.rice_score || {
     reach: 1,
@@ -448,12 +451,12 @@ export const EditFeatureForm = ({
       setLocation(feature.location || "");
       setUrgency(feature.urgency || "medium");
       setHypothesis(feature.hypothesis || "");
-      setExpectedOutcome(feature.expected_outcome || "");
+      setExpectedOutcome(feature.expectedOutcome || feature.expected_outcome || "");
       setType(feature.type || "");
-      setExperimentOwner(feature.experiment_owner || "");
+      setExperimentOwner(feature.experimentOwner || feature.experiment_owner || "");
       setTimeframe(feature.timeframe || "");
       setMetrics(feature.metrics || []);
-      setUserResearch(feature.user_research || "");
+      setUserResearch(feature.userResearch || feature.user_research || "");
       setMvp(feature.mvp || "");
       setRiceScore(feature.rice_score || {
         reach: 1,
@@ -473,18 +476,23 @@ export const EditFeatureForm = ({
       location,
       urgency,
       hypothesis,
-      expected_outcome,
+      expected_outcome: expectedOutcome,
       type,
-      experiment_owner,
+      experiment_owner: experimentOwner,
       timeframe,
       metrics,
-      user_research,
+      user_research: userResearch,
       mvp,
       rice_score: riceScore,
       current_situation: currentSituation,
       url: url,
     };
     onSave(feature.id, updatedFeature);
+  };
+
+  // Helper function to handle the urgency string type properly
+  const handleSetUrgency = (value: string) => {
+    setUrgency(value as "low" | "medium" | "high");
   };
 
   return (
@@ -515,7 +523,7 @@ export const EditFeatureForm = ({
 
           {!isBug && (
             <>
-              <UrgencySelection urgency={urgency} setUrgency={setUrgency} />
+              <UrgencySelection urgency={urgency} setUrgency={handleSetUrgency} />
               <FeatureSpecificFields
                 hypothesis={hypothesis}
                 expectedOutcome={expectedOutcome}

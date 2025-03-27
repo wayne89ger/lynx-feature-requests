@@ -21,6 +21,16 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
         urgency,
         votes,
         tags,
+        expected_outcome,
+        experiment_owner,
+        user_research,
+        hypothesis,
+        timeframe,
+        metrics,
+        mvp,
+        rice_score,
+        current_situation,
+        url
       } = updatedFeature;
       
       // Create an object with only the fields that exist in the database
@@ -31,6 +41,16 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
         product,
         location,
         urgency,
+        expected_outcome,
+        experiment_owner,
+        user_research,
+        hypothesis,
+        timeframe,
+        metrics,
+        mvp,
+        rice_score,
+        current_situation,
+        url
       };
       
       // If votes are provided, include them
@@ -78,6 +98,20 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
         urgency: (data.urgency || 'medium') as "low" | "medium" | "high",
         updated_at: data.updated_at,
         squads: data.tags || [], // Convert tags from database to squads in UI
+        // Add other fields from data if they exist
+        expected_outcome: data.expected_outcome,
+        expectedOutcome: data.expected_outcome, // Add both versions for compatibility
+        experiment_owner: data.experiment_owner,
+        experimentOwner: data.experiment_owner, // Add both versions for compatibility
+        user_research: data.user_research,
+        userResearch: data.user_research, // Add both versions for compatibility
+        hypothesis: data.hypothesis,
+        timeframe: data.timeframe,
+        metrics: data.metrics,
+        mvp: data.mvp,
+        rice_score: data.rice_score,
+        current_situation: data.current_situation,
+        url: data.url
       };
 
       // Extract the first tag as the squad if available

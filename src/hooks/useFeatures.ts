@@ -72,6 +72,7 @@ export const useFeatures = () => {
         
         if (anyFeature.expected_outcome !== undefined && anyFeature.expected_outcome !== null) {
           featureObj.expected_outcome = String(anyFeature.expected_outcome);
+          featureObj.expectedOutcome = String(anyFeature.expected_outcome); // Add both versions
         }
         
         if (anyFeature.type !== undefined && anyFeature.type !== null) {
@@ -80,6 +81,7 @@ export const useFeatures = () => {
         
         if (anyFeature.experiment_owner !== undefined && anyFeature.experiment_owner !== null) {
           featureObj.experiment_owner = String(anyFeature.experiment_owner);
+          featureObj.experimentOwner = String(anyFeature.experiment_owner); // Add both versions
         }
         
         if (anyFeature.timeframe !== undefined && anyFeature.timeframe !== null) {
@@ -97,6 +99,7 @@ export const useFeatures = () => {
         
         if (anyFeature.user_research !== undefined && anyFeature.user_research !== null) {
           featureObj.user_research = String(anyFeature.user_research);
+          featureObj.userResearch = String(anyFeature.user_research); // Add both versions
         }
         
         if (anyFeature.mvp !== undefined && anyFeature.mvp !== null) {
@@ -115,6 +118,14 @@ export const useFeatures = () => {
               total: typeof riceScore.total === 'number' ? riceScore.total : 0
             };
           }
+        }
+        
+        if (anyFeature.current_situation !== undefined && anyFeature.current_situation !== null) {
+          featureObj.current_situation = String(anyFeature.current_situation);
+        }
+        
+        if (anyFeature.url !== undefined && anyFeature.url !== null) {
+          featureObj.url = String(anyFeature.url);
         }
         
         return featureObj as Feature;
