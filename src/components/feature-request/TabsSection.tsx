@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { exportFeaturesAsCSV } from "@/utils/exportUtils";
 import { SortDropdown, SortOption } from "./components/SortDropdown";
+import { FeaturedRequests } from "./components/FeaturedRequests";
 
 interface TabsSectionProps {
   filteredFeatures: Feature[];
@@ -121,6 +122,14 @@ export const TabsSection = ({
             <SortDropdown currentSort={sortOption} onSortChange={setSortOption} />
           </div>
         </div>
+        
+        {/* Add the Featured Requests section */}
+        {searchFilteredFeatures.length > 0 && (
+          <FeaturedRequests 
+            features={searchFilteredFeatures} 
+            onEdit={onEdit} 
+          />
+        )}
         
         {searchFilteredFeatures.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground">
