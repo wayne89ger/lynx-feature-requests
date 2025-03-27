@@ -12,6 +12,7 @@ export const useFeatureComments = (
 ) => {
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState("");
+  const [comments, setComments] = useState<Comment[]>(initialComments);
   const { toast } = useToast();
 
   const handleAddComment = async (attachment?: File) => {
@@ -58,6 +59,15 @@ export const useFeatureComments = (
 
       if (error) throw error;
 
+      const newCommentObj: Comment = {
+        id: data.id,
+        text: data.text,
+        timestamp: data.created_at,
+        reporter: data.reporter,
+        attachment: data.attachment,
+      };
+
+      setComments([...comments, newCommentObj]);
       onAddComment?.(featureId, newComment, attachmentUrl);
       setNewComment("");
       
@@ -75,11 +85,45 @@ export const useFeatureComments = (
     }
   };
 
+  const handleEditComment = async (commentId: number, newText: string) => {
+    try {
+      const { error } = await supabase
+        .from('comments')
+        .update({ text: newText })
+        .eq('id', commentId);
+
+      if (error) throw error;
+
+      // Update local comments state
+      const updatedComments = comments.map(comment => 
+        comment.id === commentId 
+          ? { ...comment, text: newText } 
+          : comment
+      );
+      
+      setComments(updatedComments);
+
+      toast({
+        title: "Comment updated",
+        description: "Your comment has been updated successfully.",
+      });
+    } catch (error) {
+      console.error('Error updating comment:', error);
+      toast({
+        title: "Error updating comment",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+    }
+  };
+
   return {
     showComments,
     setShowComments,
     newComment,
     setNewComment,
-    handleAddComment
+    comments,
+    handleAddComment,
+    handleEditComment
   };
 };

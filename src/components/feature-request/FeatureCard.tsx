@@ -67,7 +67,9 @@ export const FeatureCard = ({
     setShowComments, 
     newComment, 
     setNewComment, 
-    handleAddComment 
+    comments: updatedComments,
+    handleAddComment,
+    handleEditComment
   } = useFeatureComments(id, comments, reporter, onAddComment);
 
   const handleEdit = () => {
@@ -80,7 +82,7 @@ export const FeatureCard = ({
         product,
         location,
         votes: currentVotes,
-        comments,
+        comments: updatedComments || comments,
         attachment,
         reporter,
         experiment_owner,
@@ -139,17 +141,18 @@ export const FeatureCard = ({
           onClick={() => setShowComments(true)}
         >
           <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4" />
-          <span className="text-xs">{comments.length}</span>
+          <span className="text-xs">{updatedComments?.length || comments.length}</span>
         </Button>
       </div>
 
       <CommentsDialog 
         isOpen={showComments}
         onClose={() => setShowComments(false)}
-        comments={comments}
+        comments={updatedComments || comments}
         newComment={newComment}
         onCommentChange={setNewComment}
         onAddComment={handleAddComment}
+        onEditComment={handleEditComment}
         featureTitle={title}
       />
     </div>
