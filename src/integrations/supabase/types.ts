@@ -124,6 +124,8 @@ export type Database = {
       features: {
         Row: {
           created_at: string | null
+          deleted: boolean | null
+          deleted_at: string | null
           description: string
           experiment_owner: string | null
           id: number
@@ -139,6 +141,8 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
+          deleted?: boolean | null
+          deleted_at?: string | null
           description: string
           experiment_owner?: string | null
           id?: never
@@ -154,6 +158,8 @@ export type Database = {
         }
         Update: {
           created_at?: string | null
+          deleted?: boolean | null
+          deleted_at?: string | null
           description?: string
           experiment_owner?: string | null
           id?: never

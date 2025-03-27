@@ -15,6 +15,10 @@ interface DeleteConfirmationDialogProps {
   onClose: () => void;
   onConfirm: () => void;
   title: string;
+  description?: string;
+  confirmLabel?: string;
+  cancelLabel?: string;
+  variant?: "destructive" | "warning";
 }
 
 export const DeleteConfirmationDialog = ({
@@ -22,24 +26,31 @@ export const DeleteConfirmationDialog = ({
   onClose,
   onConfirm,
   title,
+  description,
+  confirmLabel = "Delete",
+  cancelLabel = "Cancel",
+  variant = "destructive", 
 }: DeleteConfirmationDialogProps) => {
+  const defaultDescription = variant === "destructive" 
+    ? `This will permanently delete "${title}" and all its related data. This action cannot be undone.`
+    : `This will move "${title}" to the graveyard. You can restore it later if needed.`;
+
   return (
     <AlertDialog open={isOpen} onOpenChange={onClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will permanently delete "{title}" and all its related data. 
-            This action cannot be undone.
+            {description || defaultDescription}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={onClose}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel onClick={onClose}>{cancelLabel}</AlertDialogCancel>
           <AlertDialogAction 
             onClick={onConfirm}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            className={variant === "destructive" ? "bg-destructive text-destructive-foreground hover:bg-destructive/90" : ""}
           >
-            Delete
+            {confirmLabel}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

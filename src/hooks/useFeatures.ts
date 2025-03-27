@@ -6,14 +6,17 @@ import { useToast } from "@/hooks/use-toast";
 
 export const useFeatures = () => {
   const [features, setFeatures] = useState<Feature[]>([]);
+  const [deletedFeatures, setDeletedFeatures] = useState<Feature[]>([]);
   const { toast } = useToast();
 
   const fetchFeatures = async () => {
     try {
       console.log('Fetching features...');
+      // Fetch active features (not deleted)
       const { data: featuresData, error: featuresError } = await supabase
         .from('features')
         .select('*')
+        .eq('deleted', false)
         .order('votes', { ascending: false });
       
       if (featuresError) {
@@ -22,6 +25,20 @@ export const useFeatures = () => {
       }
 
       console.log('Features data:', featuresData);
+
+      // Fetch deleted features for the graveyard
+      const { data: deletedFeaturesData, error: deletedFeaturesError } = await supabase
+        .from('features')
+        .select('*')
+        .eq('deleted', true)
+        .order('deleted_at', { ascending: false });
+      
+      if (deletedFeaturesError) {
+        console.error('Error fetching deleted features:', deletedFeaturesError);
+        throw deletedFeaturesError;
+      }
+
+      console.log('Deleted features data:', deletedFeaturesData);
 
       // Then fetch all comments
       const { data: commentsData, error: commentsError } = await supabase
@@ -36,13 +53,13 @@ export const useFeatures = () => {
       console.log('Comments data:', commentsData);
 
       // Map comments to features
-      const featuresWithComments = (featuresData || []).map(feature => {
+      const processFeatures = (featureList: any[]) => featureList.map(feature => {
         // Create the base feature object with required properties
         const featureObj: Partial<Feature> = {
           id: feature.id,
           title: feature.title,
           description: feature.description,
-          status: (feature.status || 'new') as "new" | "progress" | "completed",
+          status: (feature.status || 'new') as "new" | "progress" | "completed" | "unresolvable",
           product: feature.product,
           location: feature.location,
           votes: feature.votes || 0,
@@ -60,6 +77,8 @@ export const useFeatures = () => {
           created_at: feature.created_at || new Date().toISOString(),
           updated_at: feature.updated_at || new Date().toISOString(),
           squads: feature.tags || [], // Convert tags to squads
+          deleted: feature.deleted || false,
+          deleted_at: feature.deleted_at || null,
         };
         
         // Use type assertion with any to safely access properties
@@ -131,8 +150,14 @@ export const useFeatures = () => {
         return featureObj as Feature;
       });
 
+      const featuresWithComments = processFeatures(featuresData || []);
+      const deletedFeaturesWithComments = processFeatures(deletedFeaturesData || []);
+
       console.log('Features with comments:', featuresWithComments);
+      console.log('Deleted features with comments:', deletedFeaturesWithComments);
+      
       setFeatures(featuresWithComments);
+      setDeletedFeatures(deletedFeaturesWithComments);
     } catch (error) {
       console.error('Error in useFeatures:', error);
       toast({
@@ -144,6 +169,96 @@ export const useFeatures = () => {
   };
 
   const deleteFeature = async (id: number) => {
+    try {
+      const now = new Date().toISOString();
+      
+      // Mark the feature as deleted instead of actually deleting it
+      const { error } = await supabase
+        .from('features')
+        .update({
+          deleted: true,
+          deleted_at: now
+        })
+        .eq('id', id);
+      
+      if (error) throw error;
+      
+      // Update local state
+      const featureToDelete = features.find(feature => feature.id === id);
+      if (featureToDelete) {
+        // Remove from active features
+        setFeatures(features.filter(feature => feature.id !== id));
+        
+        // Add to deleted features with deleted flag
+        const deletedFeature = {
+          ...featureToDelete,
+          deleted: true,
+          deleted_at: now
+        };
+        setDeletedFeatures([deletedFeature, ...deletedFeatures]);
+      }
+      
+      toast({
+        title: "Feature moved to graveyard",
+        description: "The feature request has been moved to the graveyard.",
+      });
+      return true;
+    } catch (error) {
+      console.error('Error deleting feature:', error);
+      toast({
+        title: "Error moving feature to graveyard",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+      return false;
+    }
+  };
+
+  const restoreFeature = async (id: number) => {
+    try {
+      // Mark the feature as not deleted
+      const { error } = await supabase
+        .from('features')
+        .update({
+          deleted: false,
+          deleted_at: null
+        })
+        .eq('id', id);
+      
+      if (error) throw error;
+      
+      // Update local state
+      const featureToRestore = deletedFeatures.find(feature => feature.id === id);
+      if (featureToRestore) {
+        // Remove from deleted features
+        setDeletedFeatures(deletedFeatures.filter(feature => feature.id !== id));
+        
+        // Add to active features
+        const restoredFeature = {
+          ...featureToRestore,
+          deleted: false,
+          deleted_at: null
+        };
+        setFeatures([...features, restoredFeature]);
+      }
+      
+      toast({
+        title: "Feature restored",
+        description: "The feature request has been restored from the graveyard.",
+      });
+      return true;
+    } catch (error) {
+      console.error('Error restoring feature:', error);
+      toast({
+        title: "Error restoring feature",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+      return false;
+    }
+  };
+
+  const permanentlyDeleteFeature = async (id: number) => {
     try {
       // First delete any votes related to this feature
       await supabase
@@ -166,15 +281,15 @@ export const useFeatures = () => {
       if (error) throw error;
       
       // Update local state
-      setFeatures(features.filter(feature => feature.id !== id));
+      setDeletedFeatures(deletedFeatures.filter(feature => feature.id !== id));
       
       toast({
-        title: "Feature deleted",
-        description: "The feature request has been successfully deleted.",
+        title: "Feature permanently deleted",
+        description: "The feature request has been permanently deleted.",
       });
       return true;
     } catch (error) {
-      console.error('Error deleting feature:', error);
+      console.error('Error permanently deleting feature:', error);
       toast({
         title: "Error deleting feature",
         description: "Please try again later",
@@ -188,5 +303,13 @@ export const useFeatures = () => {
     fetchFeatures();
   }, []);
 
-  return { features, setFeatures, fetchFeatures, deleteFeature };
+  return { 
+    features, 
+    deletedFeatures, 
+    setFeatures, 
+    fetchFeatures, 
+    deleteFeature, 
+    restoreFeature,
+    permanentlyDeleteFeature
+  };
 };

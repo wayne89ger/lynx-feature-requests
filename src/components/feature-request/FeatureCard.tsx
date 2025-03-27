@@ -174,6 +174,8 @@ export const FeatureCard = ({
         onClose={() => setShowDeleteConfirmation(false)}
         onConfirm={confirmDelete}
         title={title}
+        variant="warning"
+        confirmLabel="Move to Graveyard"
       />
     </div>
   );

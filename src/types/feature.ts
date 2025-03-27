@@ -23,6 +23,8 @@ export interface Feature {
   created_at: string;
   updated_at: string;
   squads: string[]; // This was previously named tags
+  deleted?: boolean;
+  deleted_at?: string | null;
   // Optional fields for feature details
   hypothesis?: string;
   expectedOutcome?: string;
