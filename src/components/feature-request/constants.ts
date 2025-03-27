@@ -1,15 +1,10 @@
+
 export const statusConfig = {
   new: { 
     label: "New", 
     mobileLabel: "New",
     bg: "bg-status-new", 
     text: "text-status-new-text" 
-  },
-  review: { 
-    label: "Under Review", 
-    mobileLabel: "Review",
-    bg: "bg-status-review", 
-    text: "text-status-review-text" 
   },
   progress: { 
     label: "In Progress", 

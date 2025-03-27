@@ -1,228 +1,556 @@
-
-import { useState } from "react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
-import { useToast } from "@/hooks/use-toast";
-import { ActionButtons } from "./form-sections/ActionButtons";
-import { BasicInformation } from "./form-sections/BasicInformation";
-import { FeatureSpecificFields } from "./form-sections/FeatureSpecificFields";
-import { MetricsSection } from "./form-sections/MetricsSection";
-import { RiceScoreSection } from "./form-sections/RiceScoreSection";
-import { EXPERIMENT_OWNERS } from "@/constants/experimentOwners";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useState, useEffect } from "react";
+import { Feature } from "@/types/feature";
+import { productLabels, locationLabels, allProducts } from "./constants";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Switch } from "@/components/ui/switch";
+import { useForm } from "react-hook-form";
+import { cn } from "@/lib/utils";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { PlusCircle, CheckCircle, AlertCircle } from "lucide-react";
 
 interface EditFeatureFormProps {
-  feature: {
-    id: number;
-    title: string;
-    description?: string;
-    current_situation?: string;
-    expected_behavior?: string;
-    product: string;
-    squad?: string;
-    location?: string;
-    url?: string;
-    hypothesis?: string;
-    expected_outcome?: string;
-    type?: string;
-    experiment_owner?: string;
-    timeframe?: string;
-    metrics?: string[];
-    user_research?: string;
-    mvp?: string;
-    rice_score?: {
-      reach: number;
-      impact: number;
-      confidence: number;
-      effort: number;
-      total: number;
-    };
-  };
+  feature: Feature;
   open: boolean;
-  onClose: () => void;
   onSave: (id: number, updatedFeature: any) => void;
+  onClose: () => void;
 }
 
-export const EditFeatureForm = ({ feature, open, onClose, onSave }: EditFeatureFormProps) => {
+const BasicInformation = ({
+  title,
+  description,
+  expectedBehavior,
+  url,
+  product,
+  location,
+  isBug,
+  setTitle,
+  setDescription,
+  setExpectedBehavior,
+  setUrl,
+  setProduct,
+  setLocation,
+}: {
+  title: string;
+  description: string;
+  expectedBehavior: string;
+  url: string;
+  product: string;
+  location: string;
+  isBug: boolean;
+  setTitle: (title: string) => void;
+  setDescription: (description: string) => void;
+  setExpectedBehavior: (expectedBehavior: string) => void;
+  setUrl: (url: string) => void;
+  setProduct: (product: string) => void;
+  setLocation: (location: string) => void;
+}) => {
+  return (
+    <div className="space-y-4">
+      <div>
+        <Label htmlFor="title">Title</Label>
+        <Input
+          id="title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+      </div>
+      <div>
+        <Label htmlFor="description">Description</Label>
+        <Textarea
+          id="description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+      </div>
+      {isBug && (
+        <>
+          <div>
+            <Label htmlFor="currentSituation">Current Situation</Label>
+            <Textarea
+              id="currentSituation"
+              value={expectedBehavior}
+              onChange={(e) => setExpectedBehavior(e.target.value)}
+            />
+          </div>
+          <div>
+            <Label htmlFor="url">URL</Label>
+            <Input
+              id="url"
+              type="url"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+            />
+          </div>
+        </>
+      )}
+      <div>
+        <Label htmlFor="product">Product</Label>
+        <Select value={product} onValueChange={setProduct}>
+          <SelectTrigger className="bg-white">
+            <SelectValue placeholder="Select a product" />
+          </SelectTrigger>
+          <SelectContent>
+            {Object.keys(productLabels).map((key) => (
+              <SelectItem key={key} value={key}>
+                {productLabels[key as keyof typeof productLabels].full}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div>
+        <Label htmlFor="location">Location</Label>
+        <Select value={location} onValueChange={setLocation}>
+          <SelectTrigger className="bg-white">
+            <SelectValue placeholder="Select a location" />
+          </SelectTrigger>
+          <SelectContent>
+            {Object.keys(locationLabels).map((key) => (
+              <SelectItem key={key} value={key}>
+                {locationLabels[key as keyof typeof locationLabels].full}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
+  );
+};
+
+const UrgencySelection = ({
+  urgency,
+  setUrgency,
+}: {
+  urgency: string;
+  setUrgency: (urgency: string) => void;
+}) => {
+  return (
+    <div>
+      <Label htmlFor="urgency">Urgency</Label>
+      <Select value={urgency} onValueChange={setUrgency}>
+        <SelectTrigger className="bg-white">
+          <SelectValue placeholder="Select urgency" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="low">Low</SelectItem>
+          <SelectItem value="medium">Medium</SelectItem>
+          <SelectItem value="high">High</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+  );
+};
+
+const FeatureSpecificFields = ({
+  hypothesis,
+  expectedOutcome,
+  type,
+  experimentOwner,
+  timeframe,
+  setHypothesis,
+  setExpectedOutcome,
+  setType,
+  setExperimentOwner,
+  setTimeframe,
+}: {
+  hypothesis: string;
+  expectedOutcome: string;
+  type: string;
+  experimentOwner: string;
+  timeframe: string;
+  setHypothesis: (hypothesis: string) => void;
+  setExpectedOutcome: (expectedOutcome: string) => void;
+  setType: (type: string) => void;
+  setExperimentOwner: (experimentOwner: string) => void;
+  setTimeframe: (timeframe: string) => void;
+}) => {
+  return (
+    <div className="space-y-4">
+      <div>
+        <Label htmlFor="hypothesis">Hypothesis</Label>
+        <Textarea
+          id="hypothesis"
+          value={hypothesis}
+          onChange={(e) => setHypothesis(e.target.value)}
+        />
+      </div>
+      <div>
+        <Label htmlFor="expectedOutcome">Expected Outcome</Label>
+        <Textarea
+          id="expectedOutcome"
+          value={expectedOutcome}
+          onChange={(e) => setExpectedOutcome(e.target.value)}
+        />
+      </div>
+      <div>
+        <Label htmlFor="type">Type</Label>
+        <Input
+          id="type"
+          value={type}
+          onChange={(e) => setType(e.target.value)}
+        />
+      </div>
+      <div>
+        <Label htmlFor="experimentOwner">Experiment Owner</Label>
+        <Input
+          id="experimentOwner"
+          value={experimentOwner}
+          onChange={(e) => setExperimentOwner(e.target.value)}
+        />
+      </div>
+      <div>
+        <Label htmlFor="timeframe">Timeframe</Label>
+        <Input
+          id="timeframe"
+          value={timeframe}
+          onChange={(e) => setTimeframe(e.target.value)}
+        />
+      </div>
+    </div>
+  );
+};
+
+const MetricsSection = ({
+  metrics,
+  setMetrics,
+  userResearch,
+  setUserResearch,
+  mvp,
+  setMvp,
+}: {
+  metrics: string[];
+  setMetrics: (metrics: string[]) => void;
+  userResearch: string;
+  setUserResearch: (userResearch: string) => void;
+  mvp: string;
+  setMvp: (mvp: string) => void;
+}) => {
+  const handleAddMetric = () => {
+    setMetrics([...metrics, ""]);
+  };
+
+  const handleMetricChange = (index: number, value: string) => {
+    const newMetrics = [...metrics];
+    newMetrics[index] = value;
+    setMetrics(newMetrics);
+  };
+
+  const handleRemoveMetric = (index: number) => {
+    const newMetrics = [...metrics];
+    newMetrics.splice(index, 1);
+    setMetrics(newMetrics);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <Label>Metrics</Label>
+        {metrics.map((metric, index) => (
+          <div key={index} className="flex items-center space-x-2">
+            <Input
+              type="text"
+              value={metric}
+              onChange={(e) => handleMetricChange(index, e.target.value)}
+              className="flex-1"
+            />
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              onClick={() => handleRemoveMetric(index)}
+            >
+              <AlertCircle className="h-4 w-4" />
+            </Button>
+          </div>
+        ))}
+        <Button type="button" variant="ghost" onClick={handleAddMetric}>
+          Add Metric <PlusCircle className="h-4 w-4 ml-2" />
+        </Button>
+      </div>
+      <div>
+        <Label htmlFor="userResearch">User Research</Label>
+        <Textarea
+          id="userResearch"
+          value={userResearch}
+          onChange={(e) => setUserResearch(e.target.value)}
+        />
+      </div>
+      <div>
+        <Label htmlFor="mvp">MVP</Label>
+        <Textarea
+          id="mvp"
+          value={mvp}
+          onChange={(e) => setMvp(e.target.value)}
+        />
+      </div>
+    </div>
+  );
+};
+
+const RiceScoreSection = ({
+  riceScore,
+  setRiceScore,
+}: {
+  riceScore: {
+    reach: number;
+    impact: number;
+    confidence: number;
+    effort: number;
+    total: number;
+  };
+  setRiceScore: (riceScore: any) => void;
+}) => {
+  const handleScoreChange = (field: string, value: number) => {
+    const newRiceScore = {
+      ...riceScore,
+      [field]: value,
+    };
+    newRiceScore.total =
+      (newRiceScore.reach * newRiceScore.impact * newRiceScore.confidence) /
+      newRiceScore.effort;
+    setRiceScore(newRiceScore);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Label>RICE Score</Label>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="reach">Reach</Label>
+          <Input
+            type="number"
+            id="reach"
+            value={riceScore.reach}
+            onChange={(e) =>
+              handleScoreChange("reach", Number(e.target.value))
+            }
+          />
+        </div>
+        <div>
+          <Label htmlFor="impact">Impact</Label>
+          <Input
+            type="number"
+            id="impact"
+            value={riceScore.impact}
+            onChange={(e) =>
+              handleScoreChange("impact", Number(e.target.value))
+            }
+          />
+        </div>
+        <div>
+          <Label htmlFor="confidence">Confidence</Label>
+          <Input
+            type="number"
+            id="confidence"
+            value={riceScore.confidence}
+            onChange={(e) =>
+              handleScoreChange("confidence", Number(e.target.value))
+            }
+          />
+        </div>
+        <div>
+          <Label htmlFor="effort">Effort</Label>
+          <Input
+            type="number"
+            id="effort"
+            value={riceScore.effort}
+            onChange={(e) =>
+              handleScoreChange("effort", Number(e.target.value))
+            }
+          />
+        </div>
+      </div>
+      <div>
+        <Label htmlFor="total">Total</Label>
+        <Input type="number" id="total" value={riceScore.total} disabled />
+      </div>
+    </div>
+  );
+};
+
+export const EditFeatureForm = ({
+  feature,
+  open,
+  onSave,
+  onClose,
+}: EditFeatureFormProps) => {
   const [title, setTitle] = useState(feature.title);
-  const [description, setDescription] = useState(feature.description || "");
-  const [currentSituation, setCurrentSituation] = useState(feature.current_situation || "");
-  const [expectedBehavior, setExpectedBehavior] = useState(feature.expected_behavior || "");
-  const [url, setUrl] = useState(feature.url || "");
+  const [description, setDescription] = useState(feature.description);
+  const [currentSituation, setCurrentSituation] = useState("");
+  const [url, setUrl] = useState("");
   const [product, setProduct] = useState(feature.product);
-  const [squad, setSquad] = useState(feature.squad || "");
   const [location, setLocation] = useState(feature.location || "");
-  const [hasShortcutStory, setHasShortcutStory] = useState(false);
-  const [hasConfluenceDoc, setHasConfluenceDoc] = useState(false);
-  
+  const [urgency, setUrgency] = useState(feature.urgency || "medium");
   const [hypothesis, setHypothesis] = useState(feature.hypothesis || "");
-  const [expectedOutcome, setExpectedOutcome] = useState(feature.expected_outcome || "");
+  const [expectedOutcome, setExpectedOutcome] = useState(
+    feature.expected_outcome || ""
+  );
   const [type, setType] = useState(feature.type || "");
-  const [experimentOwner, setExperimentOwner] = useState(feature.experiment_owner || "");
+  const [experimentOwner, setExperimentOwner] = useState(
+    feature.experiment_owner || ""
+  );
   const [timeframe, setTimeframe] = useState(feature.timeframe || "");
-  const [metrics, setMetrics] = useState<string[]>(["Engagement", "Retention", "Conversion", "Revenue"]);
-  const [selectedMetrics, setSelectedMetrics] = useState<string[]>(feature.metrics || []);
-  const [newMetric, setNewMetric] = useState("");
+  const [metrics, setMetrics] = useState(feature.metrics || []);
   const [userResearch, setUserResearch] = useState(feature.user_research || "");
   const [mvp, setMvp] = useState(feature.mvp || "");
-  
-  const [reach, setReach] = useState(feature.rice_score?.reach || 1);
-  const [impact, setImpact] = useState(feature.rice_score?.impact || 1);
-  const [confidence, setConfidence] = useState(feature.rice_score?.confidence || 100);
-  const [effort, setEffort] = useState(feature.rice_score?.effort || 1);
-  const [riceScore, setRiceScore] = useState(feature.rice_score?.total || 0);
-  
-  const [reviewers, setReviewers] = useState<string[]>([]);
-  
-  const { toast } = useToast();
+  const [riceScore, setRiceScore] = useState(feature.rice_score || {
+    reach: 1,
+    impact: 1,
+    confidence: 100,
+    effort: 1,
+    total: 0,
+  });
 
-  const isBug = product === "bug";
+  const isBug = feature.product === "bug";
 
-  const handleSubmit = () => {
-    if (!title) {
-      toast({
-        title: "Title is required",
-        variant: "destructive",
+  useEffect(() => {
+    if (isBug) {
+      setTitle(feature.title);
+      setDescription(feature.description);
+      setCurrentSituation(feature.current_situation || "");
+      setUrl(feature.url || "");
+      setProduct(feature.product);
+    } else {
+      setTitle(feature.title);
+      setDescription(feature.description);
+      setProduct(feature.product);
+      setLocation(feature.location || "");
+      setUrgency(feature.urgency || "medium");
+      setHypothesis(feature.hypothesis || "");
+      setExpectedOutcome(feature.expected_outcome || "");
+      setType(feature.type || "");
+      setExperimentOwner(feature.experiment_owner || "");
+      setTimeframe(feature.timeframe || "");
+      setMetrics(feature.metrics || []);
+      setUserResearch(feature.user_research || "");
+      setMvp(feature.mvp || "");
+      setRiceScore(feature.rice_score || {
+        reach: 1,
+        impact: 1,
+        confidence: 100,
+        effort: 1,
+        total: 0,
       });
-      return;
     }
+  }, [feature, isBug]);
 
-    const totalRiceScore = ((reach * impact * confidence) / 100) / effort;
-
-    const updatedData = isBug ? {
-      title,
-      current_situation: currentSituation,
-      expected_behavior: expectedBehavior,
-      url,
-      product,
-    } : {
+  const handleSave = () => {
+    const updatedFeature = {
       title,
       description,
       product,
-      squad,
       location,
-      reviewers,
+      urgency,
       hypothesis,
-      expected_outcome: expectedOutcome,
+      expected_outcome,
       type,
-      experiment_owner: experimentOwner,
+      experiment_owner,
       timeframe,
-      metrics: selectedMetrics,
-      user_research: userResearch,
+      metrics,
+      user_research,
       mvp,
-      rice_score: {
-        reach,
-        impact,
-        confidence,
-        effort,
-        total: totalRiceScore,
-      }
+      rice_score: riceScore,
+      current_situation: currentSituation,
+      url: url,
     };
-
-    onSave(feature.id, updatedData);
-    onClose();
-    
-    toast({
-      title: isBug ? "Bug updated" : "Feature updated",
-      description: "Your changes have been saved successfully.",
-    });
+    onSave(feature.id, updatedFeature);
   };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>
-            {isBug ? "Edit bug report" : "Edit feature request"}
-          </DialogTitle>
+          <DialogTitle>Edit Feature Request</DialogTitle>
+          <DialogDescription>
+            Make changes to the feature request. Click save when you're done.
+          </DialogDescription>
         </DialogHeader>
-        <div className="space-y-6 mt-4 max-h-[70vh] overflow-y-auto">
+        <div className="py-4 space-y-6">
           <BasicInformation
             title={title}
-            description={isBug ? currentSituation : description}
-            expectedBehavior={expectedBehavior}
+            description={description}
+            expectedBehavior={currentSituation}
             url={url}
             product={product}
-            squad={squad}
             location={location}
             isBug={isBug}
             setTitle={setTitle}
-            setDescription={isBug ? setCurrentSituation : setDescription}
-            setExpectedBehavior={setExpectedBehavior}
+            setDescription={setDescription}
+            setExpectedBehavior={setCurrentSituation}
             setUrl={setUrl}
             setProduct={setProduct}
-            setSquad={setSquad}
             setLocation={setLocation}
           />
 
           {!isBug && (
             <>
+              <UrgencySelection urgency={urgency} setUrgency={setUrgency} />
               <FeatureSpecificFields
-                reviewers={reviewers}
-                setReviewers={setReviewers}
                 hypothesis={hypothesis}
-                setHypothesis={setHypothesis}
                 expectedOutcome={expectedOutcome}
-                setExpectedOutcome={setExpectedOutcome}
                 type={type}
-                setType={setType}
                 experimentOwner={experimentOwner}
-                setExperimentOwner={setExperimentOwner}
                 timeframe={timeframe}
+                setHypothesis={setHypothesis}
+                setExpectedOutcome={setExpectedOutcome}
+                setType={setType}
+                setExperimentOwner={setExperimentOwner}
                 setTimeframe={setTimeframe}
+              />
+              <MetricsSection
+                metrics={metrics}
+                setMetrics={setMetrics}
                 userResearch={userResearch}
                 setUserResearch={setUserResearch}
                 mvp={mvp}
                 setMvp={setMvp}
               />
-              
-              <MetricsSection
-                metrics={metrics}
-                selectedMetrics={selectedMetrics}
-                newMetric={newMetric}
-                setNewMetric={setNewMetric}
-                setMetrics={setMetrics}
-                setSelectedMetrics={setSelectedMetrics}
-              />
-              
               <RiceScoreSection
-                reach={reach}
-                impact={impact}
-                confidence={confidence}
-                effort={effort}
                 riceScore={riceScore}
-                setReach={setReach}
-                setImpact={setImpact}
-                setConfidence={setConfidence}
-                setEffort={setEffort}
                 setRiceScore={setRiceScore}
               />
             </>
           )}
-
-          <ActionButtons
-            onSubmit={handleSubmit}
-            onShortcutAction={() => {
-              setHasShortcutStory(true);
-              toast({
-                title: hasShortcutStory ? "Synced with Shortcut" : "Added to Shortcut",
-                description: "This functionality will be implemented soon",
-              });
-            }}
-            onConfluenceAction={() => {
-              setHasConfluenceDoc(true);
-              toast({
-                title: hasConfluenceDoc ? "Synced with Confluence" : "Added to Confluence",
-                description: "This functionality will be implemented soon",
-              });
-            }}
-            hasShortcutStory={hasShortcutStory}
-            hasConfluenceDoc={hasConfluenceDoc}
-          />
         </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button type="submit" onClick={handleSave}>
+            Save changes
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

@@ -3,7 +3,6 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SearchInput } from "./SearchInput";
-import { Button } from "@/components/ui/button";
 import { productLabels, allProducts } from "../constants";
 
 interface MobileFiltersProps {
@@ -75,7 +74,6 @@ export const MobileFilters = ({
               <SelectContent>
                 <SelectItem value="all">All Statuses</SelectItem>
                 <SelectItem value="new">New</SelectItem>
-                <SelectItem value="review">Under Review</SelectItem>
                 <SelectItem value="progress">In Progress</SelectItem>
                 <SelectItem value="completed">Completed</SelectItem>
               </SelectContent>

@@ -11,7 +11,7 @@ export interface Feature {
   id: number;
   title: string;
   description: string;
-  status: "new" | "review" | "progress" | "completed";
+  status: "new" | "progress" | "completed";
   product: string;
   squad?: string;
   location?: string;
@@ -47,7 +47,7 @@ export interface Bug {
   current_situation: string;
   expected_behavior: string;
   url: string;
-  status: "new" | "review" | "progress" | "completed";
+  status: "new" | "progress" | "completed";
   product: string;
   votes: number;
   reporter: string;
