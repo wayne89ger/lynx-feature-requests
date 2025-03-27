@@ -51,7 +51,7 @@ export const useFeatureSubmission = (features: Feature[], setFeatures: (features
         id: data.id,
         title: data.title,
         description: data.description,
-        status: (data.status || 'new') as "new" | "progress" | "completed",
+        status: data.status || 'new',
         product: data.product,
         location: typeof data.location === 'string' ? data.location : '',
         votes: data.votes || 0,
