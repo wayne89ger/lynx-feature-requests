@@ -22,8 +22,11 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
         votes,
         tags,
         expected_outcome,
+        expectedOutcome,
         experiment_owner,
+        experimentOwner,
         user_research,
+        userResearch,
         hypothesis,
         timeframe,
         metrics,
@@ -44,9 +47,18 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
       };
       
       // Add optional fields if they exist
-      if (expected_outcome !== undefined) dataToUpdate.expected_outcome = expected_outcome;
-      if (experiment_owner !== undefined) dataToUpdate.experiment_owner = experiment_owner;
-      if (user_research !== undefined) dataToUpdate.user_research = user_research;
+      if (expected_outcome !== undefined || expectedOutcome !== undefined) {
+        dataToUpdate.expected_outcome = expected_outcome || expectedOutcome;
+      }
+      
+      if (experiment_owner !== undefined || experimentOwner !== undefined) {
+        dataToUpdate.experiment_owner = experiment_owner || experimentOwner;
+      }
+      
+      if (user_research !== undefined || userResearch !== undefined) {
+        dataToUpdate.user_research = user_research || userResearch;
+      }
+      
       if (hypothesis !== undefined) dataToUpdate.hypothesis = hypothesis;
       if (timeframe !== undefined) dataToUpdate.timeframe = timeframe;
       if (metrics !== undefined) dataToUpdate.metrics = metrics;
@@ -102,29 +114,32 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
         squads: data.tags || [], // Convert tags from database to squads in UI
       };
 
+      // Handle optional fields safely
+      const dataAny = data as any;
+      
       // Add optional fields if they exist in the data
-      if (data.expected_outcome) {
-        updatedFeatureWithComments.expected_outcome = data.expected_outcome;
-        updatedFeatureWithComments.expectedOutcome = data.expected_outcome;
+      if (dataAny.expected_outcome) {
+        updatedFeatureWithComments.expected_outcome = dataAny.expected_outcome;
+        updatedFeatureWithComments.expectedOutcome = dataAny.expected_outcome;
       }
       
-      if (data.experiment_owner) {
-        updatedFeatureWithComments.experiment_owner = data.experiment_owner;
-        updatedFeatureWithComments.experimentOwner = data.experiment_owner;
+      if (dataAny.experiment_owner) {
+        updatedFeatureWithComments.experiment_owner = dataAny.experiment_owner;
+        updatedFeatureWithComments.experimentOwner = dataAny.experiment_owner;
       }
       
-      if (data.user_research) {
-        updatedFeatureWithComments.user_research = data.user_research;
-        updatedFeatureWithComments.userResearch = data.user_research;
+      if (dataAny.user_research) {
+        updatedFeatureWithComments.user_research = dataAny.user_research;
+        updatedFeatureWithComments.userResearch = dataAny.user_research;
       }
       
-      if (data.hypothesis) updatedFeatureWithComments.hypothesis = data.hypothesis;
-      if (data.timeframe) updatedFeatureWithComments.timeframe = data.timeframe;
-      if (data.metrics) updatedFeatureWithComments.metrics = data.metrics;
-      if (data.mvp) updatedFeatureWithComments.mvp = data.mvp;
-      if (data.rice_score) updatedFeatureWithComments.rice_score = data.rice_score;
-      if (data.current_situation) updatedFeatureWithComments.current_situation = data.current_situation;
-      if (data.url) updatedFeatureWithComments.url = data.url;
+      if (dataAny.hypothesis) updatedFeatureWithComments.hypothesis = dataAny.hypothesis;
+      if (dataAny.timeframe) updatedFeatureWithComments.timeframe = dataAny.timeframe;
+      if (dataAny.metrics) updatedFeatureWithComments.metrics = dataAny.metrics;
+      if (dataAny.mvp) updatedFeatureWithComments.mvp = dataAny.mvp;
+      if (dataAny.rice_score) updatedFeatureWithComments.rice_score = dataAny.rice_score;
+      if (dataAny.current_situation) updatedFeatureWithComments.current_situation = dataAny.current_situation;
+      if (dataAny.url) updatedFeatureWithComments.url = dataAny.url;
 
       // Extract the first tag as the squad if available
       if (data.tags && data.tags.length > 0) {

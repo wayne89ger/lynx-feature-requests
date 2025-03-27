@@ -51,6 +51,9 @@ const productLabels = {
 };
 
 export const BugHeader = ({ id, status, product }: BugHeaderProps) => {
+  // Ensure we have a valid status
+  const validStatus = (status && statusConfig[status]) ? status : "new";
+  
   const handleStatusChange = async (newStatus: "new" | "progress" | "completed") => {
     try {
       const { supabase } = await import("@/integrations/supabase/client");
@@ -80,15 +83,15 @@ export const BugHeader = ({ id, status, product }: BugHeaderProps) => {
 
   return (
     <div className="flex items-center gap-2">
-      <Select value={status} onValueChange={handleStatusChange}>
+      <Select value={validStatus} onValueChange={handleStatusChange}>
         <SelectTrigger className={cn(
           "h-8 text-xs font-medium px-2.5 py-0.5 rounded-full w-auto",
-          statusConfig[status].bg,
-          statusConfig[status].text
+          statusConfig[validStatus].bg,
+          statusConfig[validStatus].text
         )}>
           <SelectValue>
-            <span className="hidden sm:inline">{statusConfig[status].label}</span>
-            <span className="sm:hidden">{statusConfig[status].mobileLabel}</span>
+            <span className="hidden sm:inline">{statusConfig[validStatus].label}</span>
+            <span className="sm:hidden">{statusConfig[validStatus].mobileLabel}</span>
           </SelectValue>
         </SelectTrigger>
         <SelectContent>
@@ -102,10 +105,10 @@ export const BugHeader = ({ id, status, product }: BugHeaderProps) => {
       {product && (
         <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600">
           <span className="hidden sm:inline">
-            {productLabels[product as keyof typeof productLabels]?.full}
+            {productLabels[product as keyof typeof productLabels]?.full || product}
           </span>
           <span className="sm:hidden">
-            {productLabels[product as keyof typeof productLabels]?.mobile}
+            {productLabels[product as keyof typeof productLabels]?.mobile || product}
           </span>
         </span>
       )}

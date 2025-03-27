@@ -34,6 +34,9 @@ export const FeatureHeader = ({
   onDelete
 }: FeatureHeaderProps) => {
   const isMobile = useIsMobile();
+  
+  // Make sure status is one of the valid statuses
+  const validStatus = (status && statusConfig[status]) ? status : "new";
 
   // Combined label for mobile view
   const getCombinedLabel = () => {
@@ -47,15 +50,15 @@ export const FeatureHeader = ({
   return (
     <div className="flex flex-wrap items-start justify-between mb-4 gap-2">
       <div className="flex flex-wrap items-center gap-1.5">
-        <Select value={status} onValueChange={onStatusChange}>
+        <Select value={validStatus} onValueChange={onStatusChange}>
           <SelectTrigger className={cn(
             "h-7 text-xs font-medium px-2 py-0.5 rounded-full w-auto",
-            statusConfig[status].bg,
-            statusConfig[status].text
+            statusConfig[validStatus].bg,
+            statusConfig[validStatus].text
           )}>
             <SelectValue>
-              <span className="hidden sm:inline">{statusConfig[status].label}</span>
-              <span className="sm:hidden">{statusConfig[status].mobileLabel}</span>
+              <span className="hidden sm:inline">{statusConfig[validStatus].label}</span>
+              <span className="sm:hidden">{statusConfig[validStatus].mobileLabel}</span>
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
@@ -72,12 +75,12 @@ export const FeatureHeader = ({
           <>
             {product && (
               <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
-                {productLabels[product as keyof typeof productLabels]?.full}
+                {productLabels[product as keyof typeof productLabels]?.full || product}
               </span>
             )}
             {location && (
               <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
-                {locationLabels[location as keyof typeof locationLabels]?.full}
+                {locationLabels[location as keyof typeof locationLabels]?.full || location}
               </span>
             )}
           </>
