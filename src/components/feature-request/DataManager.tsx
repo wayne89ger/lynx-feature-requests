@@ -74,15 +74,18 @@ export const DataManager = () => {
   };
 
   const handleFeatureDelete = async (id: number) => {
-    await deleteFeature(id);
+    const success = await deleteFeature(id);
+    return success;
   };
 
   const handleFeatureRestore = async (id: number) => {
-    await restoreFeature(id);
+    const success = await restoreFeature(id);
+    return success;
   };
 
   const handleFeaturePermanentDelete = async (id: number) => {
-    await permanentlyDeleteFeature(id);
+    const success = await permanentlyDeleteFeature(id);
+    return success;
   };
 
   return (
