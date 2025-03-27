@@ -13,7 +13,7 @@ interface BugCardProps {
   id: number;
   title: string;
   description: string;
-  status: "new" | "review" | "progress" | "completed";
+  status: "new" | "progress" | "completed";
   product: string;
   votes: number;
   comments: any[];

@@ -42,7 +42,7 @@ export const useFeatures = () => {
           id: feature.id,
           title: feature.title,
           description: feature.description,
-          status: feature.status || 'new',
+          status: (feature.status as "new" | "progress" | "completed") || 'new',
           product: feature.product,
           location: feature.location,
           votes: feature.votes || 0,

@@ -70,7 +70,7 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
         ...existingFeature,
         title: data.title,
         description: data.description,
-        status: data.status,
+        status: data.status as "new" | "progress" | "completed",
         product: data.product,
         location: data.location || '',
         votes: data.votes || 0,
