@@ -2,17 +2,18 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Feature } from "@/types/feature";
+
+type FeatureStatus = "new" | "progress" | "completed" | "unresolvable";
 
 export const useFeatureStatus = (
   featureId: number, 
-  initialStatus: Feature['status'],
-  onStatusChange?: (id: number, newStatus: Feature['status']) => void
+  initialStatus: FeatureStatus,
+  onStatusChange?: (id: number, newStatus: FeatureStatus) => void
 ) => {
   const [currentStatus, setCurrentStatus] = useState(initialStatus);
   const { toast } = useToast();
 
-  const handleStatusChange = async (newStatus: Feature['status']) => {
+  const handleStatusChange = async (newStatus: FeatureStatus) => {
     try {
       const { error } = await supabase
         .from('features')

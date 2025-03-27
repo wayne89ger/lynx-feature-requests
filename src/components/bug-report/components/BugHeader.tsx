@@ -1,4 +1,3 @@
-
 import {
   Select,
   SelectContent,
@@ -36,8 +35,8 @@ const statusConfig = {
   unresolvable: {
     label: "Unresolvable",
     mobileLabel: "Unresolv",
-    bg: "bg-gray-300",
-    text: "text-gray-700"
+    bg: "bg-red-100",
+    text: "text-red-700"
   }
 };
 

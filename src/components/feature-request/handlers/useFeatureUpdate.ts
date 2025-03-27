@@ -2,6 +2,8 @@ import { Feature } from "@/types/feature";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
+type FeatureStatus = "new" | "progress" | "completed" | "unresolvable";
+
 export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Feature[]) => void) => {
   const { toast } = useToast();
 
@@ -103,7 +105,7 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
         ...existingFeature,
         title: data.title,
         description: data.description,
-        status: (data.status || 'new') as Feature['status'],
+        status: (data.status || 'new') as FeatureStatus,
         product: data.product,
         location: data.location || '',
         votes: data.votes || 0,
@@ -170,7 +172,7 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
     }
   };
 
-  const handleStatusUpdate = async (id: number, newStatus: Feature['status']) => {
+  const handleStatusUpdate = async (id: number, newStatus: FeatureStatus) => {
     try {
       console.log('Updating status of feature with id:', id, 'New status:', newStatus);
       
