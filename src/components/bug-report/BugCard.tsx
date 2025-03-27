@@ -8,6 +8,7 @@ import { BugActions } from "./components/BugActions";
 import { BugCommentsDialog } from "./components/BugCommentsDialog";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { DeleteConfirmationDialog } from "../feature-request/components/DeleteConfirmationDialog";
 
 interface BugCardProps {
   id: number;
@@ -37,11 +38,17 @@ export const BugCard = ({
   className
 }: BugCardProps) => {
   const [showComments, setShowComments] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   
-  const handleDelete = async () => {
+  const handleDelete = () => {
+    setShowDeleteConfirmation(true);
+  };
+  
+  const confirmDelete = () => {
     if (onDelete) {
       onDelete(id);
     }
+    setShowDeleteConfirmation(false);
   };
 
   return (
@@ -106,6 +113,13 @@ export const BugCard = ({
         comments={comments}
         title={title}
         reporter={reporter}
+      />
+      
+      <DeleteConfirmationDialog
+        isOpen={showDeleteConfirmation}
+        onClose={() => setShowDeleteConfirmation(false)}
+        onConfirm={confirmDelete}
+        title={title}
       />
     </div>
   );

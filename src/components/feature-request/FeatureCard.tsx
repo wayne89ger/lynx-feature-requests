@@ -1,5 +1,5 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
 import { Feature } from "@/types/feature";
@@ -11,6 +11,7 @@ import { FeatureHeader } from "./components/FeatureHeader";
 import { VotingSection } from "./components/VotingSection";
 import { AttachmentDisplay } from "./components/AttachmentDisplay";
 import { CommentsDialog } from "./components/CommentsDialog";
+import { DeleteConfirmationDialog } from "./components/DeleteConfirmationDialog";
 import { format } from "date-fns";
 
 interface FeatureCardProps extends Feature {
@@ -43,6 +44,7 @@ export const FeatureCard = ({
   className = "",
 }: FeatureCardProps) => {
   const { voteStatus } = useVoteStatus(id, reporter);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   
   const { 
     currentVotes, 
@@ -94,6 +96,17 @@ export const FeatureCard = ({
     }
   };
 
+  const handleDelete = () => {
+    setShowDeleteConfirmation(true);
+  };
+
+  const confirmDelete = () => {
+    if (onDelete) {
+      onDelete(id);
+    }
+    setShowDeleteConfirmation(false);
+  };
+
   // Format the date if available
   const formattedDate = created_at ? format(new Date(created_at), 'MMM d, yyyy') : '';
 
@@ -110,7 +123,7 @@ export const FeatureCard = ({
         squads={squads}
         onStatusChange={handleStatusChange}
         onEdit={onEdit ? handleEdit : undefined}
-        onDelete={onDelete ? () => onDelete(id) : undefined}
+        onDelete={onDelete ? handleDelete : undefined}
       />
 
       <div className="space-y-2 mb-4">
@@ -154,6 +167,13 @@ export const FeatureCard = ({
         onAddComment={handleAddComment}
         onEditComment={handleEditComment}
         featureTitle={title}
+      />
+
+      <DeleteConfirmationDialog
+        isOpen={showDeleteConfirmation}
+        onClose={() => setShowDeleteConfirmation(false)}
+        onConfirm={confirmDelete}
+        title={title}
       />
     </div>
   );
