@@ -104,7 +104,7 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
         ...existingFeature,
         title: data.title,
         description: data.description,
-        status: (data.status || 'new') as "new" | "progress" | "completed",
+        status: (data.status || 'new') as Feature['status'],
         product: data.product,
         location: data.location || '',
         votes: data.votes || 0,

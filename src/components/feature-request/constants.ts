@@ -14,8 +14,8 @@ export const statusConfig = {
   completed: { 
     label: "Completed", 
     mobileLabel: "Done",
-    bg: "bg-status-completed", 
-    text: "text-status-completed-text" 
+    bg: "bg-green-100", 
+    text: "text-green-700" 
   },
   unresolvable: {
     label: "Unresolvable",

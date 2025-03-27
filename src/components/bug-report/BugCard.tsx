@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Edit, Trash2 } from "lucide-react";
 import { Feature } from "@/types/feature";
@@ -12,7 +13,7 @@ interface BugCardProps {
   id: number;
   title: string;
   description: string;
-  status: "new" | "progress" | "completed";
+  status: "new" | "progress" | "completed" | "unresolvable";
   product: string;
   votes: number;
   comments: any[];

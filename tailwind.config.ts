@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -66,8 +67,8 @@ export default {
           "review-text": "#ED6C02",
           progress: "#EDF7ED",
           "progress-text": "#2E7D32",
-          completed: "#F5F5F5",
-          "completed-text": "#424242",
+          completed: "#E8F5E9",
+          "completed-text": "#2E7D32",
         },
       },
       borderRadius: {

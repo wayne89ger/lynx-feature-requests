@@ -19,7 +19,7 @@ export const BugList = ({ bugs, onEdit, onDelete }: BugListProps) => {
             id={bug.id}
             title={bug.title}
             description={bug.description}
-            status={bug.status}
+            status={bug.status as "new" | "progress" | "completed" | "unresolvable"}
             product={bug.product}
             votes={bug.votes}
             comments={bug.comments}
