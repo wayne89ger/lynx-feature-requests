@@ -41,17 +41,19 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
         product,
         location,
         urgency,
-        expected_outcome,
-        experiment_owner,
-        user_research,
-        hypothesis,
-        timeframe,
-        metrics,
-        mvp,
-        rice_score,
-        current_situation,
-        url
       };
+      
+      // Add optional fields if they exist
+      if (expected_outcome !== undefined) dataToUpdate.expected_outcome = expected_outcome;
+      if (experiment_owner !== undefined) dataToUpdate.experiment_owner = experiment_owner;
+      if (user_research !== undefined) dataToUpdate.user_research = user_research;
+      if (hypothesis !== undefined) dataToUpdate.hypothesis = hypothesis;
+      if (timeframe !== undefined) dataToUpdate.timeframe = timeframe;
+      if (metrics !== undefined) dataToUpdate.metrics = metrics;
+      if (mvp !== undefined) dataToUpdate.mvp = mvp;
+      if (rice_score !== undefined) dataToUpdate.rice_score = rice_score;
+      if (current_situation !== undefined) dataToUpdate.current_situation = current_situation;
+      if (url !== undefined) dataToUpdate.url = url;
       
       // If votes are provided, include them
       if (typeof votes !== 'undefined') {
@@ -90,7 +92,7 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
         ...existingFeature,
         title: data.title,
         description: data.description,
-        status: data.status,
+        status: (data.status || 'new') as "new" | "progress" | "completed",
         product: data.product,
         location: data.location || '',
         votes: data.votes || 0,
@@ -98,21 +100,31 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
         urgency: (data.urgency || 'medium') as "low" | "medium" | "high",
         updated_at: data.updated_at,
         squads: data.tags || [], // Convert tags from database to squads in UI
-        // Add other fields from data if they exist
-        expected_outcome: data.expected_outcome,
-        expectedOutcome: data.expected_outcome, // Add both versions for compatibility
-        experiment_owner: data.experiment_owner,
-        experimentOwner: data.experiment_owner, // Add both versions for compatibility
-        user_research: data.user_research,
-        userResearch: data.user_research, // Add both versions for compatibility
-        hypothesis: data.hypothesis,
-        timeframe: data.timeframe,
-        metrics: data.metrics,
-        mvp: data.mvp,
-        rice_score: data.rice_score,
-        current_situation: data.current_situation,
-        url: data.url
       };
+
+      // Add optional fields if they exist in the data
+      if (data.expected_outcome) {
+        updatedFeatureWithComments.expected_outcome = data.expected_outcome;
+        updatedFeatureWithComments.expectedOutcome = data.expected_outcome;
+      }
+      
+      if (data.experiment_owner) {
+        updatedFeatureWithComments.experiment_owner = data.experiment_owner;
+        updatedFeatureWithComments.experimentOwner = data.experiment_owner;
+      }
+      
+      if (data.user_research) {
+        updatedFeatureWithComments.user_research = data.user_research;
+        updatedFeatureWithComments.userResearch = data.user_research;
+      }
+      
+      if (data.hypothesis) updatedFeatureWithComments.hypothesis = data.hypothesis;
+      if (data.timeframe) updatedFeatureWithComments.timeframe = data.timeframe;
+      if (data.metrics) updatedFeatureWithComments.metrics = data.metrics;
+      if (data.mvp) updatedFeatureWithComments.mvp = data.mvp;
+      if (data.rice_score) updatedFeatureWithComments.rice_score = data.rice_score;
+      if (data.current_situation) updatedFeatureWithComments.current_situation = data.current_situation;
+      if (data.url) updatedFeatureWithComments.url = data.url;
 
       // Extract the first tag as the squad if available
       if (data.tags && data.tags.length > 0) {
