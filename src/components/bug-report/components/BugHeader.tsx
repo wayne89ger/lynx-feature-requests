@@ -9,6 +9,7 @@ import {
 import { cn } from "@/lib/utils";
 
 interface BugHeaderProps {
+  id: number; // Added id prop
   status: "new" | "review" | "progress" | "completed";
   product: string;
 }
@@ -55,7 +56,7 @@ const productLabels = {
   }
 };
 
-export const BugHeader = ({ status, product }: BugHeaderProps) => {
+export const BugHeader = ({ id, status, product }: BugHeaderProps) => {
   const handleStatusChange = async (newStatus: "new" | "review" | "progress" | "completed") => {
     try {
       const { supabase } = await import("@/integrations/supabase/client");

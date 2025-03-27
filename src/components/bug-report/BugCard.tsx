@@ -48,6 +48,7 @@ export const BugCard = ({
     <div className={cn("bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200", className)}>
       <div className="flex items-center justify-between mb-4">
         <BugHeader 
+          id={id}
           status={status} 
           product={product} 
         />
