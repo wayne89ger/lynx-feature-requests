@@ -43,14 +43,14 @@ export const CommentsSection = ({
       <ScrollArea className="h-[200px] w-full rounded-md border p-4">
         {comments.map((comment) => (
           <div key={comment.id} className="mb-4 last:mb-0 border-b last:border-0 pb-3">
-            <div className="flex items-start justify-between group">
+            <div className="flex items-start justify-between">
               <p className="text-sm text-gray-600">{comment.text}</p>
               {onEditComment && (
                 <Button 
                   variant="ghost" 
                   size="sm" 
                   onClick={() => startEditing(comment)}
-                  className="opacity-0 group-hover:opacity-100 transition-opacity p-1 h-6 w-6"
+                  className="p-1 h-6 w-6"
                 >
                   <Edit className="h-3 w-3" />
                 </Button>
