@@ -18,6 +18,7 @@ interface EditBugFormProps {
     expected_behavior: string;
     url: string;
     product: string;
+    attachments?: string[]; // Add support for attachments
   };
   open: boolean;
   onClose: () => void;
@@ -30,6 +31,12 @@ export const EditBugForm = ({ bug, open, onClose, onSave }: EditBugFormProps) =>
   const [expectedBehavior, setExpectedBehavior] = useState(bug.expected_behavior);
   const [url, setUrl] = useState(bug.url);
   const [product, setProduct] = useState(bug.product);
+  
+  // Extract image URLs from the bug's attachments
+  const attachments = bug.attachments || [];
+  const currentSituationImages = attachments.filter(url => url.includes('current_situation'));
+  const expectedBehaviorImages = attachments.filter(url => url.includes('expected_behavior'));
+  
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -78,6 +85,8 @@ export const EditBugForm = ({ bug, open, onClose, onSave }: EditBugFormProps) =>
             expectedBehavior={expectedBehavior}
             url={url}
             product={product}
+            currentSituationImages={currentSituationImages}
+            expectedBehaviorImages={expectedBehaviorImages}
             setTitle={setTitle}
             setCurrentSituation={setCurrentSituation}
             setExpectedBehavior={setExpectedBehavior}

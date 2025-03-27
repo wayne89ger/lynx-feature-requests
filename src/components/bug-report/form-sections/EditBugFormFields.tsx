@@ -22,6 +22,8 @@ interface EditBugFormFieldsProps {
   expectedBehavior: string;
   url: string;
   product: string;
+  currentSituationImages?: string[];
+  expectedBehaviorImages?: string[];
   setTitle: (value: string) => void;
   setCurrentSituation: (value: string) => void;
   setExpectedBehavior: (value: string) => void;
@@ -35,6 +37,8 @@ export const EditBugFormFields = ({
   expectedBehavior,
   url,
   product,
+  currentSituationImages = [],
+  expectedBehaviorImages = [],
   setTitle,
   setCurrentSituation,
   setExpectedBehavior,
@@ -84,6 +88,7 @@ export const EditBugFormFields = ({
           placeholder="Describe what's happening"
           className="min-h-[100px]"
           onImagePaste={handleImagePaste(setCurrentSituationImage)}
+          existingImageUrls={currentSituationImages}
         />
       </div>
       <div className="space-y-2">
@@ -95,6 +100,7 @@ export const EditBugFormFields = ({
           placeholder="Describe how it should work"
           className="min-h-[100px]"
           onImagePaste={handleImagePaste(setExpectedBehaviorImage)}
+          existingImageUrls={expectedBehaviorImages}
         />
       </div>
       <div className="space-y-2">

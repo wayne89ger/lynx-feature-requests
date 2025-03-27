@@ -24,6 +24,8 @@ interface BasicInformationProps {
   product: string;
   location: string;
   isBug: boolean;
+  descriptionImages?: string[];
+  expectedBehaviorImages?: string[];
   setTitle: (value: string) => void;
   setDescription: (value: string) => void;
   setExpectedBehavior?: (value: string) => void;
@@ -40,6 +42,8 @@ export const BasicInformation = ({
   product,
   location,
   isBug,
+  descriptionImages = [],
+  expectedBehaviorImages = [],
   setTitle,
   setDescription,
   setExpectedBehavior,
@@ -75,6 +79,7 @@ export const BasicInformation = ({
           onChange={(e) => setDescription(e.target.value)}
           className="min-h-[100px]"
           onImagePaste={handleImagePaste(setDescriptionImage)}
+          existingImageUrls={descriptionImages}
         />
       </div>
       {isBug && (
@@ -87,6 +92,7 @@ export const BasicInformation = ({
               onChange={(e) => setExpectedBehavior?.(e.target.value)}
               className="min-h-[100px]"
               onImagePaste={handleImagePaste(setExpectedBehaviorImage)}
+              existingImageUrls={expectedBehaviorImages}
             />
           </div>
           <div className="space-y-2">

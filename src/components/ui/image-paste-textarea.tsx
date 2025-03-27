@@ -7,14 +7,21 @@ import { Button } from "@/components/ui/button";
 
 interface ImagePasteTextareaProps extends TextareaProps {
   onImagePaste?: (file: File) => void;
+  existingImageUrls?: string[]; // Add support for existing image URLs
 }
 
 export const ImagePasteTextarea = React.forwardRef<HTMLTextAreaElement, ImagePasteTextareaProps>(
-  ({ onImagePaste, ...props }, ref) => {
+  ({ onImagePaste, existingImageUrls = [], ...props }, ref) => {
     const { toast } = useToast();
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
     const [pastedImages, setPastedImages] = useState<{file: File, previewUrl: string}[]>([]);
+    const [existingImages, setExistingImages] = useState<string[]>(existingImageUrls);
     const [previewContainerHeight, setPreviewContainerHeight] = useState<number>(0);
+
+    // Update existing images when the prop changes
+    useEffect(() => {
+      setExistingImages(existingImageUrls);
+    }, [existingImageUrls]);
 
     // Combine the refs
     const handleRef = (element: HTMLTextAreaElement) => {
@@ -34,7 +41,7 @@ export const ImagePasteTextarea = React.forwardRef<HTMLTextAreaElement, ImagePas
         textareaRef.current.style.height = 'auto';
         textareaRef.current.style.height = `${textareaRef.current.scrollHeight + previewContainerHeight}px`;
       }
-    }, [props.value, pastedImages, previewContainerHeight]);
+    }, [props.value, pastedImages, existingImages, previewContainerHeight]);
 
     // Handle paste event
     const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
@@ -87,6 +94,14 @@ export const ImagePasteTextarea = React.forwardRef<HTMLTextAreaElement, ImagePas
       });
     };
 
+    const removeExistingImage = (index: number) => {
+      setExistingImages(prev => {
+        const newImages = [...prev];
+        newImages.splice(index, 1);
+        return newImages;
+      });
+    };
+
     // Update container height when preview container ref is available
     const previewContainerRef = useRef<HTMLDivElement>(null);
     
@@ -96,7 +111,7 @@ export const ImagePasteTextarea = React.forwardRef<HTMLTextAreaElement, ImagePas
       } else {
         setPreviewContainerHeight(0);
       }
-    }, [pastedImages]);
+    }, [pastedImages, existingImages]);
 
     // Clean up object URLs when component unmounts
     useEffect(() => {
@@ -105,22 +120,43 @@ export const ImagePasteTextarea = React.forwardRef<HTMLTextAreaElement, ImagePas
       };
     }, []);
 
+    const hasImages = pastedImages.length > 0 || existingImages.length > 0;
+
     return (
       <div className="relative">
         <Textarea
           ref={handleRef}
           onPaste={handlePaste}
           {...props}
-          className={`${props.className || ''} ${pastedImages.length > 0 ? 'pb-24' : ''}`}
+          className={`${props.className || ''} ${hasImages ? 'pb-24' : ''}`}
         />
         
-        {pastedImages.length > 0 && (
+        {hasImages && (
           <div 
             className="absolute bottom-2 left-2 right-2 flex flex-wrap gap-2" 
             ref={previewContainerRef}
           >
+            {existingImages.map((imageUrl, index) => (
+              <div key={`existing-${index}`} className="relative group">
+                <div className="rounded-md overflow-hidden border border-gray-200 shadow-sm">
+                  <img 
+                    src={imageUrl} 
+                    alt={`Existing attachment ${index + 1}`} 
+                    className="h-16 w-auto object-cover"
+                  />
+                </div>
+                <button
+                  type="button"
+                  className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-gray-700 text-white flex items-center justify-center opacity-70 hover:opacity-100"
+                  onClick={() => removeExistingImage(index)}
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </div>
+            ))}
+            
             {pastedImages.map((img, index) => (
-              <div key={index} className="relative group">
+              <div key={`new-${index}`} className="relative group">
                 <div className="rounded-md overflow-hidden border border-gray-200 shadow-sm">
                   <img 
                     src={img.previewUrl} 

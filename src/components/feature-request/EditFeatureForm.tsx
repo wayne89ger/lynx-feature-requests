@@ -56,6 +56,8 @@ const BasicInformation = ({
   product,
   location,
   isBug,
+  descriptionImages = [],
+  expectedBehaviorImages = [],
   setTitle,
   setDescription,
   setExpectedBehavior,
@@ -70,6 +72,8 @@ const BasicInformation = ({
   product: string;
   location: string;
   isBug: boolean;
+  descriptionImages?: string[];
+  expectedBehaviorImages?: string[];
   setTitle: (title: string) => void;
   setDescription: (description: string) => void;
   setExpectedBehavior: (expectedBehavior: string) => void;
@@ -101,6 +105,7 @@ const BasicInformation = ({
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           onImagePaste={handleImagePaste(setDescriptionImage)}
+          existingImageUrls={descriptionImages}
         />
       </div>
       {isBug && (
@@ -112,6 +117,7 @@ const BasicInformation = ({
               value={expectedBehavior}
               onChange={(e) => setExpectedBehavior(e.target.value)}
               onImagePaste={handleImagePaste(setExpectedBehaviorImage)}
+              existingImageUrls={expectedBehaviorImages}
             />
           </div>
           <div>
@@ -445,6 +451,12 @@ export const EditFeatureForm = ({
     total: 0,
   });
 
+  // Extract attachment URLs if they exist
+  const attachment = feature.attachment || "";
+  const descriptionImages = attachment ? [attachment] : [];
+  const currentSituationImages = feature.current_situation ? 
+    (feature.comments?.filter(c => c.attachment)?.map(c => c.attachment as string) || []) : [];
+
   const isBug = feature.product === "bug";
 
   useEffect(() => {
@@ -522,6 +534,8 @@ export const EditFeatureForm = ({
             product={product}
             location={location}
             isBug={isBug}
+            descriptionImages={descriptionImages}
+            expectedBehaviorImages={currentSituationImages}
             setTitle={setTitle}
             setDescription={setDescription}
             setExpectedBehavior={setCurrentSituation}
