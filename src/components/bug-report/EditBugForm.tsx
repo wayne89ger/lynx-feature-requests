@@ -34,8 +34,21 @@ export const EditBugForm = ({ bug, open, onClose, onSave }: EditBugFormProps) =>
   
   // Extract image URLs from the bug's attachments
   const attachments = bug.attachments || [];
-  const currentSituationImages = attachments.filter(url => url.includes('current_situation'));
-  const expectedBehaviorImages = attachments.filter(url => url.includes('expected_behavior'));
+  
+  // Process attachments to separate them by field
+  const currentSituationImages = attachments.filter(url => 
+    url.includes('current_situation') || 
+    (url.includes('attachment') && url.includes(bug.id.toString()))
+  );
+  
+  const expectedBehaviorImages = attachments.filter(url => 
+    url.includes('expected_behavior') || 
+    (url.includes('attachment') && !url.includes('current_situation'))
+  );
+  
+  console.log('Bug attachments:', attachments);
+  console.log('Current situation images:', currentSituationImages);
+  console.log('Expected behavior images:', expectedBehaviorImages);
   
   const { toast } = useToast();
 

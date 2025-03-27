@@ -18,8 +18,11 @@ export const ImagePasteTextarea = React.forwardRef<HTMLTextAreaElement, ImagePas
     const [existingImages, setExistingImages] = useState<string[]>(existingImageUrls);
     const [previewContainerHeight, setPreviewContainerHeight] = useState<number>(0);
 
+    console.log("ImagePasteTextarea received existingImageUrls:", existingImageUrls);
+
     // Update existing images when the prop changes
     useEffect(() => {
+      console.log("Updating existing images:", existingImageUrls);
       setExistingImages(existingImageUrls);
     }, [existingImageUrls]);
 

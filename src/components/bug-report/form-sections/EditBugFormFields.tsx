@@ -51,7 +51,16 @@ export const EditBugFormFields = ({
 
   const handleImagePaste = (setImage: (file: File | null) => void) => (file: File) => {
     setImage(file);
+    toast({
+      title: "Image attached",
+      description: "Image will be added when you save the bug report",
+    });
   };
+
+  console.log("Rendering EditBugFormFields with images:", {
+    currentSituationImages,
+    expectedBehaviorImages
+  });
 
   return (
     <>
