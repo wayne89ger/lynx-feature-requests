@@ -1,4 +1,3 @@
-
 import {
   Dialog,
   DialogContent,
@@ -10,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { ImagePasteTextarea } from "@/components/ui/image-paste-textarea";
 import {
   Select,
   SelectContent,
@@ -76,6 +75,13 @@ const BasicInformation = ({
   setProduct: (product: string) => void;
   setLocation: (location: string) => void;
 }) => {
+  const [descriptionImage, setDescriptionImage] = useState<File | null>(null);
+  const [expectedBehaviorImage, setExpectedBehaviorImage] = useState<File | null>(null);
+
+  const handleImagePaste = (setImage: (file: File | null) => void) => (file: File) => {
+    setImage(file);
+  };
+
   return (
     <div className="space-y-4">
       <div>
@@ -88,20 +94,22 @@ const BasicInformation = ({
       </div>
       <div>
         <Label htmlFor="description">Description</Label>
-        <Textarea
+        <ImagePasteTextarea
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          onImagePaste={handleImagePaste(setDescriptionImage)}
         />
       </div>
       {isBug && (
         <>
           <div>
             <Label htmlFor="currentSituation">Current Situation</Label>
-            <Textarea
+            <ImagePasteTextarea
               id="currentSituation"
               value={expectedBehavior}
               onChange={(e) => setExpectedBehavior(e.target.value)}
+              onImagePaste={handleImagePaste(expectedBehaviorImage)}
             />
           </div>
           <div>
@@ -122,9 +130,9 @@ const BasicInformation = ({
             <SelectValue placeholder="Select a product" />
           </SelectTrigger>
           <SelectContent>
-            {Object.keys(productLabels).map((key) => (
-              <SelectItem key={key} value={key}>
-                {productLabels[key as keyof typeof productLabels].full}
+            {allProducts.map((productKey) => (
+              <SelectItem key={productKey} value={productKey}>
+                {productLabels[productKey]?.full || productKey}
               </SelectItem>
             ))}
           </SelectContent>
@@ -490,7 +498,6 @@ export const EditFeatureForm = ({
     onSave(feature.id, updatedFeature);
   };
 
-  // Helper function to handle the urgency string type properly
   const handleSetUrgency = (value: string) => {
     setUrgency(value as "low" | "medium" | "high");
   };
