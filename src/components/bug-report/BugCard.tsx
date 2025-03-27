@@ -1,27 +1,13 @@
 
 import { Button } from "@/components/ui/button";
-import { ArrowBigUp, ArrowBigDown, MessageCircle, Paperclip, Edit, Bug, Trash2 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useToast } from "@/hooks/use-toast";
+import { Edit, Trash2 } from "lucide-react";
 import { Feature } from "@/types/feature";
-import { supabase } from "@/integrations/supabase/client";
-import { useState, useEffect } from "react";
-import { AttachmentUpload } from "../feature-request/components/AttachmentUpload";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { BugHeader } from "./components/BugHeader";
+import { BugContent } from "./components/BugContent";
+import { BugActions } from "./components/BugActions";
+import { BugCommentsDialog } from "./components/BugCommentsDialog";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 interface BugCardProps {
   id: number;
@@ -37,48 +23,6 @@ interface BugCardProps {
   className?: string;
 }
 
-const statusConfig = {
-  new: { 
-    label: "New", 
-    mobileLabel: "New",
-    bg: "bg-status-new", 
-    text: "text-status-new-text" 
-  },
-  review: { 
-    label: "Under Review", 
-    mobileLabel: "Review",
-    bg: "bg-status-review", 
-    text: "text-status-review-text" 
-  },
-  progress: { 
-    label: "In Progress", 
-    mobileLabel: "Progress",
-    bg: "bg-status-progress", 
-    text: "text-status-progress-text" 
-  },
-  completed: { 
-    label: "Completed", 
-    mobileLabel: "Done",
-    bg: "bg-status-completed", 
-    text: "text-status-completed-text" 
-  },
-};
-
-const productLabels = {
-  "website-demand-capture": {
-    full: "Website / Demand Capture",
-    mobile: "Website"
-  },
-  "dof-onboarding": {
-    full: "DOF / Onboarding",
-    mobile: "DOF"
-  },
-  "lynx-plus": {
-    full: "LYNX+ / Client Experience",
-    mobile: "LYNX+"
-  }
-};
-
 export const BugCard = ({
   id,
   title,
@@ -92,126 +36,8 @@ export const BugCard = ({
   onDelete,
   className
 }: BugCardProps) => {
-  const [currentVotes, setCurrentVotes] = useState(votes);
-  const [voteStatus, setVoteStatus] = useState<'none' | 'up' | 'down'>('none');
   const [showComments, setShowComments] = useState(false);
-  const [newComment, setNewComment] = useState("");
-  const [attachment, setAttachment] = useState<File | null>(null);
-  const { toast } = useToast();
-
-  const handleVote = async (direction: 'up' | 'down') => {
-    try {
-      const voteChange = direction === 'up' ? 1 : -1;
-      const { data, error } = await supabase
-        .from('bugs')
-        .update({ votes: currentVotes + voteChange })
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      setCurrentVotes(data.votes);
-      setVoteStatus(direction);
-      
-      toast({
-        title: "Vote recorded",
-        description: `You ${voteStatus === direction ? 'removed your vote' : direction === 'up' ? 'upvoted' : 'downvoted'} this bug report.`,
-      });
-    } catch (error) {
-      console.error('Error updating votes:', error);
-      toast({
-        title: "Error recording vote",
-        description: "Please try again later",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleStatusChange = async (newStatus: "new" | "review" | "progress" | "completed") => {
-    try {
-      const { error } = await supabase
-        .from('bugs')
-        .update({ status: newStatus })
-        .eq('id', id);
-
-      if (error) throw error;
-      
-      toast({
-        title: "Status updated",
-        description: `Status changed to ${statusConfig[newStatus].label}`,
-      });
-    } catch (error) {
-      console.error('Error updating status:', error);
-      toast({
-        title: "Error updating status",
-        description: "Please try again later",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleAddComment = async () => {
-    if (!newComment.trim() && !attachment) {
-      toast({
-        title: "Error",
-        description: "Please enter a comment or attach a file",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      let attachmentUrl = "";
-      
-      if (attachment) {
-        const fileName = `bug_${id}_${Date.now()}_${attachment.name}`;
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('attachments')
-          .upload(fileName, attachment);
-
-        if (uploadError) {
-          console.error('Error uploading attachment:', uploadError);
-          throw uploadError;
-        }
-
-        const { data: urlData } = supabase.storage
-          .from('attachments')
-          .getPublicUrl(fileName);
-          
-        attachmentUrl = urlData.publicUrl;
-      }
-
-      const { data, error } = await supabase
-        .from('comments')
-        .insert([{
-          bug_id: id,
-          text: newComment.trim() || (attachment ? `Attached: ${attachment.name}` : ""),
-          reporter: reporter,
-          attachment: attachmentUrl || null
-        }])
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      setNewComment("");
-      setAttachment(null);
-      
-      toast({
-        title: "Comment added",
-        description: "Your comment has been added successfully.",
-      });
-    } catch (error) {
-      console.error('Error adding comment:', error);
-      toast({
-        title: "Error adding comment",
-        description: "Please try again later",
-        variant: "destructive",
-      });
-    }
-  };
-
+  
   const handleDelete = async () => {
     if (onDelete) {
       onDelete(id);
@@ -221,37 +47,10 @@ export const BugCard = ({
   return (
     <div className={cn("bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200", className)}>
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <Select value={status} onValueChange={handleStatusChange}>
-            <SelectTrigger className={cn(
-              "h-8 text-xs font-medium px-2.5 py-0.5 rounded-full w-auto",
-              statusConfig[status].bg,
-              statusConfig[status].text
-            )}>
-              <SelectValue>
-                <span className="hidden sm:inline">{statusConfig[status].label}</span>
-                <span className="sm:hidden">{statusConfig[status].mobileLabel}</span>
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(statusConfig).map(([key, config]) => (
-                <SelectItem key={key} value={key}>
-                  {config.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {product && (
-            <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600">
-              <span className="hidden sm:inline">
-                {productLabels[product as keyof typeof productLabels]?.full}
-              </span>
-              <span className="sm:hidden">
-                {productLabels[product as keyof typeof productLabels]?.mobile}
-              </span>
-            </span>
-          )}
-        </div>
+        <BugHeader 
+          status={status} 
+          product={product} 
+        />
         <div className="flex flex-col gap-1">
           <Button
             variant="ghost"
@@ -286,101 +85,27 @@ export const BugCard = ({
         </div>
       </div>
 
-      <div className="space-y-2 mb-4">
-        <h3 className="text-lg font-semibold">{title}</h3>
-        <p className="text-gray-600 text-sm">{description}</p>
-        <p className="text-xs text-gray-500">
-          Reported by: {reporter}
-        </p>
-      </div>
+      <BugContent
+        title={title}
+        description={description}
+        reporter={reporter}
+      />
 
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            className={cn(
-              "p-1 hover:bg-gray-100",
-              voteStatus === 'up' && "text-primary bg-primary/10 hover:bg-primary/20"
-            )}
-            onClick={() => handleVote('up')}
-          >
-            <ArrowBigUp className="h-4 w-4" />
-          </Button>
-          <span className="text-sm font-medium min-w-[1ch] text-center">{currentVotes}</span>
-          <Button
-            variant="ghost"
-            size="sm"
-            className={cn(
-              "p-1 hover:bg-gray-100",
-              voteStatus === 'down' && "text-destructive bg-destructive/10 hover:bg-destructive/20"
-            )}
-            onClick={() => handleVote('down')}
-          >
-            <ArrowBigDown className="h-4 w-4" />
-          </Button>
-        </div>
+      <BugActions
+        id={id}
+        votes={votes}
+        commentsCount={comments.length}
+        onShowComments={() => setShowComments(true)}
+      />
 
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="gap-1"
-          onClick={() => setShowComments(true)}
-        >
-          <MessageCircle className="w-4 h-4" />
-          <span>{comments.length}</span>
-        </Button>
-      </div>
-
-      <Dialog open={showComments} onOpenChange={(open) => !open && setShowComments(false)}>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle>Comments on: {title}</DialogTitle>
-          </DialogHeader>
-          
-          <div className="space-y-4 pt-2">
-            <ScrollArea className="h-[300px] w-full rounded-md border p-4">
-              {comments.length === 0 ? (
-                <p className="text-gray-500 text-center py-8">No comments yet. Be the first to comment!</p>
-              ) : (
-                comments.map((comment) => (
-                  <div key={comment.id} className="mb-4 last:mb-0 border-b last:border-0 pb-3">
-                    <p className="text-sm text-gray-600">{comment.text}</p>
-                    {comment.attachment && (
-                      <a 
-                        href={comment.attachment} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center mt-1 text-xs text-primary hover:underline"
-                      >
-                        <Paperclip className="h-3 w-3 mr-1" />
-                        View attachment
-                      </a>
-                    )}
-                    <div className="mt-1 flex items-center gap-2 text-xs text-gray-400">
-                      <span className="font-medium text-gray-500">{comment.reporter}</span>
-                      <span>•</span>
-                      <span>{comment.timestamp}</span>
-                    </div>
-                  </div>
-                ))
-              )}
-            </ScrollArea>
-            <div className="space-y-2">
-              <AttachmentUpload attachment={attachment} setAttachment={setAttachment} />
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Add a comment..."
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  className="flex-1"
-                />
-                <Button onClick={handleAddComment}>Comment</Button>
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <BugCommentsDialog
+        isOpen={showComments}
+        onClose={() => setShowComments(false)}
+        bugId={id}
+        comments={comments}
+        title={title}
+        reporter={reporter}
+      />
     </div>
   );
 };
