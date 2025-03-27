@@ -56,7 +56,7 @@ export const SquadSelector = ({
 
   const displayValue = selectedSquads.length
     ? `${selectedSquads.length} Squad${selectedSquads.length > 1 ? "s" : ""}`
-    : "All Squads";
+    : "Select Squads";
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
