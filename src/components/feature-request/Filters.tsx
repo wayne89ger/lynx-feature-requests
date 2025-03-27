@@ -3,9 +3,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { MobileFilters } from "./components/MobileFilters";
 import { DesktopFilters } from "./components/DesktopFilters";
 
-// Available squads
-const AVAILABLE_SQUADS = ["Demand Capture", "Onboarding", "Client Experience", "CPI"];
-
 interface FiltersProps {
   activeTab: string;
   selectedProduct: string;
@@ -14,8 +11,6 @@ interface FiltersProps {
   setSelectedStatus: (value: string) => void;
   selectedRequester: string;
   setSelectedRequester: (value: string) => void;
-  selectedSquads: string[];
-  setSelectedSquads: (value: string[]) => void;
   searchTerm?: string;
   setSearchTerm?: (value: string) => void;
 }
@@ -28,8 +23,6 @@ export const Filters = ({
   setSelectedStatus,
   selectedRequester,
   setSelectedRequester,
-  selectedSquads,
-  setSelectedSquads,
   searchTerm = "",
   setSearchTerm = () => {},
 }: FiltersProps) => {
@@ -45,11 +38,8 @@ export const Filters = ({
         setSelectedStatus={setSelectedStatus}
         selectedRequester={selectedRequester}
         setSelectedRequester={setSelectedRequester}
-        selectedSquads={selectedSquads}
-        setSelectedSquads={setSelectedSquads}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
-        availableSquads={AVAILABLE_SQUADS}
       />
     );
   }
@@ -63,11 +53,8 @@ export const Filters = ({
       setSelectedStatus={setSelectedStatus}
       selectedRequester={selectedRequester}
       setSelectedRequester={setSelectedRequester}
-      selectedSquads={selectedSquads}
-      setSelectedSquads={setSelectedSquads}
       searchTerm={searchTerm}
       setSearchTerm={setSearchTerm}
-      availableSquads={AVAILABLE_SQUADS}
     />
   );
 };

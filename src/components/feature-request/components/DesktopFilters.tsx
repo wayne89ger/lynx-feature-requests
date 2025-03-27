@@ -1,7 +1,6 @@
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SearchInput } from "./SearchInput";
-import { SquadSelector } from "./SquadSelector";
 import { productLabels, allProducts } from "../constants";
 
 interface DesktopFiltersProps {
@@ -11,11 +10,8 @@ interface DesktopFiltersProps {
   setSelectedStatus: (value: string) => void;
   selectedRequester: string;
   setSelectedRequester: (value: string) => void;
-  selectedSquads: string[];
-  setSelectedSquads: (value: string[]) => void;
   searchTerm: string;
   setSearchTerm: (value: string) => void;
-  availableSquads: string[];
 }
 
 export const DesktopFilters = ({
@@ -25,11 +21,8 @@ export const DesktopFilters = ({
   setSelectedStatus,
   selectedRequester,
   setSelectedRequester,
-  selectedSquads,
-  setSelectedSquads,
   searchTerm,
   setSearchTerm,
-  availableSquads,
 }: DesktopFiltersProps) => {
   return (
     <div className="flex flex-col gap-3 w-full">
@@ -85,15 +78,6 @@ export const DesktopFilters = ({
               <SelectItem value="raquell-serrano">Raquell Serrano</SelectItem>
             </SelectContent>
           </Select>
-        </div>
-
-        {/* Squad filter */}
-        <div className="w-full max-w-[200px]">
-          <SquadSelector 
-            selectedSquads={selectedSquads}
-            availableSquads={availableSquads}
-            onChange={setSelectedSquads}
-          />
         </div>
       </div>
     </div>

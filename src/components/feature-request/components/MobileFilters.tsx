@@ -3,7 +3,6 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SearchInput } from "./SearchInput";
-import { SquadSelector } from "./SquadSelector";
 import { Button } from "@/components/ui/button";
 import { productLabels, allProducts } from "../constants";
 
@@ -14,11 +13,8 @@ interface MobileFiltersProps {
   setSelectedStatus: (value: string) => void;
   selectedRequester: string;
   setSelectedRequester: (value: string) => void;
-  selectedSquads: string[];
-  setSelectedSquads: (value: string[]) => void;
   searchTerm: string;
   setSearchTerm: (value: string) => void;
-  availableSquads: string[];
 }
 
 export const MobileFilters = ({
@@ -28,11 +24,8 @@ export const MobileFilters = ({
   setSelectedStatus,
   selectedRequester,
   setSelectedRequester,
-  selectedSquads,
-  setSelectedSquads,
   searchTerm,
   setSearchTerm,
-  availableSquads,
 }: MobileFiltersProps) => {
   const [showAllFilters, setShowAllFilters] = useState(false);
 
@@ -101,15 +94,6 @@ export const MobileFilters = ({
                 <SelectItem value="raquell-serrano">Raquell Serrano</SelectItem>
               </SelectContent>
             </Select>
-          </div>
-
-          {/* Squad filter */}
-          <div className="w-full">
-            <SquadSelector 
-              selectedSquads={selectedSquads}
-              availableSquads={availableSquads}
-              onChange={setSelectedSquads}
-            />
           </div>
         </div>
       )}

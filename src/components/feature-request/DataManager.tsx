@@ -1,3 +1,4 @@
+
 import { useState, useMemo } from "react";
 import { Feature } from "@/types/feature";
 import { useFeatures } from "@/hooks/useFeatures";
@@ -15,7 +16,6 @@ export const DataManager = () => {
   const [selectedProduct, setSelectedProduct] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedRequester, setSelectedRequester] = useState("all");
-  const [selectedSquads, setSelectedSquads] = useState<string[]>([]);
   const [sortOption, setSortOption] = useState<SortOption>("votes-desc");
 
   const { handleFeatureSubmit } = useFeatureSubmission(features, setFeatures);
@@ -31,11 +31,7 @@ export const DataManager = () => {
     const requesterMatch =
       selectedRequester === "all" || feature.reporter === selectedRequester;
 
-    const squadMatch =
-      selectedSquads.length === 0 || 
-      feature.squads?.some(squad => selectedSquads.includes(squad));
-
-    return productMatch && statusMatch && requesterMatch && squadMatch;
+    return productMatch && statusMatch && requesterMatch;
   });
 
   const sortedFeatures = filteredFeatures.sort((a, b) => {
@@ -105,8 +101,6 @@ export const DataManager = () => {
         setSelectedStatus={setSelectedStatus}
         selectedRequester={selectedRequester}
         setSelectedRequester={setSelectedRequester}
-        selectedSquads={selectedSquads}
-        setSelectedSquads={setSelectedSquads}
         sortOption={sortOption}
         setSortOption={setSortOption}
       />
