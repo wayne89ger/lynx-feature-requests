@@ -9,8 +9,8 @@ import { useFeatureStatus } from "@/hooks/useFeatureStatus";
 import { useFeatureComments } from "@/hooks/useFeatureComments";
 import { FeatureHeader } from "./components/FeatureHeader";
 import { VotingSection } from "./components/VotingSection";
-import { CommentsSection } from "./components/CommentsSection";
 import { AttachmentDisplay } from "./components/AttachmentDisplay";
+import { CommentsDialog } from "./components/CommentsDialog";
 import { format } from "date-fns";
 
 interface FeatureCardProps extends Feature {
@@ -136,21 +136,22 @@ export const FeatureCard = ({
           variant="ghost" 
           size="sm" 
           className="h-7 gap-1 px-1.5 sm:px-3"
-          onClick={() => setShowComments(!showComments)}
+          onClick={() => setShowComments(true)}
         >
           <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4" />
           <span className="text-xs">{comments.length}</span>
         </Button>
       </div>
 
-      {showComments && (
-        <CommentsSection
-          comments={comments}
-          newComment={newComment}
-          onCommentChange={setNewComment}
-          onAddComment={handleAddComment}
-        />
-      )}
+      <CommentsDialog 
+        isOpen={showComments}
+        onClose={() => setShowComments(false)}
+        comments={comments}
+        newComment={newComment}
+        onCommentChange={setNewComment}
+        onAddComment={handleAddComment}
+        featureTitle={title}
+      />
     </div>
   );
 };
