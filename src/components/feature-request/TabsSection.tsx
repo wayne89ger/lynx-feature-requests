@@ -51,6 +51,9 @@ export const TabsSection = ({
     // Search in title
     const titleMatch = feature.title.toLowerCase().includes(searchLower);
     
+    // Search in description
+    const descriptionMatch = feature.description.toLowerCase().includes(searchLower);
+    
     // Search in product name
     const productMatch = productLabels[feature.product]?.full.toLowerCase().includes(searchLower) ||
                          feature.product.toLowerCase().includes(searchLower);
@@ -58,7 +61,12 @@ export const TabsSection = ({
     // Search in requester name
     const requesterMatch = feature.reporter.toLowerCase().includes(searchLower);
     
-    return titleMatch || productMatch || requesterMatch;
+    // Search in squads (tags)
+    const squadsMatch = feature.squads?.some(squad => 
+      squad.toLowerCase().includes(searchLower)
+    );
+    
+    return titleMatch || descriptionMatch || productMatch || requesterMatch || squadsMatch;
   });
 
   const handleExportCSV = () => {
