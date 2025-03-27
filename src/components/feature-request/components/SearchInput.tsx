@@ -11,7 +11,7 @@ interface SearchInputProps {
 export const SearchInput = ({ 
   searchTerm, 
   setSearchTerm, 
-  placeholder = "Search titles, products, descriptions or squads..." 
+  placeholder = "Search titles, products or descriptions..." 
 }: SearchInputProps) => {
   return (
     <div className="relative w-full">
