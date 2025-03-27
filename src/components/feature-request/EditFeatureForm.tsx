@@ -1,3 +1,4 @@
+
 import {
   Dialog,
   DialogContent,
@@ -10,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ImagePasteTextarea } from "@/components/ui/image-paste-textarea";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -109,7 +111,7 @@ const BasicInformation = ({
               id="currentSituation"
               value={expectedBehavior}
               onChange={(e) => setExpectedBehavior(e.target.value)}
-              onImagePaste={handleImagePaste(expectedBehaviorImage)}
+              onImagePaste={handleImagePaste(setExpectedBehaviorImage)}
             />
           </div>
           <div>
