@@ -10,7 +10,12 @@ import { useFeatureUpdate } from "./handlers/useFeatureUpdate";
 import { SortOption } from "./components/SortDropdown";
 import { Graveyard } from "./Graveyard";
 
-export const DataManager = () => {
+interface DataManagerProps {
+  globalSearchTerm?: string;
+  setGlobalSearchTerm?: (term: string) => void;
+}
+
+export const DataManager = ({ globalSearchTerm = "", setGlobalSearchTerm }: DataManagerProps) => {
   const { features, deletedFeatures, setFeatures, deleteFeature, restoreFeature, permanentlyDeleteFeature } = useFeatures();
   const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
   const [showEditForm, setShowEditForm] = useState(false);
@@ -19,6 +24,21 @@ export const DataManager = () => {
   const [selectedRequester, setSelectedRequester] = useState("all");
   const [sortOption, setSortOption] = useState<SortOption>("votes-desc");
   const [activeTab, setActiveTab] = useState<"features" | "graveyard">("features");
+  const [searchTerm, setSearchTerm] = useState(globalSearchTerm || "");
+
+  // Sync local search term with global search term if it exists
+  useMemo(() => {
+    if (globalSearchTerm !== undefined && globalSearchTerm !== searchTerm) {
+      setSearchTerm(globalSearchTerm);
+    }
+  }, [globalSearchTerm]);
+
+  // Update global search term when local search term changes
+  useMemo(() => {
+    if (setGlobalSearchTerm && searchTerm !== globalSearchTerm) {
+      setGlobalSearchTerm(searchTerm);
+    }
+  }, [searchTerm]);
 
   const { handleFeatureSubmit } = useFeatureSubmission(features, setFeatures);
   const { handleFeatureUpdate, handleStatusUpdate } = useFeatureUpdate(features, setFeatures);
@@ -138,6 +158,8 @@ export const DataManager = () => {
           setSelectedRequester={setSelectedRequester}
           sortOption={sortOption}
           setSortOption={setSortOption}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
         />
       ) : (
         <Graveyard

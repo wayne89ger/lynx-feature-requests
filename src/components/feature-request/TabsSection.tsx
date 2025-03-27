@@ -23,6 +23,8 @@ interface TabsSectionProps {
   setSelectedRequester: (requester: string) => void;
   sortOption: SortOption;
   setSortOption: (option: SortOption) => void;
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
 }
 
 export const TabsSection = ({
@@ -38,9 +40,10 @@ export const TabsSection = ({
   setSelectedRequester,
   sortOption,
   setSortOption,
+  searchTerm,
+  setSearchTerm,
 }: TabsSectionProps) => {
   const [activeTab] = useState("features");
-  const [searchTerm, setSearchTerm] = useState("");
 
   // Apply search filter in addition to the existing filters
   const searchFilteredFeatures = filteredFeatures.filter(feature => {
