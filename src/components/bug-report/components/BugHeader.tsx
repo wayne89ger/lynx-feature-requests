@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 
 interface BugHeaderProps {
   id: number; // Added id prop
-  status: "new" | "progress" | "completed";
+  status: "new" | "progress" | "completed" | "unresolvable";
   product: string;
 }
 
@@ -33,6 +33,12 @@ const statusConfig = {
     bg: "bg-status-completed", 
     text: "text-status-completed-text" 
   },
+  unresolvable: {
+    label: "Unresolvable",
+    mobileLabel: "Unresolv",
+    bg: "bg-gray-300",
+    text: "text-gray-700"
+  }
 };
 
 const productLabels = {
@@ -54,7 +60,7 @@ export const BugHeader = ({ id, status, product }: BugHeaderProps) => {
   // Ensure we have a valid status
   const validStatus = (status && statusConfig[status]) ? status : "new";
   
-  const handleStatusChange = async (newStatus: "new" | "progress" | "completed") => {
+  const handleStatusChange = async (newStatus: "new" | "progress" | "completed" | "unresolvable") => {
     try {
       const { supabase } = await import("@/integrations/supabase/client");
       const { toast } = await import("@/hooks/use-toast");

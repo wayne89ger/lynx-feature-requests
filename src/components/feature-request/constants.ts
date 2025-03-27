@@ -1,4 +1,3 @@
-
 export const statusConfig = {
   new: { 
     label: "New", 
@@ -18,6 +17,12 @@ export const statusConfig = {
     bg: "bg-status-completed", 
     text: "text-status-completed-text" 
   },
+  unresolvable: {
+    label: "Unresolvable",
+    mobileLabel: "Unresolv",
+    bg: "bg-gray-300",
+    text: "text-gray-700"
+  }
 };
 
 export const productLabels = {

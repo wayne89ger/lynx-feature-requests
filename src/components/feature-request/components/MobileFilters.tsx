@@ -76,6 +76,7 @@ export const MobileFilters = ({
                 <SelectItem value="new">New</SelectItem>
                 <SelectItem value="progress">In Progress</SelectItem>
                 <SelectItem value="completed">Completed</SelectItem>
+                <SelectItem value="unresolvable">Unresolvable</SelectItem>
               </SelectContent>
             </Select>
           </div>

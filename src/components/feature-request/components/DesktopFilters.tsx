@@ -62,6 +62,7 @@ export const DesktopFilters = ({
               <SelectItem value="review">Under Review</SelectItem>
               <SelectItem value="progress">In Progress</SelectItem>
               <SelectItem value="completed">Completed</SelectItem>
+              <SelectItem value="unresolvable">Unresolvable</SelectItem>
             </SelectContent>
           </Select>
         </div>
