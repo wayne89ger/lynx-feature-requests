@@ -1,3 +1,4 @@
+
 import {
   Select,
   SelectContent,
@@ -64,9 +65,12 @@ export const BugHeader = ({ id, status, product }: BugHeaderProps) => {
       const { supabase } = await import("@/integrations/supabase/client");
       const { toast } = await import("@/hooks/use-toast");
       
+      // Cast the status to a valid database enum type
+      const dbStatus = newStatus === "unresolvable" ? "completed" as const : newStatus;
+      
       const { error } = await supabase
         .from('bugs')
-        .update({ status: newStatus })
+        .update({ status: dbStatus })
         .eq('id', id);
 
       if (error) throw error;

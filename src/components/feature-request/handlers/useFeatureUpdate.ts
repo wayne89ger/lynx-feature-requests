@@ -1,3 +1,4 @@
+
 import { Feature } from "@/types/feature";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -41,11 +42,15 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
       const dataToUpdate: any = {
         title,
         description,
-        status,
         product,
         location,
         urgency,
       };
+      
+      // Map 'unresolvable' status to 'completed' for database compatibility
+      if (status) {
+        dataToUpdate.status = status === "unresolvable" ? "completed" : status;
+      }
       
       // Add optional fields if they exist
       if (expected_outcome !== undefined || expectedOutcome !== undefined) {
@@ -101,11 +106,15 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
       }
       
       // Create updated feature object with appropriate type handling
+      // We need to map the database status back to our UI status
+      // If the status is "completed" but the user selected "unresolvable", we need to preserve that
+      const uiStatus = status === "unresolvable" ? "unresolvable" : data.status;
+      
       const updatedFeatureWithComments: Feature = {
         ...existingFeature,
         title: data.title,
         description: data.description,
-        status: (data.status || 'new') as FeatureStatus,
+        status: (uiStatus || 'new') as FeatureStatus,
         product: data.product,
         location: data.location || '',
         votes: data.votes || 0,
@@ -176,9 +185,12 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
     try {
       console.log('Updating status of feature with id:', id, 'New status:', newStatus);
       
+      // Map "unresolvable" to a valid database enum value for storage
+      const dbStatus = newStatus === "unresolvable" ? "completed" : newStatus;
+      
       const { data, error } = await supabase
         .from('features')
-        .update({ status: newStatus })
+        .update({ status: dbStatus })
         .eq('id', id)
         .select()
         .single();
@@ -197,6 +209,7 @@ export const useFeatureUpdate = (features: Feature[], setFeatures: (features: Fe
       }
       
       // Update only the status field for this feature
+      // We preserve the UI status (which might be "unresolvable")
       const updatedFeatureWithComments: Feature = {
         ...existingFeature,
         status: newStatus

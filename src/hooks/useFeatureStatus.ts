@@ -15,9 +15,13 @@ export const useFeatureStatus = (
 
   const handleStatusChange = async (newStatus: FeatureStatus) => {
     try {
+      // Map "unresolvable" to a valid database enum value
+      // In the database, we'll store it as "completed" but display it differently in the UI
+      const dbStatus = newStatus === "unresolvable" ? "completed" as const : newStatus;
+      
       const { error } = await supabase
         .from('features')
-        .update({ status: newStatus })
+        .update({ status: dbStatus })
         .eq('id', featureId);
 
       if (error) throw error;
