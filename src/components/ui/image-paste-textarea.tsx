@@ -1,5 +1,5 @@
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Textarea, TextareaProps } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Paperclip, X } from "lucide-react";
@@ -14,6 +14,7 @@ export const ImagePasteTextarea = React.forwardRef<HTMLTextAreaElement, ImagePas
     const { toast } = useToast();
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
     const [pastedImages, setPastedImages] = useState<{file: File, previewUrl: string}[]>([]);
+    const [previewContainerHeight, setPreviewContainerHeight] = useState<number>(0);
 
     // Combine the refs
     const handleRef = (element: HTMLTextAreaElement) => {
@@ -25,6 +26,15 @@ export const ImagePasteTextarea = React.forwardRef<HTMLTextAreaElement, ImagePas
         ref.current = element;
       }
     };
+
+    // Adjust textarea height based on content
+    useEffect(() => {
+      if (textareaRef.current) {
+        // Reset height to get the new scroll height
+        textareaRef.current.style.height = 'auto';
+        textareaRef.current.style.height = `${textareaRef.current.scrollHeight + previewContainerHeight}px`;
+      }
+    }, [props.value, pastedImages, previewContainerHeight]);
 
     // Handle paste event
     const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
@@ -77,37 +87,54 @@ export const ImagePasteTextarea = React.forwardRef<HTMLTextAreaElement, ImagePas
       });
     };
 
+    // Update container height when preview container ref is available
+    const previewContainerRef = useRef<HTMLDivElement>(null);
+    
+    useEffect(() => {
+      if (previewContainerRef.current) {
+        setPreviewContainerHeight(previewContainerRef.current.offsetHeight);
+      } else {
+        setPreviewContainerHeight(0);
+      }
+    }, [pastedImages]);
+
     // Clean up object URLs when component unmounts
-    React.useEffect(() => {
+    useEffect(() => {
       return () => {
         pastedImages.forEach(img => URL.revokeObjectURL(img.previewUrl));
       };
     }, []);
 
     return (
-      <div className="space-y-2">
+      <div className="relative">
         <Textarea
           ref={handleRef}
           onPaste={handlePaste}
           {...props}
+          className={`${props.className || ''} ${pastedImages.length > 0 ? 'pb-24' : ''}`}
         />
+        
         {pastedImages.length > 0 && (
-          <div className="mt-2 space-y-2">
+          <div 
+            className="absolute bottom-2 left-2 right-2 flex flex-wrap gap-2" 
+            ref={previewContainerRef}
+          >
             {pastedImages.map((img, index) => (
-              <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded-md group">
-                <div className="flex items-center gap-2 flex-1">
-                  <Paperclip className="h-4 w-4 flex-shrink-0" />
-                  <span className="text-sm truncate">{img.file.name}</span>
+              <div key={index} className="relative group">
+                <div className="rounded-md overflow-hidden border border-gray-200 shadow-sm">
+                  <img 
+                    src={img.previewUrl} 
+                    alt={img.file.name} 
+                    className="h-16 w-auto object-cover"
+                  />
                 </div>
-                <Button
+                <button
                   type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 w-6 p-0"
+                  className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-gray-700 text-white flex items-center justify-center opacity-70 hover:opacity-100"
                   onClick={() => removeImage(index)}
                 >
-                  <X className="h-4 w-4" />
-                </Button>
+                  <X className="h-3 w-3" />
+                </button>
               </div>
             ))}
           </div>

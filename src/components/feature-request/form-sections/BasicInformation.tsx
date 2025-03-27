@@ -15,8 +15,6 @@ import {
 } from "../constants";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { Paperclip, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 interface BasicInformationProps {
   title: string;
