@@ -1,4 +1,3 @@
-
 import { Feature } from "@/types/feature";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";

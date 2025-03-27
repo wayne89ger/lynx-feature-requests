@@ -1,3 +1,4 @@
+
 export const statusConfig = {
   new: { 
     label: "New", 
@@ -8,8 +9,8 @@ export const statusConfig = {
   progress: { 
     label: "In Progress", 
     mobileLabel: "Progress",
-    bg: "bg-status-progress", 
-    text: "text-status-progress-text" 
+    bg: "bg-yellow-100", 
+    text: "text-yellow-700" 
   },
   completed: { 
     label: "Completed", 
